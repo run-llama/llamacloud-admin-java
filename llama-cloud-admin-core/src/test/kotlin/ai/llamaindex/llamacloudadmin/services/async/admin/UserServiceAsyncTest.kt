@@ -1,0 +1,49 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package ai.llamaindex.llamacloudadmin.services.async.admin
+
+import ai.llamaindex.llamacloudadmin.client.okhttp.LlamaCloudAdminOkHttpClientAsync
+import ai.llamaindex.llamacloudadmin.models.admin.users.UserUpdateClaimsParams
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
+
+internal class UserServiceAsyncTest {
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun getClaims() {
+        val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val userServiceAsync = client.admin().users()
+
+        val userClaimsFuture = userServiceAsync.getClaims("user_id")
+
+        val userClaims = userClaimsFuture.get()
+        userClaims.validate()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun updateClaims() {
+        val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val userServiceAsync = client.admin().users()
+
+        val userClaimsFuture =
+            userServiceAsync.updateClaims(
+                UserUpdateClaimsParams.builder()
+                    .userId("user_id")
+                    .addRemoveClaim(UserUpdateClaimsParams.RemoveClaim.ALLOWED_ORG_CREATION)
+                    .setClaims(
+                        UserUpdateClaimsParams.SetClaims.builder()
+                            .allowOrgDeletion(true)
+                            .allowedOrgCreation(true)
+                            .apiDatasourceAccess(true)
+                            .maximumOrgCreation(0L)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val userClaims = userClaimsFuture.get()
+        userClaims.validate()
+    }
+}
