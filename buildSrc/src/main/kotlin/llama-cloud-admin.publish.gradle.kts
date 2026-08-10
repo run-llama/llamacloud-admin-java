@@ -59,9 +59,9 @@ configure<MavenPublishBaseExtension> {
         }
 
         scm {
-            connection.set("scm:git:git://github.com/run-llama/llama-cloud-admin-java.git")
-            developerConnection.set("scm:git:git://github.com/run-llama/llama-cloud-admin-java.git")
-            url.set("https://github.com/run-llama/llama-cloud-admin-java")
+            connection.set("scm:git:git://github.com/run-llama/llamacloud-admin-java.git")
+            developerConnection.set("scm:git:git://github.com/run-llama/llamacloud-admin-java.git")
+            url.set("https://github.com/run-llama/llamacloud-admin-java")
         }
     }
 }
