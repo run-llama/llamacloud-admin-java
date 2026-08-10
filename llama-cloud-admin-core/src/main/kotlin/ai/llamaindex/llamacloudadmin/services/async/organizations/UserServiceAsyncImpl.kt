@@ -24,7 +24,7 @@ import ai.llamaindex.llamacloudadmin.models.organizations.users.UserAddToProject
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserAddToProjectResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserAssignRoleParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserDeleteParams
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListParams
+import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListRolesParams
@@ -46,13 +46,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserServiceAsync =
         UserServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
-
-    override fun list(
-        params: UserListParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<List<OrganizationMember>> =
-        // get /api/v1/organizations/{organization_id}/users
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun delete(
         params: UserDeleteParams,
@@ -81,6 +74,13 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
     ): CompletableFuture<UserOrganizationRole> =
         // put /api/v1/organizations/{organization_id}/users/roles
         withRawResponse().assignRole(params, requestOptions).thenApply { it.parse() }
+
+    override fun listMembers(
+        params: UserListMembersParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<List<OrganizationMember>> =
+        // get /api/v1/organizations/{organization_id}/users
+        withRawResponse().listMembers(params, requestOptions).thenApply { it.parse() }
 
     override fun listProjects(
         params: UserListProjectsParams,
@@ -115,39 +115,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
             UserServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
-
-        private val listHandler: Handler<List<OrganizationMember>> =
-            jsonHandler<List<OrganizationMember>>(clientOptions.jsonMapper)
-
-        override fun list(
-            params: UserListParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("organizationId", params.organizationId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("api", "v1", "organizations", params._pathParam(0), "users")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.forEach { it.validate() }
-                                }
-                            }
-                    }
-                }
-        }
 
         private val deleteHandler: Handler<Void?> = emptyHandler()
 
@@ -294,6 +261,39 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val listMembersHandler: Handler<List<OrganizationMember>> =
+            jsonHandler<List<OrganizationMember>>(clientOptions.jsonMapper)
+
+        override fun listMembers(
+            params: UserListMembersParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("organizationId", params.organizationId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "organizations", params._pathParam(0), "users")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { listMembersHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.forEach { it.validate() }
                                 }
                             }
                     }

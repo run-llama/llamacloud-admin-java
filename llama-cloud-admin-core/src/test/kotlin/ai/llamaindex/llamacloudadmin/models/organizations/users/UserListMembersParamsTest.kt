@@ -5,17 +5,21 @@ package ai.llamaindex.llamacloudadmin.models.organizations.users
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class UserListParamsTest {
+internal class UserListMembersParamsTest {
 
     @Test
     fun create() {
-        UserListParams.builder().organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e").build()
+        UserListMembersParams.builder()
+            .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+            .build()
     }
 
     @Test
     fun pathParams() {
         val params =
-            UserListParams.builder().organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e").build()
+            UserListMembersParams.builder()
+                .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+                .build()
 
         assertThat(params._pathParam(0)).isEqualTo("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
         // out-of-bound path param

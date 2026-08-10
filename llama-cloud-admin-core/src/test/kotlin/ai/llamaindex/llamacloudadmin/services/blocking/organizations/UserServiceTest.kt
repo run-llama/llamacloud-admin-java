@@ -18,17 +18,6 @@ internal class UserServiceTest {
 
     @Disabled("Mock server tests are disabled")
     @Test
-    fun list() {
-        val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
-        val userService = client.organizations().users()
-
-        val organizationMembers = userService.list("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-
-        organizationMembers.forEach { it.validate() }
-    }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
     fun delete() {
         val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
         val userService = client.organizations().users()
@@ -101,6 +90,17 @@ internal class UserServiceTest {
             )
 
         userOrganizationRole.validate()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun listMembers() {
+        val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
+        val userService = client.organizations().users()
+
+        val organizationMembers = userService.listMembers("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+
+        organizationMembers.forEach { it.validate() }
     }
 
     @Disabled("Mock server tests are disabled")
