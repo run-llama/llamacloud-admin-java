@@ -13,7 +13,7 @@ import ai.llamaindex.llamacloudadmin.models.organizations.users.UserAddToProject
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserAddToProjectResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserAssignRoleParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserDeleteParams
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListParams
+import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListRolesParams
@@ -36,37 +36,6 @@ interface UserService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserService
-
-    /** Get all users in an organization. */
-    fun list(organizationId: String): List<OrganizationMember> =
-        list(organizationId, UserListParams.none())
-
-    /** @see list */
-    fun list(
-        organizationId: String,
-        params: UserListParams = UserListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<OrganizationMember> =
-        list(params.toBuilder().organizationId(organizationId).build(), requestOptions)
-
-    /** @see list */
-    fun list(
-        organizationId: String,
-        params: UserListParams = UserListParams.none(),
-    ): List<OrganizationMember> = list(organizationId, params, RequestOptions.none())
-
-    /** @see list */
-    fun list(
-        params: UserListParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<OrganizationMember>
-
-    /** @see list */
-    fun list(params: UserListParams): List<OrganizationMember> = list(params, RequestOptions.none())
-
-    /** @see list */
-    fun list(organizationId: String, requestOptions: RequestOptions): List<OrganizationMember> =
-        list(organizationId, UserListParams.none(), requestOptions)
 
     /** Remove users from an organization. */
     fun delete(memberUserId: String, params: UserDeleteParams) =
@@ -152,6 +121,41 @@ interface UserService {
         params: UserAssignRoleParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): UserOrganizationRole
+
+    /** Get all users in an organization. */
+    fun listMembers(organizationId: String): List<OrganizationMember> =
+        listMembers(organizationId, UserListMembersParams.none())
+
+    /** @see listMembers */
+    fun listMembers(
+        organizationId: String,
+        params: UserListMembersParams = UserListMembersParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): List<OrganizationMember> =
+        listMembers(params.toBuilder().organizationId(organizationId).build(), requestOptions)
+
+    /** @see listMembers */
+    fun listMembers(
+        organizationId: String,
+        params: UserListMembersParams = UserListMembersParams.none(),
+    ): List<OrganizationMember> = listMembers(organizationId, params, RequestOptions.none())
+
+    /** @see listMembers */
+    fun listMembers(
+        params: UserListMembersParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): List<OrganizationMember>
+
+    /** @see listMembers */
+    fun listMembers(params: UserListMembersParams): List<OrganizationMember> =
+        listMembers(params, RequestOptions.none())
+
+    /** @see listMembers */
+    fun listMembers(
+        organizationId: String,
+        requestOptions: RequestOptions,
+    ): List<OrganizationMember> =
+        listMembers(organizationId, UserListMembersParams.none(), requestOptions)
 
     /** List all projects for a user in an organization. */
     fun listProjects(
@@ -245,51 +249,6 @@ interface UserService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserService.WithRawResponse
-
-        /**
-         * Returns a raw HTTP response for `get /api/v1/organizations/{organization_id}/users`, but
-         * is otherwise the same as [UserService.list].
-         */
-        @MustBeClosed
-        fun list(organizationId: String): HttpResponseFor<List<OrganizationMember>> =
-            list(organizationId, UserListParams.none())
-
-        /** @see list */
-        @MustBeClosed
-        fun list(
-            organizationId: String,
-            params: UserListParams = UserListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<OrganizationMember>> =
-            list(params.toBuilder().organizationId(organizationId).build(), requestOptions)
-
-        /** @see list */
-        @MustBeClosed
-        fun list(
-            organizationId: String,
-            params: UserListParams = UserListParams.none(),
-        ): HttpResponseFor<List<OrganizationMember>> =
-            list(organizationId, params, RequestOptions.none())
-
-        /** @see list */
-        @MustBeClosed
-        fun list(
-            params: UserListParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<OrganizationMember>>
-
-        /** @see list */
-        @MustBeClosed
-        fun list(params: UserListParams): HttpResponseFor<List<OrganizationMember>> =
-            list(params, RequestOptions.none())
-
-        /** @see list */
-        @MustBeClosed
-        fun list(
-            organizationId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<List<OrganizationMember>> =
-            list(organizationId, UserListParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete
@@ -421,6 +380,51 @@ interface UserService {
             params: UserAssignRoleParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<UserOrganizationRole>
+
+        /**
+         * Returns a raw HTTP response for `get /api/v1/organizations/{organization_id}/users`, but
+         * is otherwise the same as [UserService.listMembers].
+         */
+        @MustBeClosed
+        fun listMembers(organizationId: String): HttpResponseFor<List<OrganizationMember>> =
+            listMembers(organizationId, UserListMembersParams.none())
+
+        /** @see listMembers */
+        @MustBeClosed
+        fun listMembers(
+            organizationId: String,
+            params: UserListMembersParams = UserListMembersParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<List<OrganizationMember>> =
+            listMembers(params.toBuilder().organizationId(organizationId).build(), requestOptions)
+
+        /** @see listMembers */
+        @MustBeClosed
+        fun listMembers(
+            organizationId: String,
+            params: UserListMembersParams = UserListMembersParams.none(),
+        ): HttpResponseFor<List<OrganizationMember>> =
+            listMembers(organizationId, params, RequestOptions.none())
+
+        /** @see listMembers */
+        @MustBeClosed
+        fun listMembers(
+            params: UserListMembersParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<List<OrganizationMember>>
+
+        /** @see listMembers */
+        @MustBeClosed
+        fun listMembers(params: UserListMembersParams): HttpResponseFor<List<OrganizationMember>> =
+            listMembers(params, RequestOptions.none())
+
+        /** @see listMembers */
+        @MustBeClosed
+        fun listMembers(
+            organizationId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<List<OrganizationMember>> =
+            listMembers(organizationId, UserListMembersParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get

@@ -49,13 +49,13 @@ This library requires Java 8 or later.
 import ai.llamaindex.llamacloudadmin.client.LlamaCloudAdminClient;
 import ai.llamaindex.llamacloudadmin.client.okhttp.LlamaCloudAdminOkHttpClient;
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationMember;
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListParams;
+import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams;
 
 // Configures using the `llamacloudadmin.llamaCloudApiKey` and `llamacloudadmin.baseUrl` system properties
 // Or configures using the `LLAMA_CLOUD_API_KEY` and `LLAMA_CLOUD_ADMIN_BASE_URL` environment variables
 LlamaCloudAdminClient client = LlamaCloudAdminOkHttpClient.fromEnv();
 
-List<OrganizationMember> organizationMembers = client.organizations().users().list("my-organization-id");
+List<OrganizationMember> organizationMembers = client.organizations().users().listMembers("my-organization-id");
 ```
 
 ## Client configuration
@@ -128,7 +128,7 @@ The `withOptions()` method does not affect the original client or service.
 
 To send a request to the Llama Cloud Admin API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a Java class.
 
-For example, `client.organizations().users().list(...)` should be called with an instance of `UserListParams`, and it will return an instance of `List<OrganizationMember>`.
+For example, `client.organizations().users().listMembers(...)` should be called with an instance of `UserListMembersParams`, and it will return an instance of `List<OrganizationMember>`.
 
 ## Immutability
 
@@ -146,14 +146,14 @@ The default client is synchronous. To switch to asynchronous execution, call the
 import ai.llamaindex.llamacloudadmin.client.LlamaCloudAdminClient;
 import ai.llamaindex.llamacloudadmin.client.okhttp.LlamaCloudAdminOkHttpClient;
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationMember;
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListParams;
+import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `llamacloudadmin.llamaCloudApiKey` and `llamacloudadmin.baseUrl` system properties
 // Or configures using the `LLAMA_CLOUD_API_KEY` and `LLAMA_CLOUD_ADMIN_BASE_URL` environment variables
 LlamaCloudAdminClient client = LlamaCloudAdminOkHttpClient.fromEnv();
 
-CompletableFuture<List<OrganizationMember>> organizationMembers = client.async().organizations().users().list("my-organization-id");
+CompletableFuture<List<OrganizationMember>> organizationMembers = client.async().organizations().users().listMembers("my-organization-id");
 ```
 
 Or create an asynchronous client from the beginning:
@@ -162,14 +162,14 @@ Or create an asynchronous client from the beginning:
 import ai.llamaindex.llamacloudadmin.client.LlamaCloudAdminClientAsync;
 import ai.llamaindex.llamacloudadmin.client.okhttp.LlamaCloudAdminOkHttpClientAsync;
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationMember;
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListParams;
+import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `llamacloudadmin.llamaCloudApiKey` and `llamacloudadmin.baseUrl` system properties
 // Or configures using the `LLAMA_CLOUD_API_KEY` and `LLAMA_CLOUD_ADMIN_BASE_URL` environment variables
 LlamaCloudAdminClientAsync client = LlamaCloudAdminOkHttpClientAsync.fromEnv();
 
-CompletableFuture<List<OrganizationMember>> organizationMembers = client.organizations().users().list("my-organization-id");
+CompletableFuture<List<OrganizationMember>> organizationMembers = client.organizations().users().listMembers("my-organization-id");
 ```
 
 The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
@@ -545,9 +545,9 @@ To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQu
 
 ```java
 import ai.llamaindex.llamacloudadmin.core.JsonValue;
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListParams;
+import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams;
 
-UserListParams params = UserListParams.builder()
+UserListMembersParams params = UserListMembersParams.builder()
     .putAdditionalHeader("Secret-Header", "42")
     .putAdditionalQueryParam("secret_query_param", "42")
     .putAdditionalBodyProperty("secretProperty", JsonValue.from("42"))
@@ -574,9 +574,9 @@ These properties can be accessed on the nested built object later using the `_ad
 To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](llama-cloud-admin-core/src/main/kotlin/ai/llamaindex/llamacloudadmin/core/Values.kt) object to its setter:
 
 ```java
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListParams;
+import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams;
 
-UserListParams params = UserListParams.builder().build();
+UserListMembersParams params = UserListMembersParams.builder().build();
 ```
 
 The most straightforward way to create a [`JsonValue`](llama-cloud-admin-core/src/main/kotlin/ai/llamaindex/llamacloudadmin/core/Values.kt) is using its `from(...)` method:
@@ -624,9 +624,9 @@ To forcibly omit a required parameter or property, pass [`JsonMissing`](llama-cl
 
 ```java
 import ai.llamaindex.llamacloudadmin.core.JsonMissing;
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListParams;
+import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams;
 
-UserListParams params = UserListParams.builder()
+UserListMembersParams params = UserListMembersParams.builder()
     .organizationId(JsonMissing.of())
     .build();
 ```
@@ -706,7 +706,7 @@ Or configure the method call to validate the response using the `responseValidat
 ```java
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationMember;
 
-List<OrganizationMember> organizationMembers = client.organizations().users().list(RequestOptions.builder().responseValidation(true).build());
+List<OrganizationMember> organizationMembers = client.organizations().users().listMembers(RequestOptions.builder().responseValidation(true).build());
 ```
 
 Or configure the default for all method calls at the client level:

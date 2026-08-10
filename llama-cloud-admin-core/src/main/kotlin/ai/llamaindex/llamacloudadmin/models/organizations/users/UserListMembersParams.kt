@@ -10,7 +10,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Get all users in an organization. */
-class UserListParams
+class UserListMembersParams
 private constructor(
     private val organizationId: String?,
     private val additionalHeaders: Headers,
@@ -29,13 +29,13 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): UserListParams = builder().build()
+        @JvmStatic fun none(): UserListMembersParams = builder().build()
 
-        /** Returns a mutable builder for constructing an instance of [UserListParams]. */
+        /** Returns a mutable builder for constructing an instance of [UserListMembersParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [UserListParams]. */
+    /** A builder for [UserListMembersParams]. */
     class Builder internal constructor() {
 
         private var organizationId: String? = null
@@ -43,10 +43,10 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(userListParams: UserListParams) = apply {
-            organizationId = userListParams.organizationId
-            additionalHeaders = userListParams.additionalHeaders.toBuilder()
-            additionalQueryParams = userListParams.additionalQueryParams.toBuilder()
+        internal fun from(userListMembersParams: UserListMembersParams) = apply {
+            organizationId = userListMembersParams.organizationId
+            additionalHeaders = userListMembersParams.additionalHeaders.toBuilder()
+            additionalQueryParams = userListMembersParams.additionalQueryParams.toBuilder()
         }
 
         fun organizationId(organizationId: String?) = apply { this.organizationId = organizationId }
@@ -154,12 +154,16 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [UserListParams].
+         * Returns an immutable instance of [UserListMembersParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): UserListParams =
-            UserListParams(organizationId, additionalHeaders.build(), additionalQueryParams.build())
+        fun build(): UserListMembersParams =
+            UserListMembersParams(
+                organizationId,
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
     }
 
     fun _pathParam(index: Int): String =
@@ -177,7 +181,7 @@ private constructor(
             return true
         }
 
-        return other is UserListParams &&
+        return other is UserListMembersParams &&
             organizationId == other.organizationId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
@@ -187,5 +191,5 @@ private constructor(
         Objects.hash(organizationId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "UserListParams{organizationId=$organizationId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "UserListMembersParams{organizationId=$organizationId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

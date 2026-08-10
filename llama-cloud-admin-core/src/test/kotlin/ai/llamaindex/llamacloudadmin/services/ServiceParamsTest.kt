@@ -5,7 +5,7 @@ package ai.llamaindex.llamacloudadmin.services
 import ai.llamaindex.llamacloudadmin.client.LlamaCloudAdminClient
 import ai.llamaindex.llamacloudadmin.client.okhttp.LlamaCloudAdminOkHttpClient
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListParams
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListParams
+import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams
 import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.get
@@ -57,12 +57,12 @@ internal class ServiceParamsTest {
 
     @Disabled("Mock server tests are disabled")
     @Test
-    fun list() {
+    fun listMembers() {
         val userService = client.organizations().users()
         stubFor(get(anyUrl()).willReturn(ok("[]")))
 
-        userService.list(
-            UserListParams.builder()
+        userService.listMembers(
+            UserListMembersParams.builder()
                 .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                 .putAdditionalHeader("Secret-Header", "42")
                 .putAdditionalQueryParam("secret_query_param", "42")
