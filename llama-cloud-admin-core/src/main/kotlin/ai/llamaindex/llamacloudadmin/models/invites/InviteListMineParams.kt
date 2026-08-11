@@ -1,18 +1,26 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package ai.llamaindex.llamacloudadmin.models.admin
+package ai.llamaindex.llamacloudadmin.models.invites
 
 import ai.llamaindex.llamacloudadmin.core.Params
 import ai.llamaindex.llamacloudadmin.core.http.Headers
 import ai.llamaindex.llamacloudadmin.core.http.QueryParams
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
-/** Return resolved S3 configuration and presigned URL signing details. */
-class AdminGetS3ConfigParams
+/** List the current user's pending invitations, cursor-paginated. */
+class InviteListMineParams
 private constructor(
+    private val pageSize: Long?,
+    private val pageToken: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    fun pageSize(): Optional<Long> = Optional.ofNullable(pageSize)
+
+    fun pageToken(): Optional<String> = Optional.ofNullable(pageToken)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -24,23 +32,44 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): AdminGetS3ConfigParams = builder().build()
+        @JvmStatic fun none(): InviteListMineParams = builder().build()
 
-        /** Returns a mutable builder for constructing an instance of [AdminGetS3ConfigParams]. */
+        /** Returns a mutable builder for constructing an instance of [InviteListMineParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [AdminGetS3ConfigParams]. */
+    /** A builder for [InviteListMineParams]. */
     class Builder internal constructor() {
 
+        private var pageSize: Long? = null
+        private var pageToken: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(adminGetS3ConfigParams: AdminGetS3ConfigParams) = apply {
-            additionalHeaders = adminGetS3ConfigParams.additionalHeaders.toBuilder()
-            additionalQueryParams = adminGetS3ConfigParams.additionalQueryParams.toBuilder()
+        internal fun from(inviteListMineParams: InviteListMineParams) = apply {
+            pageSize = inviteListMineParams.pageSize
+            pageToken = inviteListMineParams.pageToken
+            additionalHeaders = inviteListMineParams.additionalHeaders.toBuilder()
+            additionalQueryParams = inviteListMineParams.additionalQueryParams.toBuilder()
         }
+
+        fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
+
+        /**
+         * Alias for [Builder.pageSize].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
+
+        /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
+        fun pageSize(pageSize: Optional<Long>) = pageSize(pageSize.getOrNull())
+
+        fun pageToken(pageToken: String?) = apply { this.pageToken = pageToken }
+
+        /** Alias for calling [Builder.pageToken] with `pageToken.orElse(null)`. */
+        fun pageToken(pageToken: Optional<String>) = pageToken(pageToken.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -141,30 +170,45 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [AdminGetS3ConfigParams].
+         * Returns an immutable instance of [InviteListMineParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): AdminGetS3ConfigParams =
-            AdminGetS3ConfigParams(additionalHeaders.build(), additionalQueryParams.build())
+        fun build(): InviteListMineParams =
+            InviteListMineParams(
+                pageSize,
+                pageToken,
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
     }
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                pageSize?.let { put("page_size", it.toString()) }
+                pageToken?.let { put("page_token", it) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is AdminGetS3ConfigParams &&
+        return other is InviteListMineParams &&
+            pageSize == other.pageSize &&
+            pageToken == other.pageToken &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(pageSize, pageToken, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "AdminGetS3ConfigParams{additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "InviteListMineParams{pageSize=$pageSize, pageToken=$pageToken, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

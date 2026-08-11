@@ -8,9 +8,7 @@ import ai.llamaindex.llamacloudadmin.models.organizations.users.UserAddToProject
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserAssignRoleParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserDeleteParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsParams
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListRolesParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserRemoveFromProjectParams
-import kotlin.jvm.optionals.getOrNull
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -127,25 +125,6 @@ internal class UserServiceAsyncTest {
 
         val response = responseFuture.get()
         response.forEach { it.validate() }
-    }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun listRoles() {
-        val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
-        val userServiceAsync = client.organizations().users()
-
-        val userOrganizationRoleFuture =
-            userServiceAsync.listRoles(
-                UserListRolesParams.builder()
-                    .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .projectId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .build()
-            )
-
-        val userOrganizationRole = userOrganizationRoleFuture.get()
-        val unwrappedUserOrganizationRole = userOrganizationRole.getOrNull()
-        unwrappedUserOrganizationRole?.validate()
     }
 
     @Disabled("Mock server tests are disabled")

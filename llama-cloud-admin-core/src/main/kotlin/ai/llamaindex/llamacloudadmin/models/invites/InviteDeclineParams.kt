@@ -12,7 +12,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Decline a pending invitation. */
-class InviteDeleteParams
+class InviteDeclineParams
 private constructor(
     private val inviteId: String?,
     private val additionalHeaders: Headers,
@@ -35,13 +35,13 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): InviteDeleteParams = builder().build()
+        @JvmStatic fun none(): InviteDeclineParams = builder().build()
 
-        /** Returns a mutable builder for constructing an instance of [InviteDeleteParams]. */
+        /** Returns a mutable builder for constructing an instance of [InviteDeclineParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [InviteDeleteParams]. */
+    /** A builder for [InviteDeclineParams]. */
     class Builder internal constructor() {
 
         private var inviteId: String? = null
@@ -50,11 +50,11 @@ private constructor(
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(inviteDeleteParams: InviteDeleteParams) = apply {
-            inviteId = inviteDeleteParams.inviteId
-            additionalHeaders = inviteDeleteParams.additionalHeaders.toBuilder()
-            additionalQueryParams = inviteDeleteParams.additionalQueryParams.toBuilder()
-            additionalBodyProperties = inviteDeleteParams.additionalBodyProperties.toMutableMap()
+        internal fun from(inviteDeclineParams: InviteDeclineParams) = apply {
+            inviteId = inviteDeclineParams.inviteId
+            additionalHeaders = inviteDeclineParams.additionalHeaders.toBuilder()
+            additionalQueryParams = inviteDeclineParams.additionalQueryParams.toBuilder()
+            additionalBodyProperties = inviteDeclineParams.additionalBodyProperties.toMutableMap()
         }
 
         fun inviteId(inviteId: String?) = apply { this.inviteId = inviteId }
@@ -183,12 +183,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [InviteDeleteParams].
+         * Returns an immutable instance of [InviteDeclineParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): InviteDeleteParams =
-            InviteDeleteParams(
+        fun build(): InviteDeclineParams =
+            InviteDeclineParams(
                 inviteId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -214,7 +214,7 @@ private constructor(
             return true
         }
 
-        return other is InviteDeleteParams &&
+        return other is InviteDeclineParams &&
             inviteId == other.inviteId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
@@ -225,5 +225,5 @@ private constructor(
         Objects.hash(inviteId, additionalHeaders, additionalQueryParams, additionalBodyProperties)
 
     override fun toString() =
-        "InviteDeleteParams{inviteId=$inviteId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "InviteDeclineParams{inviteId=$inviteId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

@@ -71,16 +71,4 @@ internal class AdminServiceAsyncTest {
         val response = responseFuture.get()
         response.validate()
     }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun getS3Config() {
-        val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
-        val adminServiceAsync = client.admin()
-
-        val responseFuture = adminServiceAsync.getS3Config()
-
-        val response = responseFuture.get()
-        response.validate()
-    }
 }

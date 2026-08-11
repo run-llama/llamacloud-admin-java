@@ -6,16 +6,16 @@ import ai.llamaindex.llamacloudadmin.core.http.QueryParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class InviteListParamsTest {
+internal class InviteListMineParamsTest {
 
     @Test
     fun create() {
-        InviteListParams.builder().pageSize(0L).pageToken("page_token").build()
+        InviteListMineParams.builder().pageSize(0L).pageToken("page_token").build()
     }
 
     @Test
     fun queryParams() {
-        val params = InviteListParams.builder().pageSize(0L).pageToken("page_token").build()
+        val params = InviteListMineParams.builder().pageSize(0L).pageToken("page_token").build()
 
         val queryParams = params._queryParams()
 
@@ -27,7 +27,7 @@ internal class InviteListParamsTest {
 
     @Test
     fun queryParamsWithoutOptionalFields() {
-        val params = InviteListParams.builder().build()
+        val params = InviteListMineParams.builder().build()
 
         val queryParams = params._queryParams()
 
