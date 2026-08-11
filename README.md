@@ -1,41 +1,23 @@
 # Llama Cloud Admin Java API Library
 
+[![Maven Central](https://img.shields.io/maven-central/v/ai.llamaindex.llamacloudadmin/llama-cloud-admin)](https://central.sonatype.com/artifact/ai.llamaindex.llamacloudadmin/llama-cloud-admin/0.0.1)
+[![javadoc](https://javadoc.io/badge2/ai.llamaindex.llamacloudadmin/llama-cloud-admin/0.0.1/javadoc.svg)](https://javadoc.io/doc/ai.llamaindex.llamacloudadmin/llama-cloud-admin/0.0.1)
+
 The Llama Cloud Admin Java SDK provides convenient access to the [Llama Cloud Admin REST API](https://developers.llamaindex.ai/) from applications written in Java.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The REST API documentation can be found on [developers.llamaindex.ai](https://developers.llamaindex.ai/).
+The REST API documentation can be found on [developers.llamaindex.ai](https://developers.llamaindex.ai/). Javadocs are available on [javadoc.io](https://javadoc.io/doc/ai.llamaindex.llamacloudadmin/llama-cloud-admin/0.0.1).
 
 ## Installation
-
-This SDK is not published to Maven Central. Build it from source and install it into your local Maven
-repository (`~/.m2/repository`):
-
-```sh
-git clone https://github.com/run-llama/llamacloud-admin-java.git
-cd llamacloud-admin-java
-./gradlew publishToMavenLocal
-```
-
-Building requires JDK 21. The artifacts it produces target Java 8. `0.0.1` is a fixed placeholder
-version that is never incremented — re-run `publishToMavenLocal` from the commit you want.
 
 ### Gradle
 
 ```kotlin
-repositories {
-    mavenLocal()
-    mavenCentral()
-}
-
-dependencies {
-    implementation("ai.llamaindex:llama-cloud-admin:0.0.1")
-}
+implementation("ai.llamaindex:llama-cloud-admin:0.0.1")
 ```
 
 ### Maven
-
-Maven reads `~/.m2/repository` by default, so no extra repository configuration is needed:
 
 ```xml
 <dependency>
@@ -107,12 +89,9 @@ See this table for the available options:
 | Setter    | System property                    | Environment variable         | Required | Default value                       |
 | --------- | ---------------------------------- | ---------------------------- | -------- | ----------------------------------- |
 | `apiKey`  | `llamacloudadmin.llamaCloudApiKey` | `LLAMA_CLOUD_API_KEY`        | true     | -                                   |
-| `baseUrl` | `llamacloudadmin.baseUrl`          | `LLAMA_CLOUD_ADMIN_BASE_URL` | false    | `"https://api.cloud.llamaindex.ai"` |
+| `baseUrl` | `llamacloudadmin.baseUrl`          | `LLAMA_CLOUD_ADMIN_BASE_URL` | true     | `"https://api.cloud.llamaindex.ai"` |
 
 System properties take precedence over environment variables.
-
-Self-hosted and BYOC deployments must set `baseUrl` (or `LLAMA_CLOUD_ADMIN_BASE_URL`) to their own
-host, and must use an API key belonging to the deployment's global admin.
 
 > [!TIP]
 > Don't create more than one client in the same application. Each client has a connection pool and
@@ -273,12 +252,12 @@ import java.util.concurrent.CompletableFuture;
 
 CompletableFuture<OrganizationListPageAsync> pageFuture = client.async().organizations().list();
 
-pageFuture.thenAccept(page -> page.autoPager().subscribe(organization -> {
+pageFuture.thenRun(page -> page.autoPager().subscribe(organization -> {
     System.out.println(organization);
 }));
 
 // If you need to handle errors or completion of the stream
-pageFuture.thenAccept(page -> page.autoPager().subscribe(new AsyncStreamResponse.Handler<>() {
+pageFuture.thenRun(page -> page.autoPager().subscribe(new AsyncStreamResponse.Handler<>() {
     @Override
     public void onNext(Organization organization) {
         System.out.println(organization);
@@ -296,7 +275,7 @@ pageFuture.thenAccept(page -> page.autoPager().subscribe(new AsyncStreamResponse
 }));
 
 // Or use futures
-pageFuture.thenAccept(page -> page.autoPager()
+pageFuture.thenRun(page -> page.autoPager()
     .subscribe(organization -> {
         System.out.println(organization);
     })
@@ -715,7 +694,7 @@ Or configure the method call to validate the response using the `responseValidat
 ```java
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationMember;
 
-List<OrganizationMember> organizationMembers = client.organizations().users().listMembers("my-organization-id", RequestOptions.builder().responseValidation(true).build());
+List<OrganizationMember> organizationMembers = client.organizations().users().listMembers(RequestOptions.builder().responseValidation(true).build());
 ```
 
 Or configure the default for all method calls at the client level:
@@ -759,16 +738,13 @@ Checked exceptions:
 - Are tedious to propagate due to the [function coloring problem](https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function)
 - Don't play well with lambdas (also due to the function coloring problem)
 
-## Versioning
+## Semantic versioning
 
-This SDK has no published releases, git tags, or changelog, and the `0.0.1` version is a fixed
-placeholder. To get a reproducible build, check out a specific commit before building:
+This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) conventions, though certain backwards-incompatible changes may be released as minor versions:
 
-```sh
-git checkout <commit-sha>
-./gradlew publishToMavenLocal
-```
+1. Changes to library internals which are technically public but not intended or documented for external use. _(Please open a GitHub issue to let us know if you are relying on such internals.)_
+2. Changes that we do not expect to impact the vast majority of users in practice.
 
-Backwards-incompatible changes can land on the default branch.
+We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
 We are keen for your feedback; please open an [issue](https://www.github.com/run-llama/llamacloud-admin-java/issues) with questions, bugs, or suggestions.
