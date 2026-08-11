@@ -84,7 +84,7 @@ internal class OrganizationServiceAsyncTest {
         val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
         val organizationServiceAsync = client.organizations()
 
-        val responseFuture =
+        val usageAndPlanFuture =
             organizationServiceAsync.getUsage(
                 OrganizationGetUsageParams.builder()
                     .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
@@ -92,7 +92,7 @@ internal class OrganizationServiceAsyncTest {
                     .build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val usageAndPlan = usageAndPlanFuture.get()
+        usageAndPlan.validate()
     }
 }

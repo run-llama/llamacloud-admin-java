@@ -21,8 +21,6 @@ import ai.llamaindex.llamacloudadmin.models.projects.Project
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectCreateParams
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectDeleteParams
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectGetParams
-import ai.llamaindex.llamacloudadmin.models.projects.ProjectGetUsageParams
-import ai.llamaindex.llamacloudadmin.models.projects.ProjectGetUsageResponse
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectListPageAsync
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectListPageResponse
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectListParams
@@ -77,13 +75,6 @@ class ProjectServiceAsyncImpl internal constructor(private val clientOptions: Cl
     ): CompletableFuture<Project> =
         // get /api/v2/projects/{project_id}
         withRawResponse().get(params, requestOptions).thenApply { it.parse() }
-
-    override fun getUsage(
-        params: ProjectGetUsageParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<ProjectGetUsageResponse> =
-        // get /api/v1/projects/{project_id}/usage
-        withRawResponse().getUsage(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ProjectServiceAsync.WithRawResponse {
@@ -249,39 +240,6 @@ class ProjectServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     errorHandler.handle(response).parseable {
                         response
                             .use { getHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
-        }
-
-        private val getUsageHandler: Handler<ProjectGetUsageResponse> =
-            jsonHandler<ProjectGetUsageResponse>(clientOptions.jsonMapper)
-
-        override fun getUsage(
-            params: ProjectGetUsageParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<ProjectGetUsageResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("projectId", params.projectId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("api", "v1", "projects", params._pathParam(0), "usage")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { getUsageHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

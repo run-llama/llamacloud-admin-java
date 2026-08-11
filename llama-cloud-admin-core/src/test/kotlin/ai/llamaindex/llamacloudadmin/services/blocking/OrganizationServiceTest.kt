@@ -77,7 +77,7 @@ internal class OrganizationServiceTest {
         val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
         val organizationService = client.organizations()
 
-        val response =
+        val usageAndPlan =
             organizationService.getUsage(
                 OrganizationGetUsageParams.builder()
                     .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
@@ -85,6 +85,6 @@ internal class OrganizationServiceTest {
                     .build()
             )
 
-        response.validate()
+        usageAndPlan.validate()
     }
 }

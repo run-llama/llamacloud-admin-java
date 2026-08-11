@@ -22,11 +22,11 @@ import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationCreatePara
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationDeleteParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetUsageParams
-import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetUsageResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListPage
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListPageResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationUpdateParams
+import ai.llamaindex.llamacloudadmin.models.organizations.UsageAndPlan
 import ai.llamaindex.llamacloudadmin.services.blocking.organizations.RoleService
 import ai.llamaindex.llamacloudadmin.services.blocking.organizations.RoleServiceImpl
 import ai.llamaindex.llamacloudadmin.services.blocking.organizations.UserService
@@ -87,7 +87,7 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
     override fun getUsage(
         params: OrganizationGetUsageParams,
         requestOptions: RequestOptions,
-    ): OrganizationGetUsageResponse =
+    ): UsageAndPlan =
         // get /api/v1/organizations/{organization_id}/usage
         withRawResponse().getUsage(params, requestOptions).parse()
 
@@ -263,13 +263,13 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
             }
         }
 
-        private val getUsageHandler: Handler<OrganizationGetUsageResponse> =
-            jsonHandler<OrganizationGetUsageResponse>(clientOptions.jsonMapper)
+        private val getUsageHandler: Handler<UsageAndPlan> =
+            jsonHandler<UsageAndPlan>(clientOptions.jsonMapper)
 
         override fun getUsage(
             params: OrganizationGetUsageParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<OrganizationGetUsageResponse> {
+        ): HttpResponseFor<UsageAndPlan> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("organizationId", params.organizationId().getOrNull())
