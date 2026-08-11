@@ -8,16 +8,16 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class OrganizationGetUsageResponseTest {
+internal class UsageAndPlanTest {
 
     @Test
     fun create() {
-        val organizationGetUsageResponse =
-            OrganizationGetUsageResponse.builder()
+        val usageAndPlan =
+            UsageAndPlan.builder()
                 .plan(
-                    OrganizationGetUsageResponse.Plan.builder()
+                    UsageAndPlan.Plan.builder()
                         .limits(
-                            OrganizationGetUsageResponse.Plan.Limits.builder()
+                            UsageAndPlan.Plan.Limits.builder()
                                 .allowPayAsYouGo(true)
                                 .maxConcurrentIndexJobs(0L)
                                 .maxConcurrentParseJobsOther(0L)
@@ -47,15 +47,13 @@ internal class OrganizationGetUsageResponseTest {
                                 .addSpendingSoftAlertsUsdCent(0L)
                                 .build()
                         )
-                        .metronomePlanType(
-                            OrganizationGetUsageResponse.Plan.MetronomePlanType.CONTRACT
-                        )
+                        .metronomePlanType(UsageAndPlan.Plan.MetronomePlanType.CONTRACT)
                         .metronomeRateCardAlias("metronome_rate_card_alias")
-                        .name(OrganizationGetUsageResponse.Plan.Name.ENTERPRISE)
-                        .planFrequency(OrganizationGetUsageResponse.Plan.PlanFrequency.ANNUAL)
+                        .name(UsageAndPlan.Plan.Name.ENTERPRISE)
+                        .planFrequency(UsageAndPlan.Plan.PlanFrequency.ANNUAL)
                         .id("id")
                         .currentBillingPeriod(
-                            OrganizationGetUsageResponse.Plan.CurrentBillingPeriod.builder()
+                            UsageAndPlan.Plan.CurrentBillingPeriod.builder()
                                 .endDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .build()
@@ -65,11 +63,10 @@ internal class OrganizationGetUsageResponseTest {
                         .isPaymentFailed(true)
                         .metronomeCustomerId("metronome_customer_id")
                         .addRecurringCredit(
-                            OrganizationGetUsageResponse.Plan.RecurringCredit.builder()
+                            UsageAndPlan.Plan.RecurringCredit.builder()
                                 .creditAmount(0L)
                                 .creditType(
-                                    OrganizationGetUsageResponse.Plan.RecurringCredit.CreditType
-                                        .builder()
+                                    UsageAndPlan.Plan.RecurringCredit.CreditType.builder()
                                         .id("id")
                                         .name("name")
                                         .build()
@@ -85,13 +82,12 @@ internal class OrganizationGetUsageResponseTest {
                         .build()
                 )
                 .usage(
-                    OrganizationGetUsageResponse.Usage.builder()
+                    UsageAndPlan.Usage.builder()
                         .addActiveAlert(
-                            OrganizationGetUsageResponse.Usage.ActiveAlert
-                                .CONFIGURED_SPEND_LIMIT_EXCEEDED
+                            UsageAndPlan.Usage.ActiveAlert.CONFIGURED_SPEND_LIMIT_EXCEEDED
                         )
                         .addActiveFreeCreditsUsage(
-                            OrganizationGetUsageResponse.Usage.ActiveFreeCreditsUsage.builder()
+                            UsageAndPlan.Usage.ActiveFreeCreditsUsage.builder()
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .grantName("grant_name")
                                 .remainingBalance(0L)
@@ -107,11 +103,11 @@ internal class OrganizationGetUsageResponseTest {
                 )
                 .build()
 
-        assertThat(organizationGetUsageResponse.plan())
+        assertThat(usageAndPlan.plan())
             .isEqualTo(
-                OrganizationGetUsageResponse.Plan.builder()
+                UsageAndPlan.Plan.builder()
                     .limits(
-                        OrganizationGetUsageResponse.Plan.Limits.builder()
+                        UsageAndPlan.Plan.Limits.builder()
                             .allowPayAsYouGo(true)
                             .maxConcurrentIndexJobs(0L)
                             .maxConcurrentParseJobsOther(0L)
@@ -141,13 +137,13 @@ internal class OrganizationGetUsageResponseTest {
                             .addSpendingSoftAlertsUsdCent(0L)
                             .build()
                     )
-                    .metronomePlanType(OrganizationGetUsageResponse.Plan.MetronomePlanType.CONTRACT)
+                    .metronomePlanType(UsageAndPlan.Plan.MetronomePlanType.CONTRACT)
                     .metronomeRateCardAlias("metronome_rate_card_alias")
-                    .name(OrganizationGetUsageResponse.Plan.Name.ENTERPRISE)
-                    .planFrequency(OrganizationGetUsageResponse.Plan.PlanFrequency.ANNUAL)
+                    .name(UsageAndPlan.Plan.Name.ENTERPRISE)
+                    .planFrequency(UsageAndPlan.Plan.PlanFrequency.ANNUAL)
                     .id("id")
                     .currentBillingPeriod(
-                        OrganizationGetUsageResponse.Plan.CurrentBillingPeriod.builder()
+                        UsageAndPlan.Plan.CurrentBillingPeriod.builder()
                             .endDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .build()
@@ -157,11 +153,10 @@ internal class OrganizationGetUsageResponseTest {
                     .isPaymentFailed(true)
                     .metronomeCustomerId("metronome_customer_id")
                     .addRecurringCredit(
-                        OrganizationGetUsageResponse.Plan.RecurringCredit.builder()
+                        UsageAndPlan.Plan.RecurringCredit.builder()
                             .creditAmount(0L)
                             .creditType(
-                                OrganizationGetUsageResponse.Plan.RecurringCredit.CreditType
-                                    .builder()
+                                UsageAndPlan.Plan.RecurringCredit.CreditType.builder()
                                     .id("id")
                                     .name("name")
                                     .build()
@@ -176,15 +171,12 @@ internal class OrganizationGetUsageResponseTest {
                     .startingOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
-        assertThat(organizationGetUsageResponse.usage())
+        assertThat(usageAndPlan.usage())
             .isEqualTo(
-                OrganizationGetUsageResponse.Usage.builder()
-                    .addActiveAlert(
-                        OrganizationGetUsageResponse.Usage.ActiveAlert
-                            .CONFIGURED_SPEND_LIMIT_EXCEEDED
-                    )
+                UsageAndPlan.Usage.builder()
+                    .addActiveAlert(UsageAndPlan.Usage.ActiveAlert.CONFIGURED_SPEND_LIMIT_EXCEEDED)
                     .addActiveFreeCreditsUsage(
-                        OrganizationGetUsageResponse.Usage.ActiveFreeCreditsUsage.builder()
+                        UsageAndPlan.Usage.ActiveFreeCreditsUsage.builder()
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .grantName("grant_name")
                             .remainingBalance(0L)
@@ -203,12 +195,12 @@ internal class OrganizationGetUsageResponseTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val organizationGetUsageResponse =
-            OrganizationGetUsageResponse.builder()
+        val usageAndPlan =
+            UsageAndPlan.builder()
                 .plan(
-                    OrganizationGetUsageResponse.Plan.builder()
+                    UsageAndPlan.Plan.builder()
                         .limits(
-                            OrganizationGetUsageResponse.Plan.Limits.builder()
+                            UsageAndPlan.Plan.Limits.builder()
                                 .allowPayAsYouGo(true)
                                 .maxConcurrentIndexJobs(0L)
                                 .maxConcurrentParseJobsOther(0L)
@@ -238,15 +230,13 @@ internal class OrganizationGetUsageResponseTest {
                                 .addSpendingSoftAlertsUsdCent(0L)
                                 .build()
                         )
-                        .metronomePlanType(
-                            OrganizationGetUsageResponse.Plan.MetronomePlanType.CONTRACT
-                        )
+                        .metronomePlanType(UsageAndPlan.Plan.MetronomePlanType.CONTRACT)
                         .metronomeRateCardAlias("metronome_rate_card_alias")
-                        .name(OrganizationGetUsageResponse.Plan.Name.ENTERPRISE)
-                        .planFrequency(OrganizationGetUsageResponse.Plan.PlanFrequency.ANNUAL)
+                        .name(UsageAndPlan.Plan.Name.ENTERPRISE)
+                        .planFrequency(UsageAndPlan.Plan.PlanFrequency.ANNUAL)
                         .id("id")
                         .currentBillingPeriod(
-                            OrganizationGetUsageResponse.Plan.CurrentBillingPeriod.builder()
+                            UsageAndPlan.Plan.CurrentBillingPeriod.builder()
                                 .endDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .build()
@@ -256,11 +246,10 @@ internal class OrganizationGetUsageResponseTest {
                         .isPaymentFailed(true)
                         .metronomeCustomerId("metronome_customer_id")
                         .addRecurringCredit(
-                            OrganizationGetUsageResponse.Plan.RecurringCredit.builder()
+                            UsageAndPlan.Plan.RecurringCredit.builder()
                                 .creditAmount(0L)
                                 .creditType(
-                                    OrganizationGetUsageResponse.Plan.RecurringCredit.CreditType
-                                        .builder()
+                                    UsageAndPlan.Plan.RecurringCredit.CreditType.builder()
                                         .id("id")
                                         .name("name")
                                         .build()
@@ -276,13 +265,12 @@ internal class OrganizationGetUsageResponseTest {
                         .build()
                 )
                 .usage(
-                    OrganizationGetUsageResponse.Usage.builder()
+                    UsageAndPlan.Usage.builder()
                         .addActiveAlert(
-                            OrganizationGetUsageResponse.Usage.ActiveAlert
-                                .CONFIGURED_SPEND_LIMIT_EXCEEDED
+                            UsageAndPlan.Usage.ActiveAlert.CONFIGURED_SPEND_LIMIT_EXCEEDED
                         )
                         .addActiveFreeCreditsUsage(
-                            OrganizationGetUsageResponse.Usage.ActiveFreeCreditsUsage.builder()
+                            UsageAndPlan.Usage.ActiveFreeCreditsUsage.builder()
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .grantName("grant_name")
                                 .remainingBalance(0L)
@@ -298,12 +286,12 @@ internal class OrganizationGetUsageResponseTest {
                 )
                 .build()
 
-        val roundtrippedOrganizationGetUsageResponse =
+        val roundtrippedUsageAndPlan =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(organizationGetUsageResponse),
-                jacksonTypeRef<OrganizationGetUsageResponse>(),
+                jsonMapper.writeValueAsString(usageAndPlan),
+                jacksonTypeRef<UsageAndPlan>(),
             )
 
-        assertThat(roundtrippedOrganizationGetUsageResponse).isEqualTo(organizationGetUsageResponse)
+        assertThat(roundtrippedUsageAndPlan).isEqualTo(usageAndPlan)
     }
 }

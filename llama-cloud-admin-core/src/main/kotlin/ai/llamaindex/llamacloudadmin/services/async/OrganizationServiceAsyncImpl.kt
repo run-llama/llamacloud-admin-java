@@ -22,11 +22,11 @@ import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationCreatePara
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationDeleteParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetUsageParams
-import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetUsageResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListPageAsync
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListPageResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationUpdateParams
+import ai.llamaindex.llamacloudadmin.models.organizations.UsageAndPlan
 import ai.llamaindex.llamacloudadmin.services.async.organizations.RoleServiceAsync
 import ai.llamaindex.llamacloudadmin.services.async.organizations.RoleServiceAsyncImpl
 import ai.llamaindex.llamacloudadmin.services.async.organizations.UserServiceAsync
@@ -93,7 +93,7 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
     override fun getUsage(
         params: OrganizationGetUsageParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<OrganizationGetUsageResponse> =
+    ): CompletableFuture<UsageAndPlan> =
         // get /api/v1/organizations/{organization_id}/usage
         withRawResponse().getUsage(params, requestOptions).thenApply { it.parse() }
 
@@ -285,13 +285,13 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
                 }
         }
 
-        private val getUsageHandler: Handler<OrganizationGetUsageResponse> =
-            jsonHandler<OrganizationGetUsageResponse>(clientOptions.jsonMapper)
+        private val getUsageHandler: Handler<UsageAndPlan> =
+            jsonHandler<UsageAndPlan>(clientOptions.jsonMapper)
 
         override fun getUsage(
             params: OrganizationGetUsageParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<OrganizationGetUsageResponse>> {
+        ): CompletableFuture<HttpResponseFor<UsageAndPlan>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("organizationId", params.organizationId().getOrNull())
