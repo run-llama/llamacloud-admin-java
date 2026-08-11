@@ -5,16 +5,16 @@ package ai.llamaindex.llamacloudadmin.models.invites
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class InviteDeleteParamsTest {
+internal class InviteDeclineParamsTest {
 
     @Test
     fun create() {
-        InviteDeleteParams.builder().inviteId("invite_id").build()
+        InviteDeclineParams.builder().inviteId("invite_id").build()
     }
 
     @Test
     fun pathParams() {
-        val params = InviteDeleteParams.builder().inviteId("invite_id").build()
+        val params = InviteDeclineParams.builder().inviteId("invite_id").build()
 
         assertThat(params._pathParam(0)).isEqualTo("invite_id")
         // out-of-bound path param

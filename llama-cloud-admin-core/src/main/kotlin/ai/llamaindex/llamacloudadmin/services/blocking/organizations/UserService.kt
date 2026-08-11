@@ -16,11 +16,9 @@ import ai.llamaindex.llamacloudadmin.models.organizations.users.UserDeleteParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsResponse
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListRolesParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserRemoveFromProjectParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserRemoveFromProjectResponse
 import com.google.errorprone.annotations.MustBeClosed
-import java.util.Optional
 import java.util.function.Consumer
 
 interface UserService {
@@ -180,41 +178,6 @@ interface UserService {
         params: UserListProjectsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): List<UserListProjectsResponse>
-
-    /** Get the role of a user in an organization. */
-    fun listRoles(organizationId: String): Optional<UserOrganizationRole> =
-        listRoles(organizationId, UserListRolesParams.none())
-
-    /** @see listRoles */
-    fun listRoles(
-        organizationId: String,
-        params: UserListRolesParams = UserListRolesParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Optional<UserOrganizationRole> =
-        listRoles(params.toBuilder().organizationId(organizationId).build(), requestOptions)
-
-    /** @see listRoles */
-    fun listRoles(
-        organizationId: String,
-        params: UserListRolesParams = UserListRolesParams.none(),
-    ): Optional<UserOrganizationRole> = listRoles(organizationId, params, RequestOptions.none())
-
-    /** @see listRoles */
-    fun listRoles(
-        params: UserListRolesParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Optional<UserOrganizationRole>
-
-    /** @see listRoles */
-    fun listRoles(params: UserListRolesParams): Optional<UserOrganizationRole> =
-        listRoles(params, RequestOptions.none())
-
-    /** @see listRoles */
-    fun listRoles(
-        organizationId: String,
-        requestOptions: RequestOptions,
-    ): Optional<UserOrganizationRole> =
-        listRoles(organizationId, UserListRolesParams.none(), requestOptions)
 
     /** Remove a user from a project. */
     fun removeFromProject(
@@ -460,54 +423,6 @@ interface UserService {
             params: UserListProjectsParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<List<UserListProjectsResponse>>
-
-        /**
-         * Returns a raw HTTP response for `get
-         * /api/v1/organizations/{organization_id}/users/roles`, but is otherwise the same as
-         * [UserService.listRoles].
-         */
-        @MustBeClosed
-        fun listRoles(organizationId: String): HttpResponseFor<Optional<UserOrganizationRole>> =
-            listRoles(organizationId, UserListRolesParams.none())
-
-        /** @see listRoles */
-        @MustBeClosed
-        fun listRoles(
-            organizationId: String,
-            params: UserListRolesParams = UserListRolesParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Optional<UserOrganizationRole>> =
-            listRoles(params.toBuilder().organizationId(organizationId).build(), requestOptions)
-
-        /** @see listRoles */
-        @MustBeClosed
-        fun listRoles(
-            organizationId: String,
-            params: UserListRolesParams = UserListRolesParams.none(),
-        ): HttpResponseFor<Optional<UserOrganizationRole>> =
-            listRoles(organizationId, params, RequestOptions.none())
-
-        /** @see listRoles */
-        @MustBeClosed
-        fun listRoles(
-            params: UserListRolesParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Optional<UserOrganizationRole>>
-
-        /** @see listRoles */
-        @MustBeClosed
-        fun listRoles(
-            params: UserListRolesParams
-        ): HttpResponseFor<Optional<UserOrganizationRole>> =
-            listRoles(params, RequestOptions.none())
-
-        /** @see listRoles */
-        @MustBeClosed
-        fun listRoles(
-            organizationId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Optional<UserOrganizationRole>> =
-            listRoles(organizationId, UserListRolesParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete
