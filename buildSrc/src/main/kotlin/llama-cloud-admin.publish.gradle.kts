@@ -28,11 +28,7 @@ extra["signingInMemoryKeyId"] = System.getenv("GPG_SIGNING_KEY_ID")
 extra["signingInMemoryKeyPassword"] = System.getenv("GPG_SIGNING_PASSWORD")
 
 configure<MavenPublishBaseExtension> {
-    // Gate on having a key, not on an opt-in flag. This SDK is not published to
-    // Maven Central, so the only real invocation is a customer running
-    // `./gradlew publishToMavenLocal` on a clean machine — and with the flag form
-    // that failed with "no configured signatory" before producing any artifact.
-    if (!System.getenv("GPG_SIGNING_KEY").isNullOrBlank()) {
+    if (!project.hasProperty("publishLocal")) {
         signAllPublications()
         publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     }
