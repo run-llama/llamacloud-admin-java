@@ -21,8 +21,6 @@ import ai.llamaindex.llamacloudadmin.models.projects.Project
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectCreateParams
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectDeleteParams
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectGetParams
-import ai.llamaindex.llamacloudadmin.models.projects.ProjectGetUsageParams
-import ai.llamaindex.llamacloudadmin.models.projects.ProjectGetUsageResponse
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectListPage
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectListPageResponse
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectListParams
@@ -62,13 +60,6 @@ class ProjectServiceImpl internal constructor(private val clientOptions: ClientO
     override fun get(params: ProjectGetParams, requestOptions: RequestOptions): Project =
         // get /api/v2/projects/{project_id}
         withRawResponse().get(params, requestOptions).parse()
-
-    override fun getUsage(
-        params: ProjectGetUsageParams,
-        requestOptions: RequestOptions,
-    ): ProjectGetUsageResponse =
-        // get /api/v1/projects/{project_id}/usage
-        withRawResponse().getUsage(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ProjectService.WithRawResponse {
@@ -219,36 +210,6 @@ class ProjectServiceImpl internal constructor(private val clientOptions: ClientO
             return errorHandler.handle(response).parseable {
                 response
                     .use { getHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-        }
-
-        private val getUsageHandler: Handler<ProjectGetUsageResponse> =
-            jsonHandler<ProjectGetUsageResponse>(clientOptions.jsonMapper)
-
-        override fun getUsage(
-            params: ProjectGetUsageParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ProjectGetUsageResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("projectId", params.projectId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("api", "v1", "projects", params._pathParam(0), "usage")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { getUsageHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

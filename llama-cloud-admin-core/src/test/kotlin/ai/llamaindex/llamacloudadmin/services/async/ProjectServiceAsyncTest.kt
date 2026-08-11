@@ -6,7 +6,6 @@ import ai.llamaindex.llamacloudadmin.client.okhttp.LlamaCloudAdminOkHttpClientAs
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectCreateParams
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectDeleteParams
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectGetParams
-import ai.llamaindex.llamacloudadmin.models.projects.ProjectGetUsageParams
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectUpdateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -95,24 +94,5 @@ internal class ProjectServiceAsyncTest {
 
         val project = projectFuture.get()
         project.validate()
-    }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun getUsage() {
-        val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
-        val projectServiceAsync = client.projects()
-
-        val responseFuture =
-            projectServiceAsync.getUsage(
-                ProjectGetUsageParams.builder()
-                    .projectId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .getCurrentInvoiceTotal(true)
-                    .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .build()
-            )
-
-        val response = responseFuture.get()
-        response.validate()
     }
 }

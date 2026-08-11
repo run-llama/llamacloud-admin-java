@@ -21,7 +21,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class OrganizationGetUsageResponse
+class UsageAndPlan
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val plan: JsonField<Plan>,
@@ -78,7 +78,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [OrganizationGetUsageResponse].
+         * Returns a mutable builder for constructing an instance of [UsageAndPlan].
          *
          * The following fields are required:
          * ```java
@@ -89,7 +89,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [OrganizationGetUsageResponse]. */
+    /** A builder for [UsageAndPlan]. */
     class Builder internal constructor() {
 
         private var plan: JsonField<Plan>? = null
@@ -97,10 +97,10 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(organizationGetUsageResponse: OrganizationGetUsageResponse) = apply {
-            plan = organizationGetUsageResponse.plan
-            usage = organizationGetUsageResponse.usage
-            additionalProperties = organizationGetUsageResponse.additionalProperties.toMutableMap()
+        internal fun from(usageAndPlan: UsageAndPlan) = apply {
+            plan = usageAndPlan.plan
+            usage = usageAndPlan.usage
+            additionalProperties = usageAndPlan.additionalProperties.toMutableMap()
         }
 
         fun plan(plan: Plan) = plan(JsonField.of(plan))
@@ -144,7 +144,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [OrganizationGetUsageResponse].
+         * Returns an immutable instance of [UsageAndPlan].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -156,8 +156,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): OrganizationGetUsageResponse =
-            OrganizationGetUsageResponse(
+        fun build(): UsageAndPlan =
+            UsageAndPlan(
                 checkRequired("plan", plan),
                 checkRequired("usage", usage),
                 additionalProperties.toMutableMap(),
@@ -174,7 +174,7 @@ private constructor(
      * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match
      *   its expected type.
      */
-    fun validate(): OrganizationGetUsageResponse = apply {
+    fun validate(): UsageAndPlan = apply {
         if (validated) {
             return@apply
         }
@@ -4968,7 +4968,7 @@ private constructor(
             return true
         }
 
-        return other is OrganizationGetUsageResponse &&
+        return other is UsageAndPlan &&
             plan == other.plan &&
             usage == other.usage &&
             additionalProperties == other.additionalProperties
@@ -4979,5 +4979,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "OrganizationGetUsageResponse{plan=$plan, usage=$usage, additionalProperties=$additionalProperties}"
+        "UsageAndPlan{plan=$plan, usage=$usage, additionalProperties=$additionalProperties}"
 }

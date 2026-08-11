@@ -10,8 +10,6 @@ import ai.llamaindex.llamacloudadmin.models.projects.Project
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectCreateParams
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectDeleteParams
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectGetParams
-import ai.llamaindex.llamacloudadmin.models.projects.ProjectGetUsageParams
-import ai.llamaindex.llamacloudadmin.models.projects.ProjectGetUsageResponse
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectListPage
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectListParams
 import ai.llamaindex.llamacloudadmin.models.projects.ProjectUpdateParams
@@ -128,38 +126,6 @@ interface ProjectService {
     /** @see get */
     fun get(projectId: String, requestOptions: RequestOptions): Project =
         get(projectId, ProjectGetParams.none(), requestOptions)
-
-    /** Get usage for a project */
-    fun getUsage(projectId: String): ProjectGetUsageResponse =
-        getUsage(projectId, ProjectGetUsageParams.none())
-
-    /** @see getUsage */
-    fun getUsage(
-        projectId: String,
-        params: ProjectGetUsageParams = ProjectGetUsageParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ProjectGetUsageResponse =
-        getUsage(params.toBuilder().projectId(projectId).build(), requestOptions)
-
-    /** @see getUsage */
-    fun getUsage(
-        projectId: String,
-        params: ProjectGetUsageParams = ProjectGetUsageParams.none(),
-    ): ProjectGetUsageResponse = getUsage(projectId, params, RequestOptions.none())
-
-    /** @see getUsage */
-    fun getUsage(
-        params: ProjectGetUsageParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ProjectGetUsageResponse
-
-    /** @see getUsage */
-    fun getUsage(params: ProjectGetUsageParams): ProjectGetUsageResponse =
-        getUsage(params, RequestOptions.none())
-
-    /** @see getUsage */
-    fun getUsage(projectId: String, requestOptions: RequestOptions): ProjectGetUsageResponse =
-        getUsage(projectId, ProjectGetUsageParams.none(), requestOptions)
 
     /** A view of [ProjectService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -318,50 +284,5 @@ interface ProjectService {
         @MustBeClosed
         fun get(projectId: String, requestOptions: RequestOptions): HttpResponseFor<Project> =
             get(projectId, ProjectGetParams.none(), requestOptions)
-
-        /**
-         * Returns a raw HTTP response for `get /api/v1/projects/{project_id}/usage`, but is
-         * otherwise the same as [ProjectService.getUsage].
-         */
-        @MustBeClosed
-        fun getUsage(projectId: String): HttpResponseFor<ProjectGetUsageResponse> =
-            getUsage(projectId, ProjectGetUsageParams.none())
-
-        /** @see getUsage */
-        @MustBeClosed
-        fun getUsage(
-            projectId: String,
-            params: ProjectGetUsageParams = ProjectGetUsageParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ProjectGetUsageResponse> =
-            getUsage(params.toBuilder().projectId(projectId).build(), requestOptions)
-
-        /** @see getUsage */
-        @MustBeClosed
-        fun getUsage(
-            projectId: String,
-            params: ProjectGetUsageParams = ProjectGetUsageParams.none(),
-        ): HttpResponseFor<ProjectGetUsageResponse> =
-            getUsage(projectId, params, RequestOptions.none())
-
-        /** @see getUsage */
-        @MustBeClosed
-        fun getUsage(
-            params: ProjectGetUsageParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ProjectGetUsageResponse>
-
-        /** @see getUsage */
-        @MustBeClosed
-        fun getUsage(params: ProjectGetUsageParams): HttpResponseFor<ProjectGetUsageResponse> =
-            getUsage(params, RequestOptions.none())
-
-        /** @see getUsage */
-        @MustBeClosed
-        fun getUsage(
-            projectId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ProjectGetUsageResponse> =
-            getUsage(projectId, ProjectGetUsageParams.none(), requestOptions)
     }
 }
