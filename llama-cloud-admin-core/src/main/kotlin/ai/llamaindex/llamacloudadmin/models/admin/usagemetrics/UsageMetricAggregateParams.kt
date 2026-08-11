@@ -342,8 +342,6 @@ private constructor(
 
             @JvmField val EXTRACTION_NUM_PAGES = of("extraction_num_pages")
 
-            @JvmField val EXTRACTION_NUM_PAGES_PARSED = of("extraction_num_pages_parsed")
-
             @JvmField val FORM_PARSING_PAGES = of("form_parsing_pages")
 
             @JvmField val IMAGE_CLASSIFIED = of("image_classified")
@@ -397,7 +395,6 @@ private constructor(
             DIRECTORY_FILES_INGESTED,
             DIRECTORY_PAGES_EXPORTED,
             EXTRACTION_NUM_PAGES,
-            EXTRACTION_NUM_PAGES_PARSED,
             FORM_PARSING_PAGES,
             IMAGE_CLASSIFIED,
             INDEX_RETRIEVE_QUERY,
@@ -440,7 +437,6 @@ private constructor(
             DIRECTORY_FILES_INGESTED,
             DIRECTORY_PAGES_EXPORTED,
             EXTRACTION_NUM_PAGES,
-            EXTRACTION_NUM_PAGES_PARSED,
             FORM_PARSING_PAGES,
             IMAGE_CLASSIFIED,
             INDEX_RETRIEVE_QUERY,
@@ -486,7 +482,6 @@ private constructor(
                 DIRECTORY_FILES_INGESTED -> Value.DIRECTORY_FILES_INGESTED
                 DIRECTORY_PAGES_EXPORTED -> Value.DIRECTORY_PAGES_EXPORTED
                 EXTRACTION_NUM_PAGES -> Value.EXTRACTION_NUM_PAGES
-                EXTRACTION_NUM_PAGES_PARSED -> Value.EXTRACTION_NUM_PAGES_PARSED
                 FORM_PARSING_PAGES -> Value.FORM_PARSING_PAGES
                 IMAGE_CLASSIFIED -> Value.IMAGE_CLASSIFIED
                 INDEX_RETRIEVE_QUERY -> Value.INDEX_RETRIEVE_QUERY
@@ -531,7 +526,6 @@ private constructor(
                 DIRECTORY_FILES_INGESTED -> Known.DIRECTORY_FILES_INGESTED
                 DIRECTORY_PAGES_EXPORTED -> Known.DIRECTORY_PAGES_EXPORTED
                 EXTRACTION_NUM_PAGES -> Known.EXTRACTION_NUM_PAGES
-                EXTRACTION_NUM_PAGES_PARSED -> Known.EXTRACTION_NUM_PAGES_PARSED
                 FORM_PARSING_PAGES -> Known.FORM_PARSING_PAGES
                 IMAGE_CLASSIFIED -> Known.IMAGE_CLASSIFIED
                 INDEX_RETRIEVE_QUERY -> Known.INDEX_RETRIEVE_QUERY

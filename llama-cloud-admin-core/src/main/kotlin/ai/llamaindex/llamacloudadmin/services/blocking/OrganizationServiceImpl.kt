@@ -21,6 +21,8 @@ import ai.llamaindex.llamacloudadmin.models.organizations.Organization
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationCreateParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationDeleteParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetParams
+import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetUsageParams
+import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetUsageResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListPage
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListPageResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListParams
@@ -81,6 +83,13 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
     override fun get(params: OrganizationGetParams, requestOptions: RequestOptions): Organization =
         // get /api/v2/organizations/{organization_id}
         withRawResponse().get(params, requestOptions).parse()
+
+    override fun getUsage(
+        params: OrganizationGetUsageParams,
+        requestOptions: RequestOptions,
+    ): OrganizationGetUsageResponse =
+        // get /api/v1/organizations/{organization_id}/usage
+        withRawResponse().getUsage(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         OrganizationService.WithRawResponse {
@@ -246,6 +255,36 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
             return errorHandler.handle(response).parseable {
                 response
                     .use { getHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val getUsageHandler: Handler<OrganizationGetUsageResponse> =
+            jsonHandler<OrganizationGetUsageResponse>(clientOptions.jsonMapper)
+
+        override fun getUsage(
+            params: OrganizationGetUsageParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<OrganizationGetUsageResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("organizationId", params.organizationId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "organizations", params._pathParam(0), "usage")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { getUsageHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

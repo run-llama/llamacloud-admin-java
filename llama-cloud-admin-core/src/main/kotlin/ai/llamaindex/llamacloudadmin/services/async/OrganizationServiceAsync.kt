@@ -10,6 +10,8 @@ import ai.llamaindex.llamacloudadmin.models.organizations.Organization
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationCreateParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationDeleteParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetParams
+import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetUsageParams
+import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetUsageResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListPageAsync
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationUpdateParams
@@ -154,6 +156,43 @@ interface OrganizationServiceAsync {
         requestOptions: RequestOptions,
     ): CompletableFuture<Organization> =
         get(organizationId, OrganizationGetParams.none(), requestOptions)
+
+    /** Get usage for a specific organization. */
+    fun getUsage(organizationId: String): CompletableFuture<OrganizationGetUsageResponse> =
+        getUsage(organizationId, OrganizationGetUsageParams.none())
+
+    /** @see getUsage */
+    fun getUsage(
+        organizationId: String,
+        params: OrganizationGetUsageParams = OrganizationGetUsageParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<OrganizationGetUsageResponse> =
+        getUsage(params.toBuilder().organizationId(organizationId).build(), requestOptions)
+
+    /** @see getUsage */
+    fun getUsage(
+        organizationId: String,
+        params: OrganizationGetUsageParams = OrganizationGetUsageParams.none(),
+    ): CompletableFuture<OrganizationGetUsageResponse> =
+        getUsage(organizationId, params, RequestOptions.none())
+
+    /** @see getUsage */
+    fun getUsage(
+        params: OrganizationGetUsageParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<OrganizationGetUsageResponse>
+
+    /** @see getUsage */
+    fun getUsage(
+        params: OrganizationGetUsageParams
+    ): CompletableFuture<OrganizationGetUsageResponse> = getUsage(params, RequestOptions.none())
+
+    /** @see getUsage */
+    fun getUsage(
+        organizationId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<OrganizationGetUsageResponse> =
+        getUsage(organizationId, OrganizationGetUsageParams.none(), requestOptions)
 
     /**
      * A view of [OrganizationServiceAsync] that provides access to raw HTTP responses for each
@@ -318,5 +357,48 @@ interface OrganizationServiceAsync {
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<Organization>> =
             get(organizationId, OrganizationGetParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /api/v1/organizations/{organization_id}/usage`, but
+         * is otherwise the same as [OrganizationServiceAsync.getUsage].
+         */
+        fun getUsage(
+            organizationId: String
+        ): CompletableFuture<HttpResponseFor<OrganizationGetUsageResponse>> =
+            getUsage(organizationId, OrganizationGetUsageParams.none())
+
+        /** @see getUsage */
+        fun getUsage(
+            organizationId: String,
+            params: OrganizationGetUsageParams = OrganizationGetUsageParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<OrganizationGetUsageResponse>> =
+            getUsage(params.toBuilder().organizationId(organizationId).build(), requestOptions)
+
+        /** @see getUsage */
+        fun getUsage(
+            organizationId: String,
+            params: OrganizationGetUsageParams = OrganizationGetUsageParams.none(),
+        ): CompletableFuture<HttpResponseFor<OrganizationGetUsageResponse>> =
+            getUsage(organizationId, params, RequestOptions.none())
+
+        /** @see getUsage */
+        fun getUsage(
+            params: OrganizationGetUsageParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<OrganizationGetUsageResponse>>
+
+        /** @see getUsage */
+        fun getUsage(
+            params: OrganizationGetUsageParams
+        ): CompletableFuture<HttpResponseFor<OrganizationGetUsageResponse>> =
+            getUsage(params, RequestOptions.none())
+
+        /** @see getUsage */
+        fun getUsage(
+            organizationId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<OrganizationGetUsageResponse>> =
+            getUsage(organizationId, OrganizationGetUsageParams.none(), requestOptions)
     }
 }

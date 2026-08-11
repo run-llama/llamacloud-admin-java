@@ -4,6 +4,7 @@ package ai.llamaindex.llamacloudadmin.services.blocking
 
 import ai.llamaindex.llamacloudadmin.client.okhttp.LlamaCloudAdminOkHttpClient
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationCreateParams
+import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetUsageParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationUpdateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -68,5 +69,22 @@ internal class OrganizationServiceTest {
         val organization = organizationService.get("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
 
         organization.validate()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun getUsage() {
+        val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
+        val organizationService = client.organizations()
+
+        val response =
+            organizationService.getUsage(
+                OrganizationGetUsageParams.builder()
+                    .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+                    .getCurrentInvoiceTotal(true)
+                    .build()
+            )
+
+        response.validate()
     }
 }
