@@ -27,10 +27,8 @@ import ai.llamaindex.llamacloudadmin.models.organizations.users.UserDeleteParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsResponse
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListRolesParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserRemoveFromProjectParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserRemoveFromProjectResponse
-import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -88,13 +86,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
     ): CompletableFuture<List<UserListProjectsResponse>> =
         // get /api/v1/organizations/{organization_id}/users/{user_id}/projects
         withRawResponse().listProjects(params, requestOptions).thenApply { it.parse() }
-
-    override fun listRoles(
-        params: UserListRolesParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Optional<UserOrganizationRole>> =
-        // get /api/v1/organizations/{organization_id}/users/roles
-        withRawResponse().listRoles(params, requestOptions).thenApply { it.parse() }
 
     override fun removeFromProject(
         params: UserRemoveFromProjectParams,
@@ -335,46 +326,6 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.forEach { it.validate() }
-                                }
-                            }
-                    }
-                }
-        }
-
-        private val listRolesHandler: Handler<Optional<UserOrganizationRole>> =
-            jsonHandler<Optional<UserOrganizationRole>>(clientOptions.jsonMapper)
-
-        override fun listRoles(
-            params: UserListRolesParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Optional<UserOrganizationRole>>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("organizationId", params.organizationId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "api",
-                        "v1",
-                        "organizations",
-                        params._pathParam(0),
-                        "users",
-                        "roles",
-                    )
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listRolesHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.ifPresent { it.validate() }
                                 }
                             }
                     }

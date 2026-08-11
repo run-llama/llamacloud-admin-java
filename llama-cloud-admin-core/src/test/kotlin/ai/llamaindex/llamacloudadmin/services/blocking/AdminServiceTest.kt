@@ -66,15 +66,4 @@ internal class AdminServiceTest {
 
         response.validate()
     }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun getS3Config() {
-        val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
-        val adminService = client.admin()
-
-        val response = adminService.getS3Config()
-
-        response.validate()
-    }
 }

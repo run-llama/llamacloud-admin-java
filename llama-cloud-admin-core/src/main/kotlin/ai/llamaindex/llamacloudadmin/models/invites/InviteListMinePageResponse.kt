@@ -20,7 +20,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Paginated response for the current user's pending invitations. */
-class InviteListPageResponse
+class InviteListMinePageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val items: JsonField<List<Invite>>,
@@ -102,7 +102,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [InviteListPageResponse].
+         * Returns a mutable builder for constructing an instance of [InviteListMinePageResponse].
          *
          * The following fields are required:
          * ```java
@@ -112,7 +112,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [InviteListPageResponse]. */
+    /** A builder for [InviteListMinePageResponse]. */
     class Builder internal constructor() {
 
         private var items: JsonField<MutableList<Invite>>? = null
@@ -121,11 +121,11 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(inviteListPageResponse: InviteListPageResponse) = apply {
-            items = inviteListPageResponse.items.map { it.toMutableList() }
-            nextPageToken = inviteListPageResponse.nextPageToken
-            totalSize = inviteListPageResponse.totalSize
-            additionalProperties = inviteListPageResponse.additionalProperties.toMutableMap()
+        internal fun from(inviteListMinePageResponse: InviteListMinePageResponse) = apply {
+            items = inviteListMinePageResponse.items.map { it.toMutableList() }
+            nextPageToken = inviteListMinePageResponse.nextPageToken
+            totalSize = inviteListMinePageResponse.totalSize
+            additionalProperties = inviteListMinePageResponse.additionalProperties.toMutableMap()
         }
 
         /** The list of items. */
@@ -218,7 +218,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [InviteListPageResponse].
+         * Returns an immutable instance of [InviteListMinePageResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -229,8 +229,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): InviteListPageResponse =
-            InviteListPageResponse(
+        fun build(): InviteListMinePageResponse =
+            InviteListMinePageResponse(
                 checkRequired("items", items).map { it.toImmutable() },
                 nextPageToken,
                 totalSize,
@@ -248,7 +248,7 @@ private constructor(
      * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match
      *   its expected type.
      */
-    fun validate(): InviteListPageResponse = apply {
+    fun validate(): InviteListMinePageResponse = apply {
         if (validated) {
             return@apply
         }
@@ -283,7 +283,7 @@ private constructor(
             return true
         }
 
-        return other is InviteListPageResponse &&
+        return other is InviteListMinePageResponse &&
             items == other.items &&
             nextPageToken == other.nextPageToken &&
             totalSize == other.totalSize &&
@@ -297,5 +297,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "InviteListPageResponse{items=$items, nextPageToken=$nextPageToken, totalSize=$totalSize, additionalProperties=$additionalProperties}"
+        "InviteListMinePageResponse{items=$items, nextPageToken=$nextPageToken, totalSize=$totalSize, additionalProperties=$additionalProperties}"
 }

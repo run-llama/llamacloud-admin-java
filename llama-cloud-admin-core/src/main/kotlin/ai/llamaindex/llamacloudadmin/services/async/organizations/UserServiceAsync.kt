@@ -16,10 +16,8 @@ import ai.llamaindex.llamacloudadmin.models.organizations.users.UserDeleteParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsResponse
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListRolesParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserRemoveFromProjectParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserRemoveFromProjectResponse
-import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -199,42 +197,6 @@ interface UserServiceAsync {
         params: UserListProjectsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<List<UserListProjectsResponse>>
-
-    /** Get the role of a user in an organization. */
-    fun listRoles(organizationId: String): CompletableFuture<Optional<UserOrganizationRole>> =
-        listRoles(organizationId, UserListRolesParams.none())
-
-    /** @see listRoles */
-    fun listRoles(
-        organizationId: String,
-        params: UserListRolesParams = UserListRolesParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Optional<UserOrganizationRole>> =
-        listRoles(params.toBuilder().organizationId(organizationId).build(), requestOptions)
-
-    /** @see listRoles */
-    fun listRoles(
-        organizationId: String,
-        params: UserListRolesParams = UserListRolesParams.none(),
-    ): CompletableFuture<Optional<UserOrganizationRole>> =
-        listRoles(organizationId, params, RequestOptions.none())
-
-    /** @see listRoles */
-    fun listRoles(
-        params: UserListRolesParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Optional<UserOrganizationRole>>
-
-    /** @see listRoles */
-    fun listRoles(params: UserListRolesParams): CompletableFuture<Optional<UserOrganizationRole>> =
-        listRoles(params, RequestOptions.none())
-
-    /** @see listRoles */
-    fun listRoles(
-        organizationId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Optional<UserOrganizationRole>> =
-        listRoles(organizationId, UserListRolesParams.none(), requestOptions)
 
     /** Remove a user from a project. */
     fun removeFromProject(
@@ -469,50 +431,6 @@ interface UserServiceAsync {
             params: UserListProjectsParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<List<UserListProjectsResponse>>>
-
-        /**
-         * Returns a raw HTTP response for `get
-         * /api/v1/organizations/{organization_id}/users/roles`, but is otherwise the same as
-         * [UserServiceAsync.listRoles].
-         */
-        fun listRoles(
-            organizationId: String
-        ): CompletableFuture<HttpResponseFor<Optional<UserOrganizationRole>>> =
-            listRoles(organizationId, UserListRolesParams.none())
-
-        /** @see listRoles */
-        fun listRoles(
-            organizationId: String,
-            params: UserListRolesParams = UserListRolesParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Optional<UserOrganizationRole>>> =
-            listRoles(params.toBuilder().organizationId(organizationId).build(), requestOptions)
-
-        /** @see listRoles */
-        fun listRoles(
-            organizationId: String,
-            params: UserListRolesParams = UserListRolesParams.none(),
-        ): CompletableFuture<HttpResponseFor<Optional<UserOrganizationRole>>> =
-            listRoles(organizationId, params, RequestOptions.none())
-
-        /** @see listRoles */
-        fun listRoles(
-            params: UserListRolesParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Optional<UserOrganizationRole>>>
-
-        /** @see listRoles */
-        fun listRoles(
-            params: UserListRolesParams
-        ): CompletableFuture<HttpResponseFor<Optional<UserOrganizationRole>>> =
-            listRoles(params, RequestOptions.none())
-
-        /** @see listRoles */
-        fun listRoles(
-            organizationId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Optional<UserOrganizationRole>>> =
-            listRoles(organizationId, UserListRolesParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete

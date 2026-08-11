@@ -10,54 +10,54 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** @see InviteService.list */
-class InviteListPage
+/** @see InviteService.listMine */
+class InviteListMinePage
 private constructor(
     private val service: InviteService,
-    private val params: InviteListParams,
-    private val response: InviteListPageResponse,
+    private val params: InviteListMineParams,
+    private val response: InviteListMinePageResponse,
 ) : Page<Invite> {
 
     /**
-     * Delegates to [InviteListPageResponse], but gracefully handles missing data.
+     * Delegates to [InviteListMinePageResponse], but gracefully handles missing data.
      *
-     * @see InviteListPageResponse.items
+     * @see InviteListMinePageResponse.items
      */
     override fun items(): List<Invite> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
     /**
-     * Delegates to [InviteListPageResponse], but gracefully handles missing data.
+     * Delegates to [InviteListMinePageResponse], but gracefully handles missing data.
      *
-     * @see InviteListPageResponse.nextPageToken
+     * @see InviteListMinePageResponse.nextPageToken
      */
     fun nextPageToken(): Optional<String> = response._nextPageToken().getOptional("next_page_token")
 
     override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageToken().isPresent
 
-    fun nextPageParams(): InviteListParams {
+    fun nextPageParams(): InviteListMineParams {
         val nextCursor =
             nextPageToken().getOrNull()
                 ?: throw IllegalStateException("Cannot construct next page params")
         return params.toBuilder().pageToken(nextCursor).build()
     }
 
-    override fun nextPage(): InviteListPage = service.list(nextPageParams())
+    override fun nextPage(): InviteListMinePage = service.listMine(nextPageParams())
 
     fun autoPager(): AutoPager<Invite> = AutoPager.from(this)
 
     /** The parameters that were used to request this page. */
-    fun params(): InviteListParams = params
+    fun params(): InviteListMineParams = params
 
     /** The response that this page was parsed from. */
-    fun response(): InviteListPageResponse = response
+    fun response(): InviteListMinePageResponse = response
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [InviteListPage].
+         * Returns a mutable builder for constructing an instance of [InviteListMinePage].
          *
          * The following fields are required:
          * ```java
@@ -69,30 +69,30 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [InviteListPage]. */
+    /** A builder for [InviteListMinePage]. */
     class Builder internal constructor() {
 
         private var service: InviteService? = null
-        private var params: InviteListParams? = null
-        private var response: InviteListPageResponse? = null
+        private var params: InviteListMineParams? = null
+        private var response: InviteListMinePageResponse? = null
 
         @JvmSynthetic
-        internal fun from(inviteListPage: InviteListPage) = apply {
-            service = inviteListPage.service
-            params = inviteListPage.params
-            response = inviteListPage.response
+        internal fun from(inviteListMinePage: InviteListMinePage) = apply {
+            service = inviteListMinePage.service
+            params = inviteListMinePage.params
+            response = inviteListMinePage.response
         }
 
         fun service(service: InviteService) = apply { this.service = service }
 
         /** The parameters that were used to request this page. */
-        fun params(params: InviteListParams) = apply { this.params = params }
+        fun params(params: InviteListMineParams) = apply { this.params = params }
 
         /** The response that this page was parsed from. */
-        fun response(response: InviteListPageResponse) = apply { this.response = response }
+        fun response(response: InviteListMinePageResponse) = apply { this.response = response }
 
         /**
-         * Returns an immutable instance of [InviteListPage].
+         * Returns an immutable instance of [InviteListMinePage].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -105,8 +105,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): InviteListPage =
-            InviteListPage(
+        fun build(): InviteListMinePage =
+            InviteListMinePage(
                 checkRequired("service", service),
                 checkRequired("params", params),
                 checkRequired("response", response),
@@ -118,7 +118,7 @@ private constructor(
             return true
         }
 
-        return other is InviteListPage &&
+        return other is InviteListMinePage &&
             service == other.service &&
             params == other.params &&
             response == other.response
@@ -126,5 +126,6 @@ private constructor(
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() = "InviteListPage{service=$service, params=$params, response=$response}"
+    override fun toString() =
+        "InviteListMinePage{service=$service, params=$params, response=$response}"
 }
