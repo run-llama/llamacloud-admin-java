@@ -28,51 +28,46 @@ internal class ServiceParamsTest {
 
     @BeforeEach
     fun beforeEach(wmRuntimeInfo: WireMockRuntimeInfo) {
-        client =
-            LlamaCloudAdminOkHttpClient.builder()
-                .baseUrl(wmRuntimeInfo.httpBaseUrl)
-                .apiKey("My API Key")
-                .build()
+      client = LlamaCloudAdminOkHttpClient.builder()
+          .baseUrl(wmRuntimeInfo.httpBaseUrl)
+          .apiKey("My API Key")
+          .build()
     }
 
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val organizationService = client.organizations()
-        stubFor(get(anyUrl()).willReturn(ok("{}")))
+      val organizationService = client.organizations()
+      stubFor(get(anyUrl()).willReturn(ok("{}")))
 
-        organizationService.list(
-            OrganizationListParams.builder()
-                .putAdditionalHeader("Secret-Header", "42")
-                .putAdditionalQueryParam("secret_query_param", "42")
-                .build()
-        )
+      organizationService.list(OrganizationListParams.builder()
+          .putAdditionalHeader("Secret-Header", "42")
+          .putAdditionalQueryParam("secret_query_param", "42")
+          .build())
 
-        verify(
-            getRequestedFor(anyUrl())
-                .withHeader("Secret-Header", equalTo("42"))
-                .withQueryParam("secret_query_param", equalTo("42"))
-        )
+      verify(
+          getRequestedFor(anyUrl())
+              .withHeader("Secret-Header", equalTo("42"))
+              .withQueryParam("secret_query_param", equalTo("42"))
+      )
     }
 
     @Disabled("Mock server tests are disabled")
     @Test
     fun listMembers() {
-        val userService = client.organizations().users()
-        stubFor(get(anyUrl()).willReturn(ok("[]")))
+      val userService = client.organizations().users()
+      stubFor(get(anyUrl()).willReturn(ok("[]")))
 
-        userService.listMembers(
-            UserListMembersParams.builder()
-                .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .putAdditionalHeader("Secret-Header", "42")
-                .putAdditionalQueryParam("secret_query_param", "42")
-                .build()
-        )
+      userService.listMembers(UserListMembersParams.builder()
+          .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .putAdditionalHeader("Secret-Header", "42")
+          .putAdditionalQueryParam("secret_query_param", "42")
+          .build())
 
-        verify(
-            getRequestedFor(anyUrl())
-                .withHeader("Secret-Header", equalTo("42"))
-                .withQueryParam("secret_query_param", equalTo("42"))
-        )
+      verify(
+          getRequestedFor(anyUrl())
+              .withHeader("Secret-Header", equalTo("42"))
+              .withQueryParam("secret_query_param", equalTo("42"))
+      )
     }
 }

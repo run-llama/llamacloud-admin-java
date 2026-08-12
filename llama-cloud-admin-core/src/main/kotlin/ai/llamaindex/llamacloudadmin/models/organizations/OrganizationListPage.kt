@@ -5,17 +5,20 @@ package ai.llamaindex.llamacloudadmin.models.organizations
 import ai.llamaindex.llamacloudadmin.core.AutoPager
 import ai.llamaindex.llamacloudadmin.core.Page
 import ai.llamaindex.llamacloudadmin.core.checkRequired
+import ai.llamaindex.llamacloudadmin.models.organizations.Organization
+import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListPageResponse
+import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListParams
 import ai.llamaindex.llamacloudadmin.services.blocking.OrganizationService
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** @see OrganizationService.list */
-class OrganizationListPage
-private constructor(
+class OrganizationListPage private constructor(
     private val service: OrganizationService,
     private val params: OrganizationListParams,
     private val response: OrganizationListPageResponse,
+
 ) : Page<Organization> {
 
     /**
@@ -23,8 +26,7 @@ private constructor(
      *
      * @see OrganizationListPageResponse.items
      */
-    override fun items(): List<Organization> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<Organization> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     /**
      * Delegates to [OrganizationListPageResponse], but gracefully handles missing data.
@@ -36,10 +38,10 @@ private constructor(
     override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageToken().isPresent
 
     fun nextPageParams(): OrganizationListParams {
-        val nextCursor =
-            nextPageToken().getOrNull()
-                ?: throw IllegalStateException("Cannot construct next page params")
-        return params.toBuilder().pageToken(nextCursor).build()
+      val nextCursor = nextPageToken().getOrNull() ?: throw IllegalStateException("Cannot construct next page params")
+      return params.toBuilder()
+          .pageToken(nextCursor)
+          .build()
     }
 
     override fun nextPage(): OrganizationListPage = service.list(nextPageParams())
@@ -60,13 +62,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [OrganizationListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [OrganizationListPage]. */
@@ -77,19 +81,29 @@ private constructor(
         private var response: OrganizationListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(organizationListPage: OrganizationListPage) = apply {
-            service = organizationListPage.service
-            params = organizationListPage.params
-            response = organizationListPage.response
-        }
+        internal fun from(organizationListPage: OrganizationListPage) =
+            apply {
+                service = organizationListPage.service
+                params = organizationListPage.params
+                response = organizationListPage.response
+            }
 
-        fun service(service: OrganizationService) = apply { this.service = service }
+        fun service(service: OrganizationService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: OrganizationListParams) = apply { this.params = params }
+        fun params(params: OrganizationListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: OrganizationListPageResponse) = apply { this.response = response }
+        fun response(response: OrganizationListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [OrganizationListPage].
@@ -97,6 +111,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -107,25 +122,27 @@ private constructor(
          */
         fun build(): OrganizationListPage =
             OrganizationListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is OrganizationListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is OrganizationListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "OrganizationListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "OrganizationListPage{service=$service, params=$params, response=$response}"
 }

@@ -2,6 +2,7 @@
 
 package ai.llamaindex.llamacloudadmin.core.http
 
+import ai.llamaindex.llamacloudadmin.core.http.Headers
 import java.io.InputStream
 
 interface HttpResponse : AutoCloseable {

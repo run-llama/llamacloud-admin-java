@@ -12,24 +12,23 @@ internal class UsageMetricServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun aggregate() {
-        val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
-        val usageMetricServiceAsync = client.admin().usageMetrics()
+      val client = LlamaCloudAdminOkHttpClientAsync.builder()
+          .apiKey("My API Key")
+          .build()
+      val usageMetricServiceAsync = client.admin().usageMetrics()
 
-        val responseFuture =
-            usageMetricServiceAsync.aggregate(
-                UsageMetricAggregateParams.builder()
-                    .dayOnOrAfter("day_on_or_after")
-                    .dayOnOrBefore("day_on_or_before")
-                    .addGroupBy("string")
-                    .addEventType(UsageMetricAggregateParams.EventType.AUDIO_SECONDS_PARSED)
-                    .addEventType(UsageMetricAggregateParams.EventType.CHART_PARSING_AGENTIC)
-                    .organizationId("organization_id")
-                    .projectId("project_id")
-                    .userId("user_id")
-                    .build()
-            )
+      val responseFuture = usageMetricServiceAsync.aggregate(UsageMetricAggregateParams.builder()
+          .dayOnOrAfter("day_on_or_after")
+          .dayOnOrBefore("day_on_or_before")
+          .addGroupBy("string")
+          .addEventType(UsageMetricAggregateParams.EventType.AUDIO_SECONDS_PARSED)
+          .addEventType(UsageMetricAggregateParams.EventType.CHART_PARSING_AGENTIC)
+          .organizationId("organization_id")
+          .projectId("project_id")
+          .userId("user_id")
+          .build())
 
-        val response = responseFuture.get()
-        response.validate()
+      val response = responseFuture.get()
+      response.validate()
     }
 }

@@ -5,17 +5,20 @@ package ai.llamaindex.llamacloudadmin.models.projects
 import ai.llamaindex.llamacloudadmin.core.AutoPager
 import ai.llamaindex.llamacloudadmin.core.Page
 import ai.llamaindex.llamacloudadmin.core.checkRequired
+import ai.llamaindex.llamacloudadmin.models.projects.Project
+import ai.llamaindex.llamacloudadmin.models.projects.ProjectListPageResponse
+import ai.llamaindex.llamacloudadmin.models.projects.ProjectListParams
 import ai.llamaindex.llamacloudadmin.services.blocking.ProjectService
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** @see ProjectService.list */
-class ProjectListPage
-private constructor(
+class ProjectListPage private constructor(
     private val service: ProjectService,
     private val params: ProjectListParams,
     private val response: ProjectListPageResponse,
+
 ) : Page<Project> {
 
     /**
@@ -23,8 +26,7 @@ private constructor(
      *
      * @see ProjectListPageResponse.items
      */
-    override fun items(): List<Project> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<Project> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     /**
      * Delegates to [ProjectListPageResponse], but gracefully handles missing data.
@@ -36,10 +38,10 @@ private constructor(
     override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageToken().isPresent
 
     fun nextPageParams(): ProjectListParams {
-        val nextCursor =
-            nextPageToken().getOrNull()
-                ?: throw IllegalStateException("Cannot construct next page params")
-        return params.toBuilder().pageToken(nextCursor).build()
+      val nextCursor = nextPageToken().getOrNull() ?: throw IllegalStateException("Cannot construct next page params")
+      return params.toBuilder()
+          .pageToken(nextCursor)
+          .build()
     }
 
     override fun nextPage(): ProjectListPage = service.list(nextPageParams())
@@ -60,13 +62,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [ProjectListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ProjectListPage]. */
@@ -77,19 +81,29 @@ private constructor(
         private var response: ProjectListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(projectListPage: ProjectListPage) = apply {
-            service = projectListPage.service
-            params = projectListPage.params
-            response = projectListPage.response
-        }
+        internal fun from(projectListPage: ProjectListPage) =
+            apply {
+                service = projectListPage.service
+                params = projectListPage.params
+                response = projectListPage.response
+            }
 
-        fun service(service: ProjectService) = apply { this.service = service }
+        fun service(service: ProjectService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: ProjectListParams) = apply { this.params = params }
+        fun params(params: ProjectListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: ProjectListPageResponse) = apply { this.response = response }
+        fun response(response: ProjectListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [ProjectListPage].
@@ -97,6 +111,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -107,25 +122,27 @@ private constructor(
          */
         fun build(): ProjectListPage =
             ProjectListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ProjectListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is ProjectListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "ProjectListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "ProjectListPage{service=$service, params=$params, response=$response}"
 }

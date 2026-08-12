@@ -16,65 +16,60 @@ import ai.llamaindex.llamacloudadmin.core.http.parseable
 import ai.llamaindex.llamacloudadmin.core.prepare
 import ai.llamaindex.llamacloudadmin.models.admin.usagemetrics.UsageMetricAggregateParams
 import ai.llamaindex.llamacloudadmin.models.admin.usagemetrics.UsageMetricAggregateResponse
+import ai.llamaindex.llamacloudadmin.services.blocking.admin.UsageMetricService
+import ai.llamaindex.llamacloudadmin.services.blocking.admin.UsageMetricServiceImpl
 import java.util.function.Consumer
 
-class UsageMetricServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    UsageMetricService {
+class UsageMetricServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: UsageMetricService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : UsageMetricService {
+
+    private val withRawResponse: UsageMetricService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): UsageMetricService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): UsageMetricService =
-        UsageMetricServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): UsageMetricService = UsageMetricServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun aggregate(
-        params: UsageMetricAggregateParams,
-        requestOptions: RequestOptions,
-    ): UsageMetricAggregateResponse =
+    override fun aggregate(params: UsageMetricAggregateParams, requestOptions: RequestOptions): UsageMetricAggregateResponse =
         // get /api/v1/admin/usage-metrics/aggregate
         withRawResponse().aggregate(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        UsageMetricService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : UsageMetricService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): UsageMetricService.WithRawResponse =
-            UsageMetricServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): UsageMetricService.WithRawResponse = UsageMetricServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val aggregateHandler: Handler<UsageMetricAggregateResponse> = jsonHandler<UsageMetricAggregateResponse>(clientOptions.jsonMapper)
+
+        override fun aggregate(params: UsageMetricAggregateParams, requestOptions: RequestOptions): HttpResponseFor<UsageMetricAggregateResponse> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("api", "v1", "admin", "usage-metrics", "aggregate")
+            .build()
+            .prepare(
+              clientOptions, params
             )
-
-        private val aggregateHandler: Handler<UsageMetricAggregateResponse> =
-            jsonHandler<UsageMetricAggregateResponse>(clientOptions.jsonMapper)
-
-        override fun aggregate(
-            params: UsageMetricAggregateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<UsageMetricAggregateResponse> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("api", "v1", "admin", "usage-metrics", "aggregate")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { aggregateHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  aggregateHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
     }
 }

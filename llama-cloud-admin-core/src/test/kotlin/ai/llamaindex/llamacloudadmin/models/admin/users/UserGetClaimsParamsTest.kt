@@ -2,6 +2,7 @@
 
 package ai.llamaindex.llamacloudadmin.models.admin.users
 
+import ai.llamaindex.llamacloudadmin.models.admin.users.UserGetClaimsParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -9,15 +10,19 @@ internal class UserGetClaimsParamsTest {
 
     @Test
     fun create() {
-        UserGetClaimsParams.builder().userId("user_id").build()
+      UserGetClaimsParams.builder()
+          .userId("user_id")
+          .build()
     }
 
     @Test
     fun pathParams() {
-        val params = UserGetClaimsParams.builder().userId("user_id").build()
+      val params = UserGetClaimsParams.builder()
+          .userId("user_id")
+          .build()
 
-        assertThat(params._pathParam(0)).isEqualTo("user_id")
-        // out-of-bound path param
-        assertThat(params._pathParam(1)).isEqualTo("")
+      assertThat(params._pathParam(0)).isEqualTo("user_id")
+      // out-of-bound path param
+      assertThat(params._pathParam(1)).isEqualTo("")
     }
 }

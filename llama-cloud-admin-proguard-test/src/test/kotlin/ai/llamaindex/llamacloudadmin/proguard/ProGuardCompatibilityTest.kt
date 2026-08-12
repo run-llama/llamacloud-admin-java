@@ -23,8 +23,7 @@ internal class ProGuardCompatibilityTest {
             val jarPath = this::class.java.getProtectionDomain().codeSource.location
             println("JAR being used: $jarPath")
 
-            // We have to manually run the test methods instead of using the JUnit runner because it
-            // seems impossible to get working with R8.
+            // We have to manually run the test methods instead of using the JUnit runner because it seems impossible to get working with R8.
             val test = ProGuardCompatibilityTest()
             test::class
                 .memberFunctions
@@ -39,16 +38,16 @@ internal class ProGuardCompatibilityTest {
     @Test
     fun proguardRules() {
         val rulesFile =
-            javaClass.classLoader.getResourceAsStream(
-                "META-INF/proguard/llama-cloud-admin-core.pro"
-            )
+            javaClass.classLoader.getResourceAsStream("META-INF/proguard/llama-cloud-admin-core.pro")
 
         assertThat(rulesFile).isNotNull()
     }
 
     @Test
     fun client() {
-        val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
+        val client = LlamaCloudAdminOkHttpClient.builder()
+            .apiKey("My API Key")
+            .build()
 
         assertThat(client).isNotNull()
         assertThat(client.organizations()).isNotNull()
@@ -59,26 +58,19 @@ internal class ProGuardCompatibilityTest {
 
     @Test
     fun organizationRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val organization =
-            Organization.builder()
-                .id("id")
-                .name("name")
-                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .metadata(
-                    Organization.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .build()
+      val jsonMapper = jsonMapper()
+      val organization = Organization.builder()
+          .id("id")
+          .name("name")
+          .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .metadata(Organization.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("bar"))
+              .build())
+          .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build()
 
-        val roundtrippedOrganization =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(organization),
-                jacksonTypeRef<Organization>(),
-            )
+      val roundtrippedOrganization = jsonMapper.readValue(jsonMapper.writeValueAsString(organization), jacksonTypeRef<Organization>())
 
-        assertThat(roundtrippedOrganization).isEqualTo(organization)
+      assertThat(roundtrippedOrganization).isEqualTo(organization)
     }
 }

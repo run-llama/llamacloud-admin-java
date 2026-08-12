@@ -4,10 +4,15 @@ package ai.llamaindex.llamacloudadmin.errors
 
 import ai.llamaindex.llamacloudadmin.core.JsonValue
 import ai.llamaindex.llamacloudadmin.core.http.Headers
+import ai.llamaindex.llamacloudadmin.errors.LlamaCloudAdminException
 
-abstract class LlamaCloudAdminServiceException
-protected constructor(message: String, cause: Throwable? = null) :
-    LlamaCloudAdminException(message, cause) {
+abstract class LlamaCloudAdminServiceException protected constructor(
+    message: String,
+    cause: Throwable? = null,
+
+) : LlamaCloudAdminException(
+  message, cause
+) {
 
     abstract fun statusCode(): Int
 

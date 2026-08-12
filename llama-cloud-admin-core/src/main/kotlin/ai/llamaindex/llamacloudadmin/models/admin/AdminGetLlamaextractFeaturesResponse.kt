@@ -11,6 +11,7 @@ import ai.llamaindex.llamacloudadmin.core.checkKnown
 import ai.llamaindex.llamacloudadmin.core.checkRequired
 import ai.llamaindex.llamacloudadmin.core.toImmutable
 import ai.llamaindex.llamacloudadmin.errors.LlamaCloudAdminInvalidDataException
+import ai.llamaindex.llamacloudadmin.models.admin.AdminGetLlamaextractFeaturesResponse
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -20,34 +21,27 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class AdminGetLlamaextractFeaturesResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class AdminGetLlamaextractFeaturesResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val availableModes: JsonField<List<AvailableMode>>,
     private val schemaGeneration: JsonField<SchemaGeneration>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("available_modes")
-        @ExcludeMissing
-        availableModes: JsonField<List<AvailableMode>> = JsonMissing.of(),
-        @JsonProperty("schema_generation")
-        @ExcludeMissing
-        schemaGeneration: JsonField<SchemaGeneration> = JsonMissing.of(),
-    ) : this(availableModes, schemaGeneration, mutableMapOf())
+        @JsonProperty("available_modes") @ExcludeMissing availableModes: JsonField<List<AvailableMode>> = JsonMissing.of(),
+        @JsonProperty("schema_generation") @ExcludeMissing schemaGeneration: JsonField<SchemaGeneration> = JsonMissing.of()
+    ) : this(
+      availableModes,
+      schemaGeneration,
+      mutableMapOf(),
+    )
 
-    /**
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun availableModes(): List<AvailableMode> = availableModes.getRequired("available_modes")
 
-    /**
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun schemaGeneration(): SchemaGeneration = schemaGeneration.getRequired("schema_generation")
 
     /**
@@ -62,8 +56,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [schemaGeneration].
      *
-     * Unlike [schemaGeneration], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [schemaGeneration], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("schema_generation")
     @ExcludeMissing
@@ -71,29 +64,29 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [AdminGetLlamaextractFeaturesResponse].
+         * Returns a mutable builder for constructing an instance of [AdminGetLlamaextractFeaturesResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .availableModes()
          * .schemaGeneration()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [AdminGetLlamaextractFeaturesResponse]. */
@@ -104,74 +97,76 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            adminGetLlamaextractFeaturesResponse: AdminGetLlamaextractFeaturesResponse
-        ) = apply {
-            availableModes =
-                adminGetLlamaextractFeaturesResponse.availableModes.map { it.toMutableList() }
-            schemaGeneration = adminGetLlamaextractFeaturesResponse.schemaGeneration
-            additionalProperties =
-                adminGetLlamaextractFeaturesResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(adminGetLlamaextractFeaturesResponse: AdminGetLlamaextractFeaturesResponse) =
+            apply {
+                availableModes = adminGetLlamaextractFeaturesResponse.availableModes.map { it.toMutableList() }
+                schemaGeneration = adminGetLlamaextractFeaturesResponse.schemaGeneration
+                additionalProperties = adminGetLlamaextractFeaturesResponse.additionalProperties.toMutableMap()
+            }
 
-        fun availableModes(availableModes: List<AvailableMode>) =
-            availableModes(JsonField.of(availableModes))
+        fun availableModes(availableModes: List<AvailableMode>) = availableModes(JsonField.of(availableModes))
 
         /**
          * Sets [Builder.availableModes] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.availableModes] with a well-typed `List<AvailableMode>`
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.availableModes] with a well-typed `List<AvailableMode>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun availableModes(availableModes: JsonField<List<AvailableMode>>) = apply {
-            this.availableModes = availableModes.map { it.toMutableList() }
-        }
+        fun availableModes(availableModes: JsonField<List<AvailableMode>>) =
+            apply {
+                this.availableModes = availableModes.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [AvailableMode] to [availableModes].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addAvailableMode(availableMode: AvailableMode) = apply {
-            availableModes =
-                (availableModes ?: JsonField.of(mutableListOf())).also {
+        fun addAvailableMode(availableMode: AvailableMode) =
+            apply {
+                availableModes = (availableModes ?: JsonField.of(mutableListOf())).also {
                     checkKnown("availableModes", it).add(availableMode)
                 }
-        }
+            }
 
-        fun schemaGeneration(schemaGeneration: SchemaGeneration) =
-            schemaGeneration(JsonField.of(schemaGeneration))
+        fun schemaGeneration(schemaGeneration: SchemaGeneration) = schemaGeneration(JsonField.of(schemaGeneration))
 
         /**
          * Sets [Builder.schemaGeneration] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.schemaGeneration] with a well-typed [SchemaGeneration]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.schemaGeneration] with a well-typed [SchemaGeneration] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun schemaGeneration(schemaGeneration: JsonField<SchemaGeneration>) = apply {
-            this.schemaGeneration = schemaGeneration
-        }
+        fun schemaGeneration(schemaGeneration: JsonField<SchemaGeneration>) =
+            apply {
+                this.schemaGeneration = schemaGeneration
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [AdminGetLlamaextractFeaturesResponse].
@@ -179,6 +174,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .availableModes()
          * .schemaGeneration()
@@ -188,9 +184,13 @@ private constructor(
          */
         fun build(): AdminGetLlamaextractFeaturesResponse =
             AdminGetLlamaextractFeaturesResponse(
-                checkRequired("availableModes", availableModes).map { it.toImmutable() },
-                checkRequired("schemaGeneration", schemaGeneration),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "availableModes", availableModes
+              ).map { it.toImmutable() },
+              checkRequired(
+                "schemaGeneration", schemaGeneration
+              ),
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -201,18 +201,19 @@ private constructor(
      *
      * This method is _not_ forwards compatible with new types from the API for existing fields.
      *
-     * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match
-     *   its expected type.
+     * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
      */
-    fun validate(): AdminGetLlamaextractFeaturesResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): AdminGetLlamaextractFeaturesResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        availableModes().forEach { it.validate() }
-        schemaGeneration().validate()
-        validated = true
-    }
+            availableModes().forEach { it.validate() }
+            schemaGeneration().validate()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -228,13 +229,9 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (availableModes.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (schemaGeneration.asKnown().getOrNull()?.validity() ?: 0)
+    internal fun validity(): Int = (availableModes.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) + (schemaGeneration.asKnown().getOrNull()?.validity() ?: 0)
 
-    class AvailableMode
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class AvailableMode @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val mode: JsonField<String>,
         private val parseMode: JsonField<String>,
         private val status: JsonField<Status>,
@@ -243,113 +240,81 @@ private constructor(
         private val missingExtractModels: JsonField<List<String>>,
         private val missingParseModels: JsonField<List<String>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("mode") @ExcludeMissing mode: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("parse_mode")
-            @ExcludeMissing
-            parseMode: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("parse_mode") @ExcludeMissing parseMode: JsonField<String> = JsonMissing.of(),
             @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
-            @JsonProperty("available_extract_models")
-            @ExcludeMissing
-            availableExtractModels: JsonField<List<String>> = JsonMissing.of(),
-            @JsonProperty("available_parse_models")
-            @ExcludeMissing
-            availableParseModels: JsonField<List<String>> = JsonMissing.of(),
-            @JsonProperty("missing_extract_models")
-            @ExcludeMissing
-            missingExtractModels: JsonField<List<String>> = JsonMissing.of(),
-            @JsonProperty("missing_parse_models")
-            @ExcludeMissing
-            missingParseModels: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("available_extract_models") @ExcludeMissing availableExtractModels: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("available_parse_models") @ExcludeMissing availableParseModels: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("missing_extract_models") @ExcludeMissing missingExtractModels: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("missing_parse_models") @ExcludeMissing missingParseModels: JsonField<List<String>> = JsonMissing.of()
         ) : this(
-            mode,
-            parseMode,
-            status,
-            availableExtractModels,
-            availableParseModels,
-            missingExtractModels,
-            missingParseModels,
-            mutableMapOf(),
+          mode,
+          parseMode,
+          status,
+          availableExtractModels,
+          availableParseModels,
+          missingExtractModels,
+          missingParseModels,
+          mutableMapOf(),
         )
 
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
+        /** @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun mode(): String = mode.getRequired("mode")
 
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
+        /** @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun parseMode(): String = parseMode.getRequired("parse_mode")
 
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
+        /** @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun status(): Status = status.getRequired("status")
 
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun availableExtractModels(): Optional<List<String>> =
-            availableExtractModels.getOptional("available_extract_models")
+        /** @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun availableExtractModels(): Optional<List<String>> = availableExtractModels.getOptional("available_extract_models")
 
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun availableParseModels(): Optional<List<String>> =
-            availableParseModels.getOptional("available_parse_models")
+        /** @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun availableParseModels(): Optional<List<String>> = availableParseModels.getOptional("available_parse_models")
 
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun missingExtractModels(): Optional<List<String>> =
-            missingExtractModels.getOptional("missing_extract_models")
+        /** @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun missingExtractModels(): Optional<List<String>> = missingExtractModels.getOptional("missing_extract_models")
 
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun missingParseModels(): Optional<List<String>> =
-            missingParseModels.getOptional("missing_parse_models")
+        /** @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun missingParseModels(): Optional<List<String>> = missingParseModels.getOptional("missing_parse_models")
 
         /**
          * Returns the raw JSON value of [mode].
          *
          * Unlike [mode], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("mode") @ExcludeMissing fun _mode(): JsonField<String> = mode
+        @JsonProperty("mode")
+        @ExcludeMissing
+        fun _mode(): JsonField<String> = mode
 
         /**
          * Returns the raw JSON value of [parseMode].
          *
          * Unlike [parseMode], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("parse_mode") @ExcludeMissing fun _parseMode(): JsonField<String> = parseMode
+        @JsonProperty("parse_mode")
+        @ExcludeMissing
+        fun _parseMode(): JsonField<String> = parseMode
 
         /**
          * Returns the raw JSON value of [status].
          *
          * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
+        @JsonProperty("status")
+        @ExcludeMissing
+        fun _status(): JsonField<Status> = status
 
         /**
          * Returns the raw JSON value of [availableExtractModels].
          *
-         * Unlike [availableExtractModels], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [availableExtractModels], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("available_extract_models")
         @ExcludeMissing
@@ -358,8 +323,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [availableParseModels].
          *
-         * Unlike [availableParseModels], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [availableParseModels], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("available_parse_models")
         @ExcludeMissing
@@ -368,8 +332,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [missingExtractModels].
          *
-         * Unlike [missingExtractModels], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [missingExtractModels], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("missing_extract_models")
         @ExcludeMissing
@@ -378,8 +341,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [missingParseModels].
          *
-         * Unlike [missingParseModels], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [missingParseModels], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("missing_parse_models")
         @ExcludeMissing
@@ -387,13 +349,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -403,13 +364,15 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [AvailableMode].
              *
              * The following fields are required:
+             *
              * ```java
              * .mode()
              * .parseMode()
              * .status()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [AvailableMode]. */
@@ -425,173 +388,182 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(availableMode: AvailableMode) = apply {
-                mode = availableMode.mode
-                parseMode = availableMode.parseMode
-                status = availableMode.status
-                availableExtractModels =
-                    availableMode.availableExtractModels.map { it.toMutableList() }
-                availableParseModels = availableMode.availableParseModels.map { it.toMutableList() }
-                missingExtractModels = availableMode.missingExtractModels.map { it.toMutableList() }
-                missingParseModels = availableMode.missingParseModels.map { it.toMutableList() }
-                additionalProperties = availableMode.additionalProperties.toMutableMap()
-            }
+            internal fun from(availableMode: AvailableMode) =
+                apply {
+                    mode = availableMode.mode
+                    parseMode = availableMode.parseMode
+                    status = availableMode.status
+                    availableExtractModels = availableMode.availableExtractModels.map { it.toMutableList() }
+                    availableParseModels = availableMode.availableParseModels.map { it.toMutableList() }
+                    missingExtractModels = availableMode.missingExtractModels.map { it.toMutableList() }
+                    missingParseModels = availableMode.missingParseModels.map { it.toMutableList() }
+                    additionalProperties = availableMode.additionalProperties.toMutableMap()
+                }
 
             fun mode(mode: String) = mode(JsonField.of(mode))
 
             /**
              * Sets [Builder.mode] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.mode] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.mode] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun mode(mode: JsonField<String>) = apply { this.mode = mode }
+            fun mode(mode: JsonField<String>) =
+                apply {
+                    this.mode = mode
+                }
 
             fun parseMode(parseMode: String) = parseMode(JsonField.of(parseMode))
 
             /**
              * Sets [Builder.parseMode] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.parseMode] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.parseMode] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun parseMode(parseMode: JsonField<String>) = apply { this.parseMode = parseMode }
+            fun parseMode(parseMode: JsonField<String>) =
+                apply {
+                    this.parseMode = parseMode
+                }
 
             fun status(status: Status) = status(JsonField.of(status))
 
             /**
              * Sets [Builder.status] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.status] with a well-typed [Status] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.status] with a well-typed [Status] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun status(status: JsonField<Status>) = apply { this.status = status }
+            fun status(status: JsonField<Status>) =
+                apply {
+                    this.status = status
+                }
 
-            fun availableExtractModels(availableExtractModels: List<String>) =
-                availableExtractModels(JsonField.of(availableExtractModels))
+            fun availableExtractModels(availableExtractModels: List<String>) = availableExtractModels(JsonField.of(availableExtractModels))
 
             /**
              * Sets [Builder.availableExtractModels] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.availableExtractModels] with a well-typed
-             * `List<String>` value instead. This method is primarily for setting the field to an
-             * undocumented or not yet supported value.
+             * You should usually call [Builder.availableExtractModels] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun availableExtractModels(availableExtractModels: JsonField<List<String>>) = apply {
-                this.availableExtractModels = availableExtractModels.map { it.toMutableList() }
-            }
+            fun availableExtractModels(availableExtractModels: JsonField<List<String>>) =
+                apply {
+                    this.availableExtractModels = availableExtractModels.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [String] to [availableExtractModels].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addAvailableExtractModel(availableExtractModel: String) = apply {
-                availableExtractModels =
-                    (availableExtractModels ?: JsonField.of(mutableListOf())).also {
+            fun addAvailableExtractModel(availableExtractModel: String) =
+                apply {
+                    availableExtractModels = (availableExtractModels ?: JsonField.of(mutableListOf())).also {
                         checkKnown("availableExtractModels", it).add(availableExtractModel)
                     }
-            }
+                }
 
-            fun availableParseModels(availableParseModels: List<String>) =
-                availableParseModels(JsonField.of(availableParseModels))
+            fun availableParseModels(availableParseModels: List<String>) = availableParseModels(JsonField.of(availableParseModels))
 
             /**
              * Sets [Builder.availableParseModels] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.availableParseModels] with a well-typed
-             * `List<String>` value instead. This method is primarily for setting the field to an
-             * undocumented or not yet supported value.
+             * You should usually call [Builder.availableParseModels] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun availableParseModels(availableParseModels: JsonField<List<String>>) = apply {
-                this.availableParseModels = availableParseModels.map { it.toMutableList() }
-            }
+            fun availableParseModels(availableParseModels: JsonField<List<String>>) =
+                apply {
+                    this.availableParseModels = availableParseModels.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [String] to [availableParseModels].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addAvailableParseModel(availableParseModel: String) = apply {
-                availableParseModels =
-                    (availableParseModels ?: JsonField.of(mutableListOf())).also {
+            fun addAvailableParseModel(availableParseModel: String) =
+                apply {
+                    availableParseModels = (availableParseModels ?: JsonField.of(mutableListOf())).also {
                         checkKnown("availableParseModels", it).add(availableParseModel)
                     }
-            }
+                }
 
-            fun missingExtractModels(missingExtractModels: List<String>) =
-                missingExtractModels(JsonField.of(missingExtractModels))
+            fun missingExtractModels(missingExtractModels: List<String>) = missingExtractModels(JsonField.of(missingExtractModels))
 
             /**
              * Sets [Builder.missingExtractModels] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.missingExtractModels] with a well-typed
-             * `List<String>` value instead. This method is primarily for setting the field to an
-             * undocumented or not yet supported value.
+             * You should usually call [Builder.missingExtractModels] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun missingExtractModels(missingExtractModels: JsonField<List<String>>) = apply {
-                this.missingExtractModels = missingExtractModels.map { it.toMutableList() }
-            }
+            fun missingExtractModels(missingExtractModels: JsonField<List<String>>) =
+                apply {
+                    this.missingExtractModels = missingExtractModels.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [String] to [missingExtractModels].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addMissingExtractModel(missingExtractModel: String) = apply {
-                missingExtractModels =
-                    (missingExtractModels ?: JsonField.of(mutableListOf())).also {
+            fun addMissingExtractModel(missingExtractModel: String) =
+                apply {
+                    missingExtractModels = (missingExtractModels ?: JsonField.of(mutableListOf())).also {
                         checkKnown("missingExtractModels", it).add(missingExtractModel)
                     }
-            }
+                }
 
-            fun missingParseModels(missingParseModels: List<String>) =
-                missingParseModels(JsonField.of(missingParseModels))
+            fun missingParseModels(missingParseModels: List<String>) = missingParseModels(JsonField.of(missingParseModels))
 
             /**
              * Sets [Builder.missingParseModels] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.missingParseModels] with a well-typed `List<String>`
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.missingParseModels] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun missingParseModels(missingParseModels: JsonField<List<String>>) = apply {
-                this.missingParseModels = missingParseModels.map { it.toMutableList() }
-            }
+            fun missingParseModels(missingParseModels: JsonField<List<String>>) =
+                apply {
+                    this.missingParseModels = missingParseModels.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [String] to [missingParseModels].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addMissingParseModel(missingParseModel: String) = apply {
-                missingParseModels =
-                    (missingParseModels ?: JsonField.of(mutableListOf())).also {
+            fun addMissingParseModel(missingParseModel: String) =
+                apply {
+                    missingParseModels = (missingParseModels ?: JsonField.of(mutableListOf())).also {
                         checkKnown("missingParseModels", it).add(missingParseModel)
                     }
-            }
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [AvailableMode].
@@ -599,6 +571,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .mode()
              * .parseMode()
@@ -609,42 +582,48 @@ private constructor(
              */
             fun build(): AvailableMode =
                 AvailableMode(
-                    checkRequired("mode", mode),
-                    checkRequired("parseMode", parseMode),
-                    checkRequired("status", status),
-                    (availableExtractModels ?: JsonMissing.of()).map { it.toImmutable() },
-                    (availableParseModels ?: JsonMissing.of()).map { it.toImmutable() },
-                    (missingExtractModels ?: JsonMissing.of()).map { it.toImmutable() },
-                    (missingParseModels ?: JsonMissing.of()).map { it.toImmutable() },
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "mode", mode
+                  ),
+                  checkRequired(
+                    "parseMode", parseMode
+                  ),
+                  checkRequired(
+                    "status", status
+                  ),
+                  (availableExtractModels?: JsonMissing.of()).map { it.toImmutable() },
+                  (availableParseModels?: JsonMissing.of()).map { it.toImmutable() },
+                  (missingExtractModels?: JsonMissing.of()).map { it.toImmutable() },
+                  (missingParseModels?: JsonMissing.of()).map { it.toImmutable() },
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't
-         *   match its expected type.
+         * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): AvailableMode = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): AvailableMode =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            mode()
-            parseMode()
-            status().validate()
-            availableExtractModels()
-            availableParseModels()
-            missingExtractModels()
-            missingParseModels()
-            validated = true
-        }
+                mode()
+                parseMode()
+                status().validate()
+                availableExtractModels()
+                availableParseModels()
+                missingExtractModels()
+                missingParseModels()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -655,32 +634,27 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (mode.asKnown().isPresent) 1 else 0) +
-                (if (parseMode.asKnown().isPresent) 1 else 0) +
-                (status.asKnown().getOrNull()?.validity() ?: 0) +
-                (availableExtractModels.asKnown().getOrNull()?.size ?: 0) +
-                (availableParseModels.asKnown().getOrNull()?.size ?: 0) +
-                (missingExtractModels.asKnown().getOrNull()?.size ?: 0) +
-                (missingParseModels.asKnown().getOrNull()?.size ?: 0)
+        internal fun validity(): Int = (if (mode.asKnown().isPresent) 1 else 0) + (if (parseMode.asKnown().isPresent) 1 else 0) + (status.asKnown().getOrNull()?.validity() ?: 0) + (availableExtractModels.asKnown().getOrNull()?.size ?: 0) + (availableParseModels.asKnown().getOrNull()?.size ?: 0) + (missingExtractModels.asKnown().getOrNull()?.size ?: 0) + (missingParseModels.asKnown().getOrNull()?.size ?: 0)
 
-        class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Status @JsonCreator private constructor(
+            private val value: JsonField<String>,
+
+        ) : Enum {
 
             /**
              * Returns this class instance's raw value.
              *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
+             * This is usually only useful if this instance was deserialized from data that doesn't match any known
+             * member, and you want to know that value. For example, if the SDK is on an older version than the
+             * API, then the API may respond with new members that the SDK is unaware of.
              */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+            @com.fasterxml.jackson.annotation.JsonValue
+            fun _value(): JsonField<String> = value
 
             companion object {
 
@@ -701,26 +675,26 @@ private constructor(
              * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [Status] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
+             *
+             * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+             *   an older version than the API, then the API may respond with new members that the SDK is unaware
+             *   of.
+             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
                 AVAILABLE,
                 UNAVAILABLE,
-                /**
-                 * An enum member indicating that [Status] was instantiated with an unknown value.
-                 */
+                /** An enum member indicating that [Status] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
 
             /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+             * class was instantiated with an unknown value.
              *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
+             * Use the [known] method instead if you're certain the value is always known or if you want to throw
+             * for the unknown case.
              */
             fun value(): Value =
                 when (this) {
@@ -732,11 +706,10 @@ private constructor(
             /**
              * Returns an enum member corresponding to this class instance's value.
              *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
+             * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+             * for the unknown case.
              *
-             * @throws LlamaCloudAdminInvalidDataException if this class instance's value is a not a
-             *   known member.
+             * @throws LlamaCloudAdminInvalidDataException if this class instance's value is a not a known member.
              */
             fun known(): Known =
                 when (this) {
@@ -748,37 +721,33 @@ private constructor(
             /**
              * Returns this class instance's primitive wire representation.
              *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
+             * This differs from the [toString] method because that method is primarily for debugging and generally
+             * doesn't throw.
              *
-             * @throws LlamaCloudAdminInvalidDataException if this class instance's value does not
-             *   have the expected primitive type.
+             * @throws LlamaCloudAdminInvalidDataException if this class instance's value does not have the expected
+             *   primitive type.
              */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    LlamaCloudAdminInvalidDataException("Value is not a String")
-                }
+            fun asString(): String = _value().asString().orElseThrow { LlamaCloudAdminInvalidDataException("Value is not a String") }
 
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
+             * Validates that the types of all values in this object match their expected types recursively.
              *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
+             * This method is _not_ forwards compatible with new types from the API for existing fields.
              *
-             * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
+             * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
              */
-            fun validate(): Status = apply {
-                if (validated) {
-                    return@apply
-                }
+            fun validate(): Status =
+                apply {
+                    if (validated) {
+                      return@apply
+                    }
 
-                known()
-                validated = true
-            }
+                    known()
+                    validated = true
+                }
 
             fun isValid(): Boolean =
                 try {
@@ -789,19 +758,19 @@ private constructor(
                 }
 
             /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
+             * Returns a score indicating how many valid values are contained in this object recursively.
              *
              * Used for best match union deserialization.
              */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+            @JvmSynthetic
+            internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
             override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
+              if (this === other) {
+                  return true
+              }
 
-                return other is Status && value == other.value
+              return other is Status && value == other.value
             }
 
             override fun hashCode() = value.hashCode()
@@ -810,66 +779,41 @@ private constructor(
         }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is AvailableMode &&
-                mode == other.mode &&
-                parseMode == other.parseMode &&
-                status == other.status &&
-                availableExtractModels == other.availableExtractModels &&
-                availableParseModels == other.availableParseModels &&
-                missingExtractModels == other.missingExtractModels &&
-                missingParseModels == other.missingParseModels &&
-                additionalProperties == other.additionalProperties
+          return other is AvailableMode && mode == other.mode && parseMode == other.parseMode && status == other.status && availableExtractModels == other.availableExtractModels && availableParseModels == other.availableParseModels && missingExtractModels == other.missingExtractModels && missingParseModels == other.missingParseModels && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(
-                mode,
-                parseMode,
-                status,
-                availableExtractModels,
-                availableParseModels,
-                missingExtractModels,
-                missingParseModels,
-                additionalProperties,
-            )
-        }
+        private val hashCode: Int by lazy { Objects.hash(mode, parseMode, status, availableExtractModels, availableParseModels, missingExtractModels, missingParseModels, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "AvailableMode{mode=$mode, parseMode=$parseMode, status=$status, availableExtractModels=$availableExtractModels, availableParseModels=$availableParseModels, missingExtractModels=$missingExtractModels, missingParseModels=$missingParseModels, additionalProperties=$additionalProperties}"
+        override fun toString() = "AvailableMode{mode=$mode, parseMode=$parseMode, status=$status, availableExtractModels=$availableExtractModels, availableParseModels=$availableParseModels, missingExtractModels=$missingExtractModels, missingParseModels=$missingParseModels, additionalProperties=$additionalProperties}"
     }
 
-    class SchemaGeneration
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class SchemaGeneration @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val model: JsonField<String>,
         private val status: JsonField<Status>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("model") @ExcludeMissing model: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
-        ) : this(model, status, mutableMapOf())
+            @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of()
+        ) : this(
+          model,
+          status,
+          mutableMapOf(),
+        )
 
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
+        /** @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun model(): String = model.getRequired("model")
 
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
+        /** @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun status(): Status = status.getRequired("status")
 
         /**
@@ -877,24 +821,27 @@ private constructor(
          *
          * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<String> = model
+        @JsonProperty("model")
+        @ExcludeMissing
+        fun _model(): JsonField<String> = model
 
         /**
          * Returns the raw JSON value of [status].
          *
          * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
+        @JsonProperty("status")
+        @ExcludeMissing
+        fun _status(): JsonField<Status> = status
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -904,12 +851,14 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [SchemaGeneration].
              *
              * The following fields are required:
+             *
              * ```java
              * .model()
              * .status()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [SchemaGeneration]. */
@@ -920,52 +869,64 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(schemaGeneration: SchemaGeneration) = apply {
-                model = schemaGeneration.model
-                status = schemaGeneration.status
-                additionalProperties = schemaGeneration.additionalProperties.toMutableMap()
-            }
+            internal fun from(schemaGeneration: SchemaGeneration) =
+                apply {
+                    model = schemaGeneration.model
+                    status = schemaGeneration.status
+                    additionalProperties = schemaGeneration.additionalProperties.toMutableMap()
+                }
 
             fun model(model: String) = model(JsonField.of(model))
 
             /**
              * Sets [Builder.model] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.model] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.model] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun model(model: JsonField<String>) = apply { this.model = model }
+            fun model(model: JsonField<String>) =
+                apply {
+                    this.model = model
+                }
 
             fun status(status: Status) = status(JsonField.of(status))
 
             /**
              * Sets [Builder.status] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.status] with a well-typed [Status] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.status] with a well-typed [Status] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun status(status: JsonField<Status>) = apply { this.status = status }
+            fun status(status: JsonField<Status>) =
+                apply {
+                    this.status = status
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [SchemaGeneration].
@@ -973,6 +934,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .model()
              * .status()
@@ -982,32 +944,36 @@ private constructor(
              */
             fun build(): SchemaGeneration =
                 SchemaGeneration(
-                    checkRequired("model", model),
-                    checkRequired("status", status),
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "model", model
+                  ),
+                  checkRequired(
+                    "status", status
+                  ),
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't
-         *   match its expected type.
+         * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): SchemaGeneration = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): SchemaGeneration =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            model()
-            status().validate()
-            validated = true
-        }
+                model()
+                status().validate()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -1018,27 +984,27 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (model.asKnown().isPresent) 1 else 0) +
-                (status.asKnown().getOrNull()?.validity() ?: 0)
+        internal fun validity(): Int = (if (model.asKnown().isPresent) 1 else 0) + (status.asKnown().getOrNull()?.validity() ?: 0)
 
-        class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Status @JsonCreator private constructor(
+            private val value: JsonField<String>,
+
+        ) : Enum {
 
             /**
              * Returns this class instance's raw value.
              *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
+             * This is usually only useful if this instance was deserialized from data that doesn't match any known
+             * member, and you want to know that value. For example, if the SDK is on an older version than the
+             * API, then the API may respond with new members that the SDK is unaware of.
              */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+            @com.fasterxml.jackson.annotation.JsonValue
+            fun _value(): JsonField<String> = value
 
             companion object {
 
@@ -1059,26 +1025,26 @@ private constructor(
              * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [Status] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
+             *
+             * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+             *   an older version than the API, then the API may respond with new members that the SDK is unaware
+             *   of.
+             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
                 AVAILABLE,
                 UNAVAILABLE,
-                /**
-                 * An enum member indicating that [Status] was instantiated with an unknown value.
-                 */
+                /** An enum member indicating that [Status] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
 
             /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+             * class was instantiated with an unknown value.
              *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
+             * Use the [known] method instead if you're certain the value is always known or if you want to throw
+             * for the unknown case.
              */
             fun value(): Value =
                 when (this) {
@@ -1090,11 +1056,10 @@ private constructor(
             /**
              * Returns an enum member corresponding to this class instance's value.
              *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
+             * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+             * for the unknown case.
              *
-             * @throws LlamaCloudAdminInvalidDataException if this class instance's value is a not a
-             *   known member.
+             * @throws LlamaCloudAdminInvalidDataException if this class instance's value is a not a known member.
              */
             fun known(): Known =
                 when (this) {
@@ -1106,37 +1071,33 @@ private constructor(
             /**
              * Returns this class instance's primitive wire representation.
              *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
+             * This differs from the [toString] method because that method is primarily for debugging and generally
+             * doesn't throw.
              *
-             * @throws LlamaCloudAdminInvalidDataException if this class instance's value does not
-             *   have the expected primitive type.
+             * @throws LlamaCloudAdminInvalidDataException if this class instance's value does not have the expected
+             *   primitive type.
              */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    LlamaCloudAdminInvalidDataException("Value is not a String")
-                }
+            fun asString(): String = _value().asString().orElseThrow { LlamaCloudAdminInvalidDataException("Value is not a String") }
 
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
+             * Validates that the types of all values in this object match their expected types recursively.
              *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
+             * This method is _not_ forwards compatible with new types from the API for existing fields.
              *
-             * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
+             * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
              */
-            fun validate(): Status = apply {
-                if (validated) {
-                    return@apply
-                }
+            fun validate(): Status =
+                apply {
+                    if (validated) {
+                      return@apply
+                    }
 
-                known()
-                validated = true
-            }
+                    known()
+                    validated = true
+                }
 
             fun isValid(): Boolean =
                 try {
@@ -1147,19 +1108,19 @@ private constructor(
                 }
 
             /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
+             * Returns a score indicating how many valid values are contained in this object recursively.
              *
              * Used for best match union deserialization.
              */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+            @JvmSynthetic
+            internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
             override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
+              if (this === other) {
+                  return true
+              }
 
-                return other is Status && value == other.value
+              return other is Status && value == other.value
             }
 
             override fun hashCode() = value.hashCode()
@@ -1168,41 +1129,31 @@ private constructor(
         }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is SchemaGeneration &&
-                model == other.model &&
-                status == other.status &&
-                additionalProperties == other.additionalProperties
+          return other is SchemaGeneration && model == other.model && status == other.status && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(model, status, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "SchemaGeneration{model=$model, status=$status, additionalProperties=$additionalProperties}"
+        override fun toString() = "SchemaGeneration{model=$model, status=$status, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is AdminGetLlamaextractFeaturesResponse &&
-            availableModes == other.availableModes &&
-            schemaGeneration == other.schemaGeneration &&
-            additionalProperties == other.additionalProperties
+      return other is AdminGetLlamaextractFeaturesResponse && availableModes == other.availableModes && schemaGeneration == other.schemaGeneration && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(availableModes, schemaGeneration, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(availableModes, schemaGeneration, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "AdminGetLlamaextractFeaturesResponse{availableModes=$availableModes, schemaGeneration=$schemaGeneration, additionalProperties=$additionalProperties}"
+    override fun toString() = "AdminGetLlamaextractFeaturesResponse{availableModes=$availableModes, schemaGeneration=$schemaGeneration, additionalProperties=$additionalProperties}"
 }

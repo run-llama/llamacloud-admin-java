@@ -2,6 +2,7 @@
 
 package ai.llamaindex.llamacloudadmin.models.organizations
 
+import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -9,20 +10,19 @@ internal class OrganizationGetParamsTest {
 
     @Test
     fun create() {
-        OrganizationGetParams.builder()
-            .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-            .build()
+      OrganizationGetParams.builder()
+          .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .build()
     }
 
     @Test
     fun pathParams() {
-        val params =
-            OrganizationGetParams.builder()
-                .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .build()
+      val params = OrganizationGetParams.builder()
+          .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .build()
 
-        assertThat(params._pathParam(0)).isEqualTo("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-        // out-of-bound path param
-        assertThat(params._pathParam(1)).isEqualTo("")
+      assertThat(params._pathParam(0)).isEqualTo("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+      // out-of-bound path param
+      assertThat(params._pathParam(1)).isEqualTo("")
     }
 }

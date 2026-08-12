@@ -19,9 +19,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** API response schema for a project. */
-class Project
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class Project @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val id: JsonField<String>,
     private val name: JsonField<String>,
     private val organizationId: JsonField<String>,
@@ -29,71 +27,66 @@ private constructor(
     private val isDefault: JsonField<Boolean>,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("organization_id")
-        @ExcludeMissing
-        organizationId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("created_at")
-        @ExcludeMissing
-        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("is_default")
-        @ExcludeMissing
-        isDefault: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("updated_at")
-        @ExcludeMissing
-        updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(id, name, organizationId, createdAt, isDefault, updatedAt, mutableMapOf())
+        @JsonProperty("organization_id") @ExcludeMissing organizationId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("created_at") @ExcludeMissing createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("is_default") @ExcludeMissing isDefault: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("updated_at") @ExcludeMissing updatedAt: JsonField<OffsetDateTime> = JsonMissing.of()
+    ) : this(
+      id,
+      name,
+      organizationId,
+      createdAt,
+      isDefault,
+      updatedAt,
+      mutableMapOf(),
+    )
 
     /**
      * The project's unique identifier.
      *
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
 
     /**
      * The project's display name.
      *
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun name(): String = name.getRequired("name")
 
     /**
      * The organization the project belongs to.
      *
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun organizationId(): String = organizationId.getRequired("organization_id")
 
     /**
      * Creation datetime
      *
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun createdAt(): Optional<OffsetDateTime> = createdAt.getOptional("created_at")
 
     /**
      * Whether this project is the default project for its organization.
      *
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun isDefault(): Optional<Boolean> = isDefault.getOptional("is_default")
 
     /**
      * Update datetime
      *
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun updatedAt(): Optional<OffsetDateTime> = updatedAt.getOptional("updated_at")
 
@@ -102,14 +95,18 @@ private constructor(
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+    @JsonProperty("id")
+    @ExcludeMissing
+    fun _id(): JsonField<String> = id
 
     /**
      * Returns the raw JSON value of [name].
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+    @JsonProperty("name")
+    @ExcludeMissing
+    fun _name(): JsonField<String> = name
 
     /**
      * Returns the raw JSON value of [organizationId].
@@ -134,7 +131,9 @@ private constructor(
      *
      * Unlike [isDefault], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("is_default") @ExcludeMissing fun _isDefault(): JsonField<Boolean> = isDefault
+    @JsonProperty("is_default")
+    @ExcludeMissing
+    fun _isDefault(): JsonField<Boolean> = isDefault
 
     /**
      * Returns the raw JSON value of [updatedAt].
@@ -147,13 +146,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -163,13 +161,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [Project].
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * .name()
          * .organizationId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [Project]. */
@@ -184,15 +184,16 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(project: Project) = apply {
-            id = project.id
-            name = project.name
-            organizationId = project.organizationId
-            createdAt = project.createdAt
-            isDefault = project.isDefault
-            updatedAt = project.updatedAt
-            additionalProperties = project.additionalProperties.toMutableMap()
-        }
+        internal fun from(project: Project) =
+            apply {
+                id = project.id
+                name = project.name
+                organizationId = project.organizationId
+                createdAt = project.createdAt
+                isDefault = project.isDefault
+                updatedAt = project.updatedAt
+                additionalProperties = project.additionalProperties.toMutableMap()
+            }
 
         /** The project's unique identifier. */
         fun id(id: String) = id(JsonField.of(id))
@@ -200,10 +201,13 @@ private constructor(
         /**
          * Sets [Builder.id] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.id] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun id(id: JsonField<String>) = apply { this.id = id }
+        fun id(id: JsonField<String>) =
+            apply {
+                this.id = id
+            }
 
         /** The project's display name. */
         fun name(name: String) = name(JsonField.of(name))
@@ -211,10 +215,13 @@ private constructor(
         /**
          * Sets [Builder.name] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun name(name: JsonField<String>) = apply { this.name = name }
+        fun name(name: JsonField<String>) =
+            apply {
+                this.name = name
+            }
 
         /** The organization the project belongs to. */
         fun organizationId(organizationId: String) = organizationId(JsonField.of(organizationId))
@@ -222,13 +229,13 @@ private constructor(
         /**
          * Sets [Builder.organizationId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.organizationId] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.organizationId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun organizationId(organizationId: JsonField<String>) = apply {
-            this.organizationId = organizationId
-        }
+        fun organizationId(organizationId: JsonField<String>) =
+            apply {
+                this.organizationId = organizationId
+            }
 
         /** Creation datetime */
         fun createdAt(createdAt: OffsetDateTime?) = createdAt(JsonField.ofNullable(createdAt))
@@ -239,11 +246,13 @@ private constructor(
         /**
          * Sets [Builder.createdAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+        fun createdAt(createdAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.createdAt = createdAt
+            }
 
         /** Whether this project is the default project for its organization. */
         fun isDefault(isDefault: Boolean) = isDefault(JsonField.of(isDefault))
@@ -251,11 +260,13 @@ private constructor(
         /**
          * Sets [Builder.isDefault] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.isDefault] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.isDefault] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun isDefault(isDefault: JsonField<Boolean>) = apply { this.isDefault = isDefault }
+        fun isDefault(isDefault: JsonField<Boolean>) =
+            apply {
+                this.isDefault = isDefault
+            }
 
         /** Update datetime */
         fun updatedAt(updatedAt: OffsetDateTime?) = updatedAt(JsonField.ofNullable(updatedAt))
@@ -266,30 +277,39 @@ private constructor(
         /**
          * Sets [Builder.updatedAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.updatedAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.updatedAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
+        fun updatedAt(updatedAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.updatedAt = updatedAt
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [Project].
@@ -297,6 +317,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * .name()
@@ -307,13 +328,19 @@ private constructor(
          */
         fun build(): Project =
             Project(
-                checkRequired("id", id),
-                checkRequired("name", name),
-                checkRequired("organizationId", organizationId),
-                createdAt,
-                isDefault,
-                updatedAt,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "id", id
+              ),
+              checkRequired(
+                "name", name
+              ),
+              checkRequired(
+                "organizationId", organizationId
+              ),
+              createdAt,
+              isDefault,
+              updatedAt,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -324,22 +351,23 @@ private constructor(
      *
      * This method is _not_ forwards compatible with new types from the API for existing fields.
      *
-     * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match
-     *   its expected type.
+     * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
      */
-    fun validate(): Project = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): Project =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        id()
-        name()
-        organizationId()
-        createdAt()
-        isDefault()
-        updatedAt()
-        validated = true
-    }
+            id()
+            name()
+            organizationId()
+            createdAt()
+            isDefault()
+            updatedAt()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -355,43 +383,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (if (name.asKnown().isPresent) 1 else 0) +
-            (if (organizationId.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (if (isDefault.asKnown().isPresent) 1 else 0) +
-            (if (updatedAt.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (id.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0) + (if (organizationId.asKnown().isPresent) 1 else 0) + (if (createdAt.asKnown().isPresent) 1 else 0) + (if (isDefault.asKnown().isPresent) 1 else 0) + (if (updatedAt.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is Project &&
-            id == other.id &&
-            name == other.name &&
-            organizationId == other.organizationId &&
-            createdAt == other.createdAt &&
-            isDefault == other.isDefault &&
-            updatedAt == other.updatedAt &&
-            additionalProperties == other.additionalProperties
+      return other is Project && id == other.id && name == other.name && organizationId == other.organizationId && createdAt == other.createdAt && isDefault == other.isDefault && updatedAt == other.updatedAt && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            id,
-            name,
-            organizationId,
-            createdAt,
-            isDefault,
-            updatedAt,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(id, name, organizationId, createdAt, isDefault, updatedAt, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "Project{id=$id, name=$name, organizationId=$organizationId, createdAt=$createdAt, isDefault=$isDefault, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+    override fun toString() = "Project{id=$id, name=$name, organizationId=$organizationId, createdAt=$createdAt, isDefault=$isDefault, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }
