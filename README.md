@@ -1,10 +1,17 @@
 # Llama Cloud Admin Java API Library
 
-The Llama Cloud Admin Java SDK provides convenient access to the [Llama Cloud Admin REST API](https://developers.llamaindex.ai/) from applications written in Java.
+The Llama Cloud Admin Java SDK provides convenient access to the Llama Cloud Admin REST API from applications written in Java.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The REST API documentation can be found on [developers.llamaindex.ai](https://developers.llamaindex.ai/).
+This SDK covers the LlamaCloud organization- and project-administration API — 30 endpoints in total:
+organizations (`client.organizations()`), organization members and roles
+(`client.organizations().users()`, `client.organizations().roles()`), projects (`client.projects()`),
+invites (`client.invites()`), and the deployment-operator surface under `/api/v1/admin/*`
+(`client.admin()`). These endpoints are not covered by the public documentation on
+developers.llamaindex.ai. For the full method surface, generate the Javadoc with
+`./gradlew :llama-cloud-admin:dokkaJavadoc`, or read the service interfaces under
+`llama-cloud-admin-core/src/main/kotlin/ai/llamaindex/llamacloudadmin/services/blocking/`.
 
 ## Installation
 
@@ -111,8 +118,11 @@ See this table for the available options:
 
 System properties take precedence over environment variables.
 
+The API key must belong to an organization admin. The `client.admin()` methods (`/api/v1/admin/*`)
+additionally require the deployment's global admin key.
+
 Self-hosted and BYOC deployments must set `baseUrl` (or `LLAMA_CLOUD_ADMIN_BASE_URL`) to their own
-host, and must use an API key belonging to the deployment's global admin.
+host, and must use an API key belonging to that deployment's global admin.
 
 > [!TIP]
 > Don't create more than one client in the same application. Each client has a connection pool and
@@ -554,9 +564,10 @@ To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQu
 
 ```java
 import ai.llamaindex.llamacloudadmin.core.JsonValue;
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams;
+import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationCreateParams;
 
-UserListMembersParams params = UserListMembersParams.builder()
+OrganizationCreateParams params = OrganizationCreateParams.builder()
+    .name("My organization")
     .putAdditionalHeader("Secret-Header", "42")
     .putAdditionalQueryParam("secret_query_param", "42")
     .putAdditionalBodyProperty("secretProperty", JsonValue.from("42"))
@@ -583,9 +594,12 @@ These properties can be accessed on the nested built object later using the `_ad
 To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](llama-cloud-admin-core/src/main/kotlin/ai/llamaindex/llamacloudadmin/core/Values.kt) object to its setter:
 
 ```java
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams;
+import ai.llamaindex.llamacloudadmin.core.JsonValue;
+import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationCreateParams;
 
-UserListMembersParams params = UserListMembersParams.builder().build();
+OrganizationCreateParams params = OrganizationCreateParams.builder()
+    .name(JsonValue.from(42))
+    .build();
 ```
 
 The most straightforward way to create a [`JsonValue`](llama-cloud-admin-core/src/main/kotlin/ai/llamaindex/llamacloudadmin/core/Values.kt) is using its `from(...)` method:
@@ -633,10 +647,10 @@ To forcibly omit a required parameter or property, pass [`JsonMissing`](llama-cl
 
 ```java
 import ai.llamaindex.llamacloudadmin.core.JsonMissing;
-import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListMembersParams;
+import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationCreateParams;
 
-UserListMembersParams params = UserListMembersParams.builder()
-    .organizationId(JsonMissing.of())
+OrganizationCreateParams params = OrganizationCreateParams.builder()
+    .name(JsonMissing.of())
     .build();
 ```
 
