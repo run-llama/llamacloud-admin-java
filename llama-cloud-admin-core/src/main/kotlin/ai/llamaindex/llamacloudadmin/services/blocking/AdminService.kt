@@ -15,6 +15,8 @@ import ai.llamaindex.llamacloudadmin.models.admin.AdminGetLlmsInfoParams
 import ai.llamaindex.llamacloudadmin.models.admin.AdminGetLlmsInfoResponse
 import ai.llamaindex.llamacloudadmin.models.admin.AdminGetOcrStatusParams
 import ai.llamaindex.llamacloudadmin.models.admin.AdminGetOcrStatusResponse
+import ai.llamaindex.llamacloudadmin.models.admin.AdminGetS3ConfigParams
+import ai.llamaindex.llamacloudadmin.models.admin.AdminGetS3ConfigResponse
 import ai.llamaindex.llamacloudadmin.services.blocking.admin.UsageMetricService
 import ai.llamaindex.llamacloudadmin.services.blocking.admin.UserService
 import com.google.errorprone.annotations.MustBeClosed
@@ -132,6 +134,24 @@ interface AdminService {
     /** @see getOcrStatus */
     fun getOcrStatus(requestOptions: RequestOptions): AdminGetOcrStatusResponse =
         getOcrStatus(AdminGetOcrStatusParams.none(), requestOptions)
+
+    /** Return resolved S3 configuration and presigned URL signing details. */
+    fun getS3Config(): AdminGetS3ConfigResponse = getS3Config(AdminGetS3ConfigParams.none())
+
+    /** @see getS3Config */
+    fun getS3Config(
+        params: AdminGetS3ConfigParams = AdminGetS3ConfigParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AdminGetS3ConfigResponse
+
+    /** @see getS3Config */
+    fun getS3Config(
+        params: AdminGetS3ConfigParams = AdminGetS3ConfigParams.none()
+    ): AdminGetS3ConfigResponse = getS3Config(params, RequestOptions.none())
+
+    /** @see getS3Config */
+    fun getS3Config(requestOptions: RequestOptions): AdminGetS3ConfigResponse =
+        getS3Config(AdminGetS3ConfigParams.none(), requestOptions)
 
     /** A view of [AdminService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -287,5 +307,31 @@ interface AdminService {
             requestOptions: RequestOptions
         ): HttpResponseFor<AdminGetOcrStatusResponse> =
             getOcrStatus(AdminGetOcrStatusParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /api/v1/admin/s3/config`, but is otherwise the same
+         * as [AdminService.getS3Config].
+         */
+        @MustBeClosed
+        fun getS3Config(): HttpResponseFor<AdminGetS3ConfigResponse> =
+            getS3Config(AdminGetS3ConfigParams.none())
+
+        /** @see getS3Config */
+        @MustBeClosed
+        fun getS3Config(
+            params: AdminGetS3ConfigParams = AdminGetS3ConfigParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AdminGetS3ConfigResponse>
+
+        /** @see getS3Config */
+        @MustBeClosed
+        fun getS3Config(
+            params: AdminGetS3ConfigParams = AdminGetS3ConfigParams.none()
+        ): HttpResponseFor<AdminGetS3ConfigResponse> = getS3Config(params, RequestOptions.none())
+
+        /** @see getS3Config */
+        @MustBeClosed
+        fun getS3Config(requestOptions: RequestOptions): HttpResponseFor<AdminGetS3ConfigResponse> =
+            getS3Config(AdminGetS3ConfigParams.none(), requestOptions)
     }
 }

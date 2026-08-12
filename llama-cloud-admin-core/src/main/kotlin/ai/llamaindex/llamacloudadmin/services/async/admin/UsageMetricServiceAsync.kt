@@ -4,9 +4,11 @@ package ai.llamaindex.llamacloudadmin.services.async.admin
 
 import ai.llamaindex.llamacloudadmin.core.ClientOptions
 import ai.llamaindex.llamacloudadmin.core.RequestOptions
+import ai.llamaindex.llamacloudadmin.core.http.HttpResponse
 import ai.llamaindex.llamacloudadmin.core.http.HttpResponseFor
 import ai.llamaindex.llamacloudadmin.models.admin.usagemetrics.UsageMetricAggregateParams
 import ai.llamaindex.llamacloudadmin.models.admin.usagemetrics.UsageMetricAggregateResponse
+import ai.llamaindex.llamacloudadmin.models.admin.usagemetrics.UsageMetricExportParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -45,6 +47,21 @@ interface UsageMetricServiceAsync {
     ): CompletableFuture<UsageMetricAggregateResponse>
 
     /**
+     * Export usage metrics line by line as CSV over a date range. Global admin only.
+     *
+     * Each row is a single usage metric. Use the optional filters to scope the export to an
+     * organization, project, user, or set of event types.
+     */
+    fun export(params: UsageMetricExportParams): CompletableFuture<Void?> =
+        export(params, RequestOptions.none())
+
+    /** @see export */
+    fun export(
+        params: UsageMetricExportParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?>
+
+    /**
      * A view of [UsageMetricServiceAsync] that provides access to raw HTTP responses for each
      * method.
      */
@@ -73,5 +90,18 @@ interface UsageMetricServiceAsync {
             params: UsageMetricAggregateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<UsageMetricAggregateResponse>>
+
+        /**
+         * Returns a raw HTTP response for `get /api/v1/admin/usage-metrics/export`, but is
+         * otherwise the same as [UsageMetricServiceAsync.export].
+         */
+        fun export(params: UsageMetricExportParams): CompletableFuture<HttpResponse> =
+            export(params, RequestOptions.none())
+
+        /** @see export */
+        fun export(
+            params: UsageMetricExportParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse>
     }
 }

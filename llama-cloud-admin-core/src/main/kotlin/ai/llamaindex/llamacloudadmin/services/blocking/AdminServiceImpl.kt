@@ -24,6 +24,8 @@ import ai.llamaindex.llamacloudadmin.models.admin.AdminGetLlmsInfoParams
 import ai.llamaindex.llamacloudadmin.models.admin.AdminGetLlmsInfoResponse
 import ai.llamaindex.llamacloudadmin.models.admin.AdminGetOcrStatusParams
 import ai.llamaindex.llamacloudadmin.models.admin.AdminGetOcrStatusResponse
+import ai.llamaindex.llamacloudadmin.models.admin.AdminGetS3ConfigParams
+import ai.llamaindex.llamacloudadmin.models.admin.AdminGetS3ConfigResponse
 import ai.llamaindex.llamacloudadmin.services.blocking.admin.UsageMetricService
 import ai.llamaindex.llamacloudadmin.services.blocking.admin.UsageMetricServiceImpl
 import ai.llamaindex.llamacloudadmin.services.blocking.admin.UserService
@@ -84,6 +86,13 @@ class AdminServiceImpl internal constructor(private val clientOptions: ClientOpt
     ): AdminGetOcrStatusResponse =
         // get /api/v1/admin/ocr/statusz
         withRawResponse().getOcrStatus(params, requestOptions).parse()
+
+    override fun getS3Config(
+        params: AdminGetS3ConfigParams,
+        requestOptions: RequestOptions,
+    ): AdminGetS3ConfigResponse =
+        // get /api/v1/admin/s3/config
+        withRawResponse().getS3Config(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AdminService.WithRawResponse {
@@ -237,6 +246,33 @@ class AdminServiceImpl internal constructor(private val clientOptions: ClientOpt
             return errorHandler.handle(response).parseable {
                 response
                     .use { getOcrStatusHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+            }
+        }
+
+        private val getS3ConfigHandler: Handler<AdminGetS3ConfigResponse> =
+            jsonHandler<AdminGetS3ConfigResponse>(clientOptions.jsonMapper)
+
+        override fun getS3Config(
+            params: AdminGetS3ConfigParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<AdminGetS3ConfigResponse> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "admin", "s3", "config")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { getS3ConfigHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

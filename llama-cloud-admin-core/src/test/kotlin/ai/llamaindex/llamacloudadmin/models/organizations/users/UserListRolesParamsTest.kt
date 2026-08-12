@@ -1,25 +1,25 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package ai.llamaindex.llamacloudadmin.models.organizations
+package ai.llamaindex.llamacloudadmin.models.organizations.users
 
 import ai.llamaindex.llamacloudadmin.core.http.QueryParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class OrganizationGetUsageParamsTest {
+internal class UserListRolesParamsTest {
 
     @Test
     fun create() {
-        OrganizationGetUsageParams.builder()
+        UserListRolesParams.builder()
             .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-            .getCurrentInvoiceTotal(true)
+            .projectId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
             .build()
     }
 
     @Test
     fun pathParams() {
         val params =
-            OrganizationGetUsageParams.builder()
+            UserListRolesParams.builder()
                 .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                 .build()
 
@@ -31,21 +31,25 @@ internal class OrganizationGetUsageParamsTest {
     @Test
     fun queryParams() {
         val params =
-            OrganizationGetUsageParams.builder()
+            UserListRolesParams.builder()
                 .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .getCurrentInvoiceTotal(true)
+                .projectId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                 .build()
 
         val queryParams = params._queryParams()
 
         assertThat(queryParams)
-            .isEqualTo(QueryParams.builder().put("get_current_invoice_total", "true").build())
+            .isEqualTo(
+                QueryParams.builder()
+                    .put("project_id", "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+                    .build()
+            )
     }
 
     @Test
     fun queryParamsWithoutOptionalFields() {
         val params =
-            OrganizationGetUsageParams.builder()
+            UserListRolesParams.builder()
                 .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                 .build()
 

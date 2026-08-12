@@ -21,12 +21,10 @@ import ai.llamaindex.llamacloudadmin.models.organizations.Organization
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationCreateParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationDeleteParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetParams
-import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetUsageParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListPageAsync
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListPageResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationUpdateParams
-import ai.llamaindex.llamacloudadmin.models.organizations.UsageAndPlan
 import ai.llamaindex.llamacloudadmin.services.async.organizations.RoleServiceAsync
 import ai.llamaindex.llamacloudadmin.services.async.organizations.RoleServiceAsyncImpl
 import ai.llamaindex.llamacloudadmin.services.async.organizations.UserServiceAsync
@@ -89,13 +87,6 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
     ): CompletableFuture<Organization> =
         // get /api/v2/organizations/{organization_id}
         withRawResponse().get(params, requestOptions).thenApply { it.parse() }
-
-    override fun getUsage(
-        params: OrganizationGetUsageParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<UsageAndPlan> =
-        // get /api/v1/organizations/{organization_id}/usage
-        withRawResponse().getUsage(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         OrganizationServiceAsync.WithRawResponse {
@@ -276,39 +267,6 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
                     errorHandler.handle(response).parseable {
                         response
                             .use { getHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
-        }
-
-        private val getUsageHandler: Handler<UsageAndPlan> =
-            jsonHandler<UsageAndPlan>(clientOptions.jsonMapper)
-
-        override fun getUsage(
-            params: OrganizationGetUsageParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<UsageAndPlan>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("organizationId", params.organizationId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("api", "v1", "organizations", params._pathParam(0), "usage")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { getUsageHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

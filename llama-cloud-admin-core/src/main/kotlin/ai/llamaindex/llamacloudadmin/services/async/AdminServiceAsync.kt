@@ -15,6 +15,8 @@ import ai.llamaindex.llamacloudadmin.models.admin.AdminGetLlmsInfoParams
 import ai.llamaindex.llamacloudadmin.models.admin.AdminGetLlmsInfoResponse
 import ai.llamaindex.llamacloudadmin.models.admin.AdminGetOcrStatusParams
 import ai.llamaindex.llamacloudadmin.models.admin.AdminGetOcrStatusResponse
+import ai.llamaindex.llamacloudadmin.models.admin.AdminGetS3ConfigParams
+import ai.llamaindex.llamacloudadmin.models.admin.AdminGetS3ConfigResponse
 import ai.llamaindex.llamacloudadmin.services.async.admin.UsageMetricServiceAsync
 import ai.llamaindex.llamacloudadmin.services.async.admin.UserServiceAsync
 import java.util.concurrent.CompletableFuture
@@ -141,6 +143,25 @@ interface AdminServiceAsync {
     /** @see getOcrStatus */
     fun getOcrStatus(requestOptions: RequestOptions): CompletableFuture<AdminGetOcrStatusResponse> =
         getOcrStatus(AdminGetOcrStatusParams.none(), requestOptions)
+
+    /** Return resolved S3 configuration and presigned URL signing details. */
+    fun getS3Config(): CompletableFuture<AdminGetS3ConfigResponse> =
+        getS3Config(AdminGetS3ConfigParams.none())
+
+    /** @see getS3Config */
+    fun getS3Config(
+        params: AdminGetS3ConfigParams = AdminGetS3ConfigParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<AdminGetS3ConfigResponse>
+
+    /** @see getS3Config */
+    fun getS3Config(
+        params: AdminGetS3ConfigParams = AdminGetS3ConfigParams.none()
+    ): CompletableFuture<AdminGetS3ConfigResponse> = getS3Config(params, RequestOptions.none())
+
+    /** @see getS3Config */
+    fun getS3Config(requestOptions: RequestOptions): CompletableFuture<AdminGetS3ConfigResponse> =
+        getS3Config(AdminGetS3ConfigParams.none(), requestOptions)
 
     /** A view of [AdminServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -284,5 +305,30 @@ interface AdminServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<AdminGetOcrStatusResponse>> =
             getOcrStatus(AdminGetOcrStatusParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /api/v1/admin/s3/config`, but is otherwise the same
+         * as [AdminServiceAsync.getS3Config].
+         */
+        fun getS3Config(): CompletableFuture<HttpResponseFor<AdminGetS3ConfigResponse>> =
+            getS3Config(AdminGetS3ConfigParams.none())
+
+        /** @see getS3Config */
+        fun getS3Config(
+            params: AdminGetS3ConfigParams = AdminGetS3ConfigParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<AdminGetS3ConfigResponse>>
+
+        /** @see getS3Config */
+        fun getS3Config(
+            params: AdminGetS3ConfigParams = AdminGetS3ConfigParams.none()
+        ): CompletableFuture<HttpResponseFor<AdminGetS3ConfigResponse>> =
+            getS3Config(params, RequestOptions.none())
+
+        /** @see getS3Config */
+        fun getS3Config(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<AdminGetS3ConfigResponse>> =
+            getS3Config(AdminGetS3ConfigParams.none(), requestOptions)
     }
 }

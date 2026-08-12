@@ -16,20 +16,15 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Aggregate usage metrics by one or more dimensions, reporting total credits used. Global admin
- * only.
+ * Export usage metrics line by line as CSV over a date range. Global admin only.
  *
- * A date range is required, which bounds the scan via the `day`-leading index. Supplying
- * `organization_id` narrows it further via the `(organization_id, day)` index.
- *
- * Supported `group_by` dimensions: `day`, `organization_id`, `project_id`, `event_type`, `user_id`.
- * Buckets are ordered by total credits descending.
+ * Each row is a single usage metric. Use the optional filters to scope the export to an
+ * organization, project, user, or set of event types.
  */
-class UsageMetricAggregateParams
+class UsageMetricExportParams
 private constructor(
     private val dayOnOrAfter: String,
     private val dayOnOrBefore: String,
-    private val groupBy: List<String>,
     private val eventTypes: List<EventType>?,
     private val organizationId: String?,
     private val projectId: String?,
@@ -43,9 +38,6 @@ private constructor(
 
     /** Inclusive upper bound on the day (YYYY-MM-DD, UTC) */
     fun dayOnOrBefore(): String = dayOnOrBefore
-
-    /** Dimensions to group by: day, organization_id, project_id, event_type, user_id */
-    fun groupBy(): List<String> = groupBy
 
     /** Filter by event types */
     fun eventTypes(): Optional<List<EventType>> = Optional.ofNullable(eventTypes)
@@ -70,24 +62,22 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [UsageMetricAggregateParams].
+         * Returns a mutable builder for constructing an instance of [UsageMetricExportParams].
          *
          * The following fields are required:
          * ```java
          * .dayOnOrAfter()
          * .dayOnOrBefore()
-         * .groupBy()
          * ```
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [UsageMetricAggregateParams]. */
+    /** A builder for [UsageMetricExportParams]. */
     class Builder internal constructor() {
 
         private var dayOnOrAfter: String? = null
         private var dayOnOrBefore: String? = null
-        private var groupBy: MutableList<String>? = null
         private var eventTypes: MutableList<EventType>? = null
         private var organizationId: String? = null
         private var projectId: String? = null
@@ -96,16 +86,15 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(usageMetricAggregateParams: UsageMetricAggregateParams) = apply {
-            dayOnOrAfter = usageMetricAggregateParams.dayOnOrAfter
-            dayOnOrBefore = usageMetricAggregateParams.dayOnOrBefore
-            groupBy = usageMetricAggregateParams.groupBy.toMutableList()
-            eventTypes = usageMetricAggregateParams.eventTypes?.toMutableList()
-            organizationId = usageMetricAggregateParams.organizationId
-            projectId = usageMetricAggregateParams.projectId
-            userId = usageMetricAggregateParams.userId
-            additionalHeaders = usageMetricAggregateParams.additionalHeaders.toBuilder()
-            additionalQueryParams = usageMetricAggregateParams.additionalQueryParams.toBuilder()
+        internal fun from(usageMetricExportParams: UsageMetricExportParams) = apply {
+            dayOnOrAfter = usageMetricExportParams.dayOnOrAfter
+            dayOnOrBefore = usageMetricExportParams.dayOnOrBefore
+            eventTypes = usageMetricExportParams.eventTypes?.toMutableList()
+            organizationId = usageMetricExportParams.organizationId
+            projectId = usageMetricExportParams.projectId
+            userId = usageMetricExportParams.userId
+            additionalHeaders = usageMetricExportParams.additionalHeaders.toBuilder()
+            additionalQueryParams = usageMetricExportParams.additionalQueryParams.toBuilder()
         }
 
         /** Inclusive lower bound on the day (YYYY-MM-DD, UTC) */
@@ -113,18 +102,6 @@ private constructor(
 
         /** Inclusive upper bound on the day (YYYY-MM-DD, UTC) */
         fun dayOnOrBefore(dayOnOrBefore: String) = apply { this.dayOnOrBefore = dayOnOrBefore }
-
-        /** Dimensions to group by: day, organization_id, project_id, event_type, user_id */
-        fun groupBy(groupBy: List<String>) = apply { this.groupBy = groupBy.toMutableList() }
-
-        /**
-         * Adds a single [String] to [Builder.groupBy].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        fun addGroupBy(groupBy: String) = apply {
-            this.groupBy = (this.groupBy ?: mutableListOf()).apply { add(groupBy) }
-        }
 
         /** Filter by event types */
         fun eventTypes(eventTypes: List<EventType>?) = apply {
@@ -261,7 +238,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [UsageMetricAggregateParams].
+         * Returns an immutable instance of [UsageMetricExportParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -269,16 +246,14 @@ private constructor(
          * ```java
          * .dayOnOrAfter()
          * .dayOnOrBefore()
-         * .groupBy()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): UsageMetricAggregateParams =
-            UsageMetricAggregateParams(
+        fun build(): UsageMetricExportParams =
+            UsageMetricExportParams(
                 checkRequired("dayOnOrAfter", dayOnOrAfter),
                 checkRequired("dayOnOrBefore", dayOnOrBefore),
-                checkRequired("groupBy", groupBy).toImmutable(),
                 eventTypes?.toImmutable(),
                 organizationId,
                 projectId,
@@ -295,7 +270,6 @@ private constructor(
             .apply {
                 put("day_on_or_after", dayOnOrAfter)
                 put("day_on_or_before", dayOnOrBefore)
-                groupBy.forEach { put("group_by", it) }
                 eventTypes?.forEach { put("event_types", it.toString()) }
                 organizationId?.let { put("organization_id", it) }
                 projectId?.let { put("project_id", it) }
@@ -621,10 +595,9 @@ private constructor(
             return true
         }
 
-        return other is UsageMetricAggregateParams &&
+        return other is UsageMetricExportParams &&
             dayOnOrAfter == other.dayOnOrAfter &&
             dayOnOrBefore == other.dayOnOrBefore &&
-            groupBy == other.groupBy &&
             eventTypes == other.eventTypes &&
             organizationId == other.organizationId &&
             projectId == other.projectId &&
@@ -637,7 +610,6 @@ private constructor(
         Objects.hash(
             dayOnOrAfter,
             dayOnOrBefore,
-            groupBy,
             eventTypes,
             organizationId,
             projectId,
@@ -647,5 +619,5 @@ private constructor(
         )
 
     override fun toString() =
-        "UsageMetricAggregateParams{dayOnOrAfter=$dayOnOrAfter, dayOnOrBefore=$dayOnOrBefore, groupBy=$groupBy, eventTypes=$eventTypes, organizationId=$organizationId, projectId=$projectId, userId=$userId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "UsageMetricExportParams{dayOnOrAfter=$dayOnOrAfter, dayOnOrBefore=$dayOnOrBefore, eventTypes=$eventTypes, organizationId=$organizationId, projectId=$projectId, userId=$userId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

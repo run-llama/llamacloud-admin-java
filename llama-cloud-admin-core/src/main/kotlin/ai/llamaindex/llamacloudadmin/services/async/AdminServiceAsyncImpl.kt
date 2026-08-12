@@ -24,6 +24,8 @@ import ai.llamaindex.llamacloudadmin.models.admin.AdminGetLlmsInfoParams
 import ai.llamaindex.llamacloudadmin.models.admin.AdminGetLlmsInfoResponse
 import ai.llamaindex.llamacloudadmin.models.admin.AdminGetOcrStatusParams
 import ai.llamaindex.llamacloudadmin.models.admin.AdminGetOcrStatusResponse
+import ai.llamaindex.llamacloudadmin.models.admin.AdminGetS3ConfigParams
+import ai.llamaindex.llamacloudadmin.models.admin.AdminGetS3ConfigResponse
 import ai.llamaindex.llamacloudadmin.services.async.admin.UsageMetricServiceAsync
 import ai.llamaindex.llamacloudadmin.services.async.admin.UsageMetricServiceAsyncImpl
 import ai.llamaindex.llamacloudadmin.services.async.admin.UserServiceAsync
@@ -87,6 +89,13 @@ class AdminServiceAsyncImpl internal constructor(private val clientOptions: Clie
     ): CompletableFuture<AdminGetOcrStatusResponse> =
         // get /api/v1/admin/ocr/statusz
         withRawResponse().getOcrStatus(params, requestOptions).thenApply { it.parse() }
+
+    override fun getS3Config(
+        params: AdminGetS3ConfigParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<AdminGetS3ConfigResponse> =
+        // get /api/v1/admin/s3/config
+        withRawResponse().getS3Config(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AdminServiceAsync.WithRawResponse {
@@ -254,6 +263,36 @@ class AdminServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     errorHandler.handle(response).parseable {
                         response
                             .use { getOcrStatusHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val getS3ConfigHandler: Handler<AdminGetS3ConfigResponse> =
+            jsonHandler<AdminGetS3ConfigResponse>(clientOptions.jsonMapper)
+
+        override fun getS3Config(
+            params: AdminGetS3ConfigParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<AdminGetS3ConfigResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("api", "v1", "admin", "s3", "config")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { getS3ConfigHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

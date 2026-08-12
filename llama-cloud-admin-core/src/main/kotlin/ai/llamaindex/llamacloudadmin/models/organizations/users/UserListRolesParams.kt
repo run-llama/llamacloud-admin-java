@@ -1,29 +1,26 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package ai.llamaindex.llamacloudadmin.models.invites
+package ai.llamaindex.llamacloudadmin.models.organizations.users
 
-import ai.llamaindex.llamacloudadmin.core.JsonValue
 import ai.llamaindex.llamacloudadmin.core.Params
 import ai.llamaindex.llamacloudadmin.core.http.Headers
 import ai.llamaindex.llamacloudadmin.core.http.QueryParams
-import ai.llamaindex.llamacloudadmin.core.toImmutable
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Decline a pending invitation. */
-class InviteDeclineParams
+/** Get the role of a user in an organization. */
+class UserListRolesParams
 private constructor(
-    private val inviteId: String?,
+    private val organizationId: String?,
+    private val projectId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-    private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
-    fun inviteId(): Optional<String> = Optional.ofNullable(inviteId)
+    fun organizationId(): Optional<String> = Optional.ofNullable(organizationId)
 
-    /** Additional body properties to send with the request. */
-    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+    fun projectId(): Optional<String> = Optional.ofNullable(projectId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -35,32 +32,38 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): InviteDeclineParams = builder().build()
+        @JvmStatic fun none(): UserListRolesParams = builder().build()
 
-        /** Returns a mutable builder for constructing an instance of [InviteDeclineParams]. */
+        /** Returns a mutable builder for constructing an instance of [UserListRolesParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [InviteDeclineParams]. */
+    /** A builder for [UserListRolesParams]. */
     class Builder internal constructor() {
 
-        private var inviteId: String? = null
+        private var organizationId: String? = null
+        private var projectId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
-        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(inviteDeclineParams: InviteDeclineParams) = apply {
-            inviteId = inviteDeclineParams.inviteId
-            additionalHeaders = inviteDeclineParams.additionalHeaders.toBuilder()
-            additionalQueryParams = inviteDeclineParams.additionalQueryParams.toBuilder()
-            additionalBodyProperties = inviteDeclineParams.additionalBodyProperties.toMutableMap()
+        internal fun from(userListRolesParams: UserListRolesParams) = apply {
+            organizationId = userListRolesParams.organizationId
+            projectId = userListRolesParams.projectId
+            additionalHeaders = userListRolesParams.additionalHeaders.toBuilder()
+            additionalQueryParams = userListRolesParams.additionalQueryParams.toBuilder()
         }
 
-        fun inviteId(inviteId: String?) = apply { this.inviteId = inviteId }
+        fun organizationId(organizationId: String?) = apply { this.organizationId = organizationId }
 
-        /** Alias for calling [Builder.inviteId] with `inviteId.orElse(null)`. */
-        fun inviteId(inviteId: Optional<String>) = inviteId(inviteId.getOrNull())
+        /** Alias for calling [Builder.organizationId] with `organizationId.orElse(null)`. */
+        fun organizationId(organizationId: Optional<String>) =
+            organizationId(organizationId.getOrNull())
+
+        fun projectId(projectId: String?) = apply { this.projectId = projectId }
+
+        /** Alias for calling [Builder.projectId] with `projectId.orElse(null)`. */
+        fun projectId(projectId: Optional<String>) = projectId(projectId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -160,70 +163,51 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            this.additionalBodyProperties.clear()
-            putAllAdditionalBodyProperties(additionalBodyProperties)
-        }
-
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            additionalBodyProperties.put(key, value)
-        }
-
-        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
-            apply {
-                this.additionalBodyProperties.putAll(additionalBodyProperties)
-            }
-
-        fun removeAdditionalBodyProperty(key: String) = apply {
-            additionalBodyProperties.remove(key)
-        }
-
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalBodyProperty)
-        }
-
         /**
-         * Returns an immutable instance of [InviteDeclineParams].
+         * Returns an immutable instance of [UserListRolesParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): InviteDeclineParams =
-            InviteDeclineParams(
-                inviteId,
+        fun build(): UserListRolesParams =
+            UserListRolesParams(
+                organizationId,
+                projectId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
-                additionalBodyProperties.toImmutable(),
             )
     }
 
-    fun _body(): Optional<Map<String, JsonValue>> =
-        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
-
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> inviteId ?: ""
+            0 -> organizationId ?: ""
             else -> ""
         }
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                projectId?.let { put("project_id", it) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is InviteDeclineParams &&
-            inviteId == other.inviteId &&
+        return other is UserListRolesParams &&
+            organizationId == other.organizationId &&
+            projectId == other.projectId &&
             additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams &&
-            additionalBodyProperties == other.additionalBodyProperties
+            additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(inviteId, additionalHeaders, additionalQueryParams, additionalBodyProperties)
+        Objects.hash(organizationId, projectId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "InviteDeclineParams{inviteId=$inviteId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "UserListRolesParams{organizationId=$organizationId, projectId=$projectId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -10,6 +10,29 @@ internal class InviteServiceAsyncTest {
 
     @Disabled("Mock server tests are disabled")
     @Test
+    fun list() {
+        val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val inviteServiceAsync = client.invites()
+
+        val pageFuture = inviteServiceAsync.list()
+
+        val page = pageFuture.get()
+        page.response().validate()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun delete() {
+        val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
+        val inviteServiceAsync = client.invites()
+
+        val future = inviteServiceAsync.delete("invite_id")
+
+        val response = future.get()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
     fun accept() {
         val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
         val inviteServiceAsync = client.invites()
@@ -18,28 +41,5 @@ internal class InviteServiceAsyncTest {
 
         val response = responseFuture.get()
         response.validate()
-    }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun decline() {
-        val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
-        val inviteServiceAsync = client.invites()
-
-        val future = inviteServiceAsync.decline("invite_id")
-
-        val response = future.get()
-    }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun listMine() {
-        val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
-        val inviteServiceAsync = client.invites()
-
-        val pageFuture = inviteServiceAsync.listMine()
-
-        val page = pageFuture.get()
-        page.response().validate()
     }
 }

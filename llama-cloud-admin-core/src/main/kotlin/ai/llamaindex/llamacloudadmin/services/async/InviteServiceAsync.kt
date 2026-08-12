@@ -8,9 +8,9 @@ import ai.llamaindex.llamacloudadmin.core.http.HttpResponse
 import ai.llamaindex.llamacloudadmin.core.http.HttpResponseFor
 import ai.llamaindex.llamacloudadmin.models.invites.InviteAcceptParams
 import ai.llamaindex.llamacloudadmin.models.invites.InviteAcceptResponse
-import ai.llamaindex.llamacloudadmin.models.invites.InviteDeclineParams
-import ai.llamaindex.llamacloudadmin.models.invites.InviteListMinePageAsync
-import ai.llamaindex.llamacloudadmin.models.invites.InviteListMineParams
+import ai.llamaindex.llamacloudadmin.models.invites.InviteDeleteParams
+import ai.llamaindex.llamacloudadmin.models.invites.InviteListPageAsync
+import ai.llamaindex.llamacloudadmin.models.invites.InviteListParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -27,6 +27,56 @@ interface InviteServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): InviteServiceAsync
+
+    /** List the current user's pending invitations, cursor-paginated. */
+    fun list(): CompletableFuture<InviteListPageAsync> = list(InviteListParams.none())
+
+    /** @see list */
+    fun list(
+        params: InviteListParams = InviteListParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<InviteListPageAsync>
+
+    /** @see list */
+    fun list(
+        params: InviteListParams = InviteListParams.none()
+    ): CompletableFuture<InviteListPageAsync> = list(params, RequestOptions.none())
+
+    /** @see list */
+    fun list(requestOptions: RequestOptions): CompletableFuture<InviteListPageAsync> =
+        list(InviteListParams.none(), requestOptions)
+
+    /** Decline a pending invitation. */
+    fun delete(inviteId: String): CompletableFuture<Void?> =
+        delete(inviteId, InviteDeleteParams.none())
+
+    /** @see delete */
+    fun delete(
+        inviteId: String,
+        params: InviteDeleteParams = InviteDeleteParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?> =
+        delete(params.toBuilder().inviteId(inviteId).build(), requestOptions)
+
+    /** @see delete */
+    fun delete(
+        inviteId: String,
+        params: InviteDeleteParams = InviteDeleteParams.none(),
+    ): CompletableFuture<Void?> = delete(inviteId, params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(
+        params: InviteDeleteParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?>
+
+    /** @see delete */
+    fun delete(params: InviteDeleteParams): CompletableFuture<Void?> =
+        delete(params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(inviteId: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
+        delete(inviteId, InviteDeleteParams.none(), requestOptions)
 
     /** Accept a pending invitation. Returns the joined organization id. */
     fun accept(inviteId: String): CompletableFuture<InviteAcceptResponse> =
@@ -63,57 +113,6 @@ interface InviteServiceAsync {
     ): CompletableFuture<InviteAcceptResponse> =
         accept(inviteId, InviteAcceptParams.none(), requestOptions)
 
-    /** Decline a pending invitation. */
-    fun decline(inviteId: String): CompletableFuture<Void?> =
-        decline(inviteId, InviteDeclineParams.none())
-
-    /** @see decline */
-    fun decline(
-        inviteId: String,
-        params: InviteDeclineParams = InviteDeclineParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?> =
-        decline(params.toBuilder().inviteId(inviteId).build(), requestOptions)
-
-    /** @see decline */
-    fun decline(
-        inviteId: String,
-        params: InviteDeclineParams = InviteDeclineParams.none(),
-    ): CompletableFuture<Void?> = decline(inviteId, params, RequestOptions.none())
-
-    /** @see decline */
-    fun decline(
-        params: InviteDeclineParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
-
-    /** @see decline */
-    fun decline(params: InviteDeclineParams): CompletableFuture<Void?> =
-        decline(params, RequestOptions.none())
-
-    /** @see decline */
-    fun decline(inviteId: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
-        decline(inviteId, InviteDeclineParams.none(), requestOptions)
-
-    /** List the current user's pending invitations, cursor-paginated. */
-    fun listMine(): CompletableFuture<InviteListMinePageAsync> =
-        listMine(InviteListMineParams.none())
-
-    /** @see listMine */
-    fun listMine(
-        params: InviteListMineParams = InviteListMineParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<InviteListMinePageAsync>
-
-    /** @see listMine */
-    fun listMine(
-        params: InviteListMineParams = InviteListMineParams.none()
-    ): CompletableFuture<InviteListMinePageAsync> = listMine(params, RequestOptions.none())
-
-    /** @see listMine */
-    fun listMine(requestOptions: RequestOptions): CompletableFuture<InviteListMinePageAsync> =
-        listMine(InviteListMineParams.none(), requestOptions)
-
     /**
      * A view of [InviteServiceAsync] that provides access to raw HTTP responses for each method.
      */
@@ -127,6 +126,69 @@ interface InviteServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): InviteServiceAsync.WithRawResponse
+
+        /**
+         * Returns a raw HTTP response for `get /api/v2/invites`, but is otherwise the same as
+         * [InviteServiceAsync.list].
+         */
+        fun list(): CompletableFuture<HttpResponseFor<InviteListPageAsync>> =
+            list(InviteListParams.none())
+
+        /** @see list */
+        fun list(
+            params: InviteListParams = InviteListParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<InviteListPageAsync>>
+
+        /** @see list */
+        fun list(
+            params: InviteListParams = InviteListParams.none()
+        ): CompletableFuture<HttpResponseFor<InviteListPageAsync>> =
+            list(params, RequestOptions.none())
+
+        /** @see list */
+        fun list(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<InviteListPageAsync>> =
+            list(InviteListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete /api/v2/invites/{invite_id}`, but is otherwise
+         * the same as [InviteServiceAsync.delete].
+         */
+        fun delete(inviteId: String): CompletableFuture<HttpResponse> =
+            delete(inviteId, InviteDeleteParams.none())
+
+        /** @see delete */
+        fun delete(
+            inviteId: String,
+            params: InviteDeleteParams = InviteDeleteParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse> =
+            delete(params.toBuilder().inviteId(inviteId).build(), requestOptions)
+
+        /** @see delete */
+        fun delete(
+            inviteId: String,
+            params: InviteDeleteParams = InviteDeleteParams.none(),
+        ): CompletableFuture<HttpResponse> = delete(inviteId, params, RequestOptions.none())
+
+        /** @see delete */
+        fun delete(
+            params: InviteDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse>
+
+        /** @see delete */
+        fun delete(params: InviteDeleteParams): CompletableFuture<HttpResponse> =
+            delete(params, RequestOptions.none())
+
+        /** @see delete */
+        fun delete(
+            inviteId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> =
+            delete(inviteId, InviteDeleteParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post /api/v2/invites/{invite_id}/accept`, but is
@@ -168,68 +230,5 @@ interface InviteServiceAsync {
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<InviteAcceptResponse>> =
             accept(inviteId, InviteAcceptParams.none(), requestOptions)
-
-        /**
-         * Returns a raw HTTP response for `delete /api/v2/invites/{invite_id}`, but is otherwise
-         * the same as [InviteServiceAsync.decline].
-         */
-        fun decline(inviteId: String): CompletableFuture<HttpResponse> =
-            decline(inviteId, InviteDeclineParams.none())
-
-        /** @see decline */
-        fun decline(
-            inviteId: String,
-            params: InviteDeclineParams = InviteDeclineParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            decline(params.toBuilder().inviteId(inviteId).build(), requestOptions)
-
-        /** @see decline */
-        fun decline(
-            inviteId: String,
-            params: InviteDeclineParams = InviteDeclineParams.none(),
-        ): CompletableFuture<HttpResponse> = decline(inviteId, params, RequestOptions.none())
-
-        /** @see decline */
-        fun decline(
-            params: InviteDeclineParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
-
-        /** @see decline */
-        fun decline(params: InviteDeclineParams): CompletableFuture<HttpResponse> =
-            decline(params, RequestOptions.none())
-
-        /** @see decline */
-        fun decline(
-            inviteId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> =
-            decline(inviteId, InviteDeclineParams.none(), requestOptions)
-
-        /**
-         * Returns a raw HTTP response for `get /api/v2/invites`, but is otherwise the same as
-         * [InviteServiceAsync.listMine].
-         */
-        fun listMine(): CompletableFuture<HttpResponseFor<InviteListMinePageAsync>> =
-            listMine(InviteListMineParams.none())
-
-        /** @see listMine */
-        fun listMine(
-            params: InviteListMineParams = InviteListMineParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<InviteListMinePageAsync>>
-
-        /** @see listMine */
-        fun listMine(
-            params: InviteListMineParams = InviteListMineParams.none()
-        ): CompletableFuture<HttpResponseFor<InviteListMinePageAsync>> =
-            listMine(params, RequestOptions.none())
-
-        /** @see listMine */
-        fun listMine(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<InviteListMinePageAsync>> =
-            listMine(InviteListMineParams.none(), requestOptions)
     }
 }

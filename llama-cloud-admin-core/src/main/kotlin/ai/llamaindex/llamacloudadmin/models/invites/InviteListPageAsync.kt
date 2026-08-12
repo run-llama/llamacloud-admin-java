@@ -12,56 +12,55 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrNull
 
-/** @see InviteServiceAsync.listMine */
-class InviteListMinePageAsync
+/** @see InviteServiceAsync.list */
+class InviteListPageAsync
 private constructor(
     private val service: InviteServiceAsync,
     private val streamHandlerExecutor: Executor,
-    private val params: InviteListMineParams,
-    private val response: InviteListMinePageResponse,
+    private val params: InviteListParams,
+    private val response: InviteListPageResponse,
 ) : PageAsync<Invite> {
 
     /**
-     * Delegates to [InviteListMinePageResponse], but gracefully handles missing data.
+     * Delegates to [InviteListPageResponse], but gracefully handles missing data.
      *
-     * @see InviteListMinePageResponse.items
+     * @see InviteListPageResponse.items
      */
     override fun items(): List<Invite> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
     /**
-     * Delegates to [InviteListMinePageResponse], but gracefully handles missing data.
+     * Delegates to [InviteListPageResponse], but gracefully handles missing data.
      *
-     * @see InviteListMinePageResponse.nextPageToken
+     * @see InviteListPageResponse.nextPageToken
      */
     fun nextPageToken(): Optional<String> = response._nextPageToken().getOptional("next_page_token")
 
     override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageToken().isPresent
 
-    fun nextPageParams(): InviteListMineParams {
+    fun nextPageParams(): InviteListParams {
         val nextCursor =
             nextPageToken().getOrNull()
                 ?: throw IllegalStateException("Cannot construct next page params")
         return params.toBuilder().pageToken(nextCursor).build()
     }
 
-    override fun nextPage(): CompletableFuture<InviteListMinePageAsync> =
-        service.listMine(nextPageParams())
+    override fun nextPage(): CompletableFuture<InviteListPageAsync> = service.list(nextPageParams())
 
     fun autoPager(): AutoPagerAsync<Invite> = AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */
-    fun params(): InviteListMineParams = params
+    fun params(): InviteListParams = params
 
     /** The response that this page was parsed from. */
-    fun response(): InviteListMinePageResponse = response
+    fun response(): InviteListPageResponse = response
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [InviteListMinePageAsync].
+         * Returns a mutable builder for constructing an instance of [InviteListPageAsync].
          *
          * The following fields are required:
          * ```java
@@ -74,20 +73,20 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [InviteListMinePageAsync]. */
+    /** A builder for [InviteListPageAsync]. */
     class Builder internal constructor() {
 
         private var service: InviteServiceAsync? = null
         private var streamHandlerExecutor: Executor? = null
-        private var params: InviteListMineParams? = null
-        private var response: InviteListMinePageResponse? = null
+        private var params: InviteListParams? = null
+        private var response: InviteListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(inviteListMinePageAsync: InviteListMinePageAsync) = apply {
-            service = inviteListMinePageAsync.service
-            streamHandlerExecutor = inviteListMinePageAsync.streamHandlerExecutor
-            params = inviteListMinePageAsync.params
-            response = inviteListMinePageAsync.response
+        internal fun from(inviteListPageAsync: InviteListPageAsync) = apply {
+            service = inviteListPageAsync.service
+            streamHandlerExecutor = inviteListPageAsync.streamHandlerExecutor
+            params = inviteListPageAsync.params
+            response = inviteListPageAsync.response
         }
 
         fun service(service: InviteServiceAsync) = apply { this.service = service }
@@ -97,13 +96,13 @@ private constructor(
         }
 
         /** The parameters that were used to request this page. */
-        fun params(params: InviteListMineParams) = apply { this.params = params }
+        fun params(params: InviteListParams) = apply { this.params = params }
 
         /** The response that this page was parsed from. */
-        fun response(response: InviteListMinePageResponse) = apply { this.response = response }
+        fun response(response: InviteListPageResponse) = apply { this.response = response }
 
         /**
-         * Returns an immutable instance of [InviteListMinePageAsync].
+         * Returns an immutable instance of [InviteListPageAsync].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -117,8 +116,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): InviteListMinePageAsync =
-            InviteListMinePageAsync(
+        fun build(): InviteListPageAsync =
+            InviteListPageAsync(
                 checkRequired("service", service),
                 checkRequired("streamHandlerExecutor", streamHandlerExecutor),
                 checkRequired("params", params),
@@ -131,7 +130,7 @@ private constructor(
             return true
         }
 
-        return other is InviteListMinePageAsync &&
+        return other is InviteListPageAsync &&
             service == other.service &&
             streamHandlerExecutor == other.streamHandlerExecutor &&
             params == other.params &&
@@ -141,5 +140,5 @@ private constructor(
     override fun hashCode(): Int = Objects.hash(service, streamHandlerExecutor, params, response)
 
     override fun toString() =
-        "InviteListMinePageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
+        "InviteListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }

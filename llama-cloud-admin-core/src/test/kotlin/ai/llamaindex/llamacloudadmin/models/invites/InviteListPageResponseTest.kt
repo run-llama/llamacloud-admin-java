@@ -8,12 +8,12 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class InviteListMinePageResponseTest {
+internal class InviteListPageResponseTest {
 
     @Test
     fun create() {
-        val inviteListMinePageResponse =
-            InviteListMinePageResponse.builder()
+        val inviteListPageResponse =
+            InviteListPageResponse.builder()
                 .addItem(
                     Invite.builder()
                         .id("id")
@@ -28,7 +28,7 @@ internal class InviteListMinePageResponseTest {
                 .totalSize(0L)
                 .build()
 
-        assertThat(inviteListMinePageResponse.items())
+        assertThat(inviteListPageResponse.items())
             .containsExactly(
                 Invite.builder()
                     .id("id")
@@ -39,15 +39,15 @@ internal class InviteListMinePageResponseTest {
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
-        assertThat(inviteListMinePageResponse.nextPageToken()).contains("next_page_token")
-        assertThat(inviteListMinePageResponse.totalSize()).contains(0L)
+        assertThat(inviteListPageResponse.nextPageToken()).contains("next_page_token")
+        assertThat(inviteListPageResponse.totalSize()).contains(0L)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val inviteListMinePageResponse =
-            InviteListMinePageResponse.builder()
+        val inviteListPageResponse =
+            InviteListPageResponse.builder()
                 .addItem(
                     Invite.builder()
                         .id("id")
@@ -62,12 +62,12 @@ internal class InviteListMinePageResponseTest {
                 .totalSize(0L)
                 .build()
 
-        val roundtrippedInviteListMinePageResponse =
+        val roundtrippedInviteListPageResponse =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(inviteListMinePageResponse),
-                jacksonTypeRef<InviteListMinePageResponse>(),
+                jsonMapper.writeValueAsString(inviteListPageResponse),
+                jacksonTypeRef<InviteListPageResponse>(),
             )
 
-        assertThat(roundtrippedInviteListMinePageResponse).isEqualTo(inviteListMinePageResponse)
+        assertThat(roundtrippedInviteListPageResponse).isEqualTo(inviteListPageResponse)
     }
 }

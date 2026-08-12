@@ -4,7 +4,6 @@ package ai.llamaindex.llamacloudadmin.services.async
 
 import ai.llamaindex.llamacloudadmin.client.okhttp.LlamaCloudAdminOkHttpClientAsync
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationCreateParams
-import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetUsageParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationUpdateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -76,23 +75,5 @@ internal class OrganizationServiceAsyncTest {
 
         val organization = organizationFuture.get()
         organization.validate()
-    }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun getUsage() {
-        val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
-        val organizationServiceAsync = client.organizations()
-
-        val usageAndPlanFuture =
-            organizationServiceAsync.getUsage(
-                OrganizationGetUsageParams.builder()
-                    .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .getCurrentInvoiceTotal(true)
-                    .build()
-            )
-
-        val usageAndPlan = usageAndPlanFuture.get()
-        usageAndPlan.validate()
     }
 }

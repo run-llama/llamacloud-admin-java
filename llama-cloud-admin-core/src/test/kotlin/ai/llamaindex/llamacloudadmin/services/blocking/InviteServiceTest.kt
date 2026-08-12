@@ -10,6 +10,26 @@ internal class InviteServiceTest {
 
     @Disabled("Mock server tests are disabled")
     @Test
+    fun list() {
+        val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
+        val inviteService = client.invites()
+
+        val page = inviteService.list()
+
+        page.response().validate()
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
+    fun delete() {
+        val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
+        val inviteService = client.invites()
+
+        inviteService.delete("invite_id")
+    }
+
+    @Disabled("Mock server tests are disabled")
+    @Test
     fun accept() {
         val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
         val inviteService = client.invites()
@@ -17,25 +37,5 @@ internal class InviteServiceTest {
         val response = inviteService.accept("invite_id")
 
         response.validate()
-    }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun decline() {
-        val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
-        val inviteService = client.invites()
-
-        inviteService.decline("invite_id")
-    }
-
-    @Disabled("Mock server tests are disabled")
-    @Test
-    fun listMine() {
-        val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
-        val inviteService = client.invites()
-
-        val page = inviteService.listMine()
-
-        page.response().validate()
     }
 }

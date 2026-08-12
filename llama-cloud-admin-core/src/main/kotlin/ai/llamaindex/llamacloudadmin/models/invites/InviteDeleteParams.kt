@@ -1,26 +1,29 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package ai.llamaindex.llamacloudadmin.models.organizations
+package ai.llamaindex.llamacloudadmin.models.invites
 
+import ai.llamaindex.llamacloudadmin.core.JsonValue
 import ai.llamaindex.llamacloudadmin.core.Params
 import ai.llamaindex.llamacloudadmin.core.http.Headers
 import ai.llamaindex.llamacloudadmin.core.http.QueryParams
+import ai.llamaindex.llamacloudadmin.core.toImmutable
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get usage for a specific organization. */
-class OrganizationGetUsageParams
+/** Decline a pending invitation. */
+class InviteDeleteParams
 private constructor(
-    private val organizationId: String?,
-    private val getCurrentInvoiceTotal: Boolean?,
+    private val inviteId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+    private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
-    fun organizationId(): Optional<String> = Optional.ofNullable(organizationId)
+    fun inviteId(): Optional<String> = Optional.ofNullable(inviteId)
 
-    fun getCurrentInvoiceTotal(): Optional<Boolean> = Optional.ofNullable(getCurrentInvoiceTotal)
+    /** Additional body properties to send with the request. */
+    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -32,54 +35,32 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): OrganizationGetUsageParams = builder().build()
+        @JvmStatic fun none(): InviteDeleteParams = builder().build()
 
-        /**
-         * Returns a mutable builder for constructing an instance of [OrganizationGetUsageParams].
-         */
+        /** Returns a mutable builder for constructing an instance of [InviteDeleteParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [OrganizationGetUsageParams]. */
+    /** A builder for [InviteDeleteParams]. */
     class Builder internal constructor() {
 
-        private var organizationId: String? = null
-        private var getCurrentInvoiceTotal: Boolean? = null
+        private var inviteId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
+        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(organizationGetUsageParams: OrganizationGetUsageParams) = apply {
-            organizationId = organizationGetUsageParams.organizationId
-            getCurrentInvoiceTotal = organizationGetUsageParams.getCurrentInvoiceTotal
-            additionalHeaders = organizationGetUsageParams.additionalHeaders.toBuilder()
-            additionalQueryParams = organizationGetUsageParams.additionalQueryParams.toBuilder()
+        internal fun from(inviteDeleteParams: InviteDeleteParams) = apply {
+            inviteId = inviteDeleteParams.inviteId
+            additionalHeaders = inviteDeleteParams.additionalHeaders.toBuilder()
+            additionalQueryParams = inviteDeleteParams.additionalQueryParams.toBuilder()
+            additionalBodyProperties = inviteDeleteParams.additionalBodyProperties.toMutableMap()
         }
 
-        fun organizationId(organizationId: String?) = apply { this.organizationId = organizationId }
+        fun inviteId(inviteId: String?) = apply { this.inviteId = inviteId }
 
-        /** Alias for calling [Builder.organizationId] with `organizationId.orElse(null)`. */
-        fun organizationId(organizationId: Optional<String>) =
-            organizationId(organizationId.getOrNull())
-
-        fun getCurrentInvoiceTotal(getCurrentInvoiceTotal: Boolean?) = apply {
-            this.getCurrentInvoiceTotal = getCurrentInvoiceTotal
-        }
-
-        /**
-         * Alias for [Builder.getCurrentInvoiceTotal].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
-        fun getCurrentInvoiceTotal(getCurrentInvoiceTotal: Boolean) =
-            getCurrentInvoiceTotal(getCurrentInvoiceTotal as Boolean?)
-
-        /**
-         * Alias for calling [Builder.getCurrentInvoiceTotal] with
-         * `getCurrentInvoiceTotal.orElse(null)`.
-         */
-        fun getCurrentInvoiceTotal(getCurrentInvoiceTotal: Optional<Boolean>) =
-            getCurrentInvoiceTotal(getCurrentInvoiceTotal.getOrNull())
+        /** Alias for calling [Builder.inviteId] with `inviteId.orElse(null)`. */
+        fun inviteId(inviteId: Optional<String>) = inviteId(inviteId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -179,56 +160,70 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
+            this.additionalBodyProperties.clear()
+            putAllAdditionalBodyProperties(additionalBodyProperties)
+        }
+
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
+            additionalBodyProperties.put(key, value)
+        }
+
+        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalBodyProperties.putAll(additionalBodyProperties)
+            }
+
+        fun removeAdditionalBodyProperty(key: String) = apply {
+            additionalBodyProperties.remove(key)
+        }
+
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalBodyProperty)
+        }
+
         /**
-         * Returns an immutable instance of [OrganizationGetUsageParams].
+         * Returns an immutable instance of [InviteDeleteParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): OrganizationGetUsageParams =
-            OrganizationGetUsageParams(
-                organizationId,
-                getCurrentInvoiceTotal,
+        fun build(): InviteDeleteParams =
+            InviteDeleteParams(
+                inviteId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
+                additionalBodyProperties.toImmutable(),
             )
     }
 
+    fun _body(): Optional<Map<String, JsonValue>> =
+        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
+
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> organizationId ?: ""
+            0 -> inviteId ?: ""
             else -> ""
         }
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams =
-        QueryParams.builder()
-            .apply {
-                getCurrentInvoiceTotal?.let { put("get_current_invoice_total", it.toString()) }
-                putAll(additionalQueryParams)
-            }
-            .build()
+    override fun _queryParams(): QueryParams = additionalQueryParams
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is OrganizationGetUsageParams &&
-            organizationId == other.organizationId &&
-            getCurrentInvoiceTotal == other.getCurrentInvoiceTotal &&
+        return other is InviteDeleteParams &&
+            inviteId == other.inviteId &&
             additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+            additionalQueryParams == other.additionalQueryParams &&
+            additionalBodyProperties == other.additionalBodyProperties
     }
 
     override fun hashCode(): Int =
-        Objects.hash(
-            organizationId,
-            getCurrentInvoiceTotal,
-            additionalHeaders,
-            additionalQueryParams,
-        )
+        Objects.hash(inviteId, additionalHeaders, additionalQueryParams, additionalBodyProperties)
 
     override fun toString() =
-        "OrganizationGetUsageParams{organizationId=$organizationId, getCurrentInvoiceTotal=$getCurrentInvoiceTotal, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "InviteDeleteParams{inviteId=$inviteId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

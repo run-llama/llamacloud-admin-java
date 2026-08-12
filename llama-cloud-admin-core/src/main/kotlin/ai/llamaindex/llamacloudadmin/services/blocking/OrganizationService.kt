@@ -10,11 +10,9 @@ import ai.llamaindex.llamacloudadmin.models.organizations.Organization
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationCreateParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationDeleteParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetParams
-import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationGetUsageParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListPage
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationListParams
 import ai.llamaindex.llamacloudadmin.models.organizations.OrganizationUpdateParams
-import ai.llamaindex.llamacloudadmin.models.organizations.UsageAndPlan
 import ai.llamaindex.llamacloudadmin.services.blocking.organizations.RoleService
 import ai.llamaindex.llamacloudadmin.services.blocking.organizations.UserService
 import com.google.errorprone.annotations.MustBeClosed
@@ -145,38 +143,6 @@ interface OrganizationService {
     /** @see get */
     fun get(organizationId: String, requestOptions: RequestOptions): Organization =
         get(organizationId, OrganizationGetParams.none(), requestOptions)
-
-    /** Get usage for a specific organization. */
-    fun getUsage(organizationId: String): UsageAndPlan =
-        getUsage(organizationId, OrganizationGetUsageParams.none())
-
-    /** @see getUsage */
-    fun getUsage(
-        organizationId: String,
-        params: OrganizationGetUsageParams = OrganizationGetUsageParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): UsageAndPlan =
-        getUsage(params.toBuilder().organizationId(organizationId).build(), requestOptions)
-
-    /** @see getUsage */
-    fun getUsage(
-        organizationId: String,
-        params: OrganizationGetUsageParams = OrganizationGetUsageParams.none(),
-    ): UsageAndPlan = getUsage(organizationId, params, RequestOptions.none())
-
-    /** @see getUsage */
-    fun getUsage(
-        params: OrganizationGetUsageParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): UsageAndPlan
-
-    /** @see getUsage */
-    fun getUsage(params: OrganizationGetUsageParams): UsageAndPlan =
-        getUsage(params, RequestOptions.none())
-
-    /** @see getUsage */
-    fun getUsage(organizationId: String, requestOptions: RequestOptions): UsageAndPlan =
-        getUsage(organizationId, OrganizationGetUsageParams.none(), requestOptions)
 
     /**
      * A view of [OrganizationService] that provides access to raw HTTP responses for each method.
@@ -351,49 +317,5 @@ interface OrganizationService {
             requestOptions: RequestOptions,
         ): HttpResponseFor<Organization> =
             get(organizationId, OrganizationGetParams.none(), requestOptions)
-
-        /**
-         * Returns a raw HTTP response for `get /api/v1/organizations/{organization_id}/usage`, but
-         * is otherwise the same as [OrganizationService.getUsage].
-         */
-        @MustBeClosed
-        fun getUsage(organizationId: String): HttpResponseFor<UsageAndPlan> =
-            getUsage(organizationId, OrganizationGetUsageParams.none())
-
-        /** @see getUsage */
-        @MustBeClosed
-        fun getUsage(
-            organizationId: String,
-            params: OrganizationGetUsageParams = OrganizationGetUsageParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UsageAndPlan> =
-            getUsage(params.toBuilder().organizationId(organizationId).build(), requestOptions)
-
-        /** @see getUsage */
-        @MustBeClosed
-        fun getUsage(
-            organizationId: String,
-            params: OrganizationGetUsageParams = OrganizationGetUsageParams.none(),
-        ): HttpResponseFor<UsageAndPlan> = getUsage(organizationId, params, RequestOptions.none())
-
-        /** @see getUsage */
-        @MustBeClosed
-        fun getUsage(
-            params: OrganizationGetUsageParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<UsageAndPlan>
-
-        /** @see getUsage */
-        @MustBeClosed
-        fun getUsage(params: OrganizationGetUsageParams): HttpResponseFor<UsageAndPlan> =
-            getUsage(params, RequestOptions.none())
-
-        /** @see getUsage */
-        @MustBeClosed
-        fun getUsage(
-            organizationId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<UsageAndPlan> =
-            getUsage(organizationId, OrganizationGetUsageParams.none(), requestOptions)
     }
 }
