@@ -10,23 +10,20 @@ import ai.llamaindex.llamacloudadmin.core.http.Headers
 import ai.llamaindex.llamacloudadmin.core.http.QueryParams
 import ai.llamaindex.llamacloudadmin.core.toImmutable
 import ai.llamaindex.llamacloudadmin.errors.LlamaCloudAdminInvalidDataException
+import ai.llamaindex.llamacloudadmin.models.admin.usagemetrics.UsageMetricAggregateParams
 import com.fasterxml.jackson.annotation.JsonCreator
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Aggregate usage metrics by one or more dimensions, reporting total credits used. Global admin
- * only.
+ * Aggregate usage metrics by one or more dimensions, reporting total credits used. Global admin only.
  *
- * A date range is required, which bounds the scan via the `day`-leading index. Supplying
- * `organization_id` narrows it further via the `(organization_id, day)` index.
+ * A date range is required, which bounds the scan via the `day`-leading index. Supplying `organization_id` narrows it further via the `(organization_id, day)` index.
  *
- * Supported `group_by` dimensions: `day`, `organization_id`, `project_id`, `event_type`, `user_id`.
- * Buckets are ordered by total credits descending.
+ * Supported `group_by` dimensions: `day`, `organization_id`, `project_id`, `event_type`, `user_id`. Buckets are ordered by total credits descending.
  */
-class UsageMetricAggregateParams
-private constructor(
+class UsageMetricAggregateParams private constructor(
     private val dayOnOrAfter: String,
     private val dayOnOrBefore: String,
     private val groupBy: List<String>,
@@ -36,6 +33,7 @@ private constructor(
     private val userId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     /** Inclusive lower bound on the day (YYYY-MM-DD, UTC) */
@@ -73,13 +71,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [UsageMetricAggregateParams].
          *
          * The following fields are required:
+         *
          * ```java
          * .dayOnOrAfter()
          * .dayOnOrBefore()
          * .groupBy()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [UsageMetricAggregateParams]. */
@@ -96,40 +96,52 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(usageMetricAggregateParams: UsageMetricAggregateParams) = apply {
-            dayOnOrAfter = usageMetricAggregateParams.dayOnOrAfter
-            dayOnOrBefore = usageMetricAggregateParams.dayOnOrBefore
-            groupBy = usageMetricAggregateParams.groupBy.toMutableList()
-            eventTypes = usageMetricAggregateParams.eventTypes?.toMutableList()
-            organizationId = usageMetricAggregateParams.organizationId
-            projectId = usageMetricAggregateParams.projectId
-            userId = usageMetricAggregateParams.userId
-            additionalHeaders = usageMetricAggregateParams.additionalHeaders.toBuilder()
-            additionalQueryParams = usageMetricAggregateParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(usageMetricAggregateParams: UsageMetricAggregateParams) =
+            apply {
+                dayOnOrAfter = usageMetricAggregateParams.dayOnOrAfter
+                dayOnOrBefore = usageMetricAggregateParams.dayOnOrBefore
+                groupBy = usageMetricAggregateParams.groupBy.toMutableList()
+                eventTypes = usageMetricAggregateParams.eventTypes?.toMutableList()
+                organizationId = usageMetricAggregateParams.organizationId
+                projectId = usageMetricAggregateParams.projectId
+                userId = usageMetricAggregateParams.userId
+                additionalHeaders = usageMetricAggregateParams.additionalHeaders.toBuilder()
+                additionalQueryParams = usageMetricAggregateParams.additionalQueryParams.toBuilder()
+            }
 
         /** Inclusive lower bound on the day (YYYY-MM-DD, UTC) */
-        fun dayOnOrAfter(dayOnOrAfter: String) = apply { this.dayOnOrAfter = dayOnOrAfter }
+        fun dayOnOrAfter(dayOnOrAfter: String) =
+            apply {
+                this.dayOnOrAfter = dayOnOrAfter
+            }
 
         /** Inclusive upper bound on the day (YYYY-MM-DD, UTC) */
-        fun dayOnOrBefore(dayOnOrBefore: String) = apply { this.dayOnOrBefore = dayOnOrBefore }
+        fun dayOnOrBefore(dayOnOrBefore: String) =
+            apply {
+                this.dayOnOrBefore = dayOnOrBefore
+            }
 
         /** Dimensions to group by: day, organization_id, project_id, event_type, user_id */
-        fun groupBy(groupBy: List<String>) = apply { this.groupBy = groupBy.toMutableList() }
+        fun groupBy(groupBy: List<String>) =
+            apply {
+                this.groupBy = groupBy.toMutableList()
+            }
 
         /**
          * Adds a single [String] to [Builder.groupBy].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addGroupBy(groupBy: String) = apply {
-            this.groupBy = (this.groupBy ?: mutableListOf()).apply { add(groupBy) }
-        }
+        fun addGroupBy(groupBy: String) =
+            apply {
+                this.groupBy = (this.groupBy ?: mutableListOf()).apply { add(groupBy) }
+            }
 
         /** Filter by event types */
-        fun eventTypes(eventTypes: List<EventType>?) = apply {
-            this.eventTypes = eventTypes?.toMutableList()
-        }
+        fun eventTypes(eventTypes: List<EventType>?) =
+            apply {
+                this.eventTypes = eventTypes?.toMutableList()
+            }
 
         /** Alias for calling [Builder.eventTypes] with `eventTypes.orElse(null)`. */
         fun eventTypes(eventTypes: Optional<List<EventType>>) = eventTypes(eventTypes.getOrNull())
@@ -139,126 +151,161 @@ private constructor(
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addEventType(eventType: EventType) = apply {
-            eventTypes = (eventTypes ?: mutableListOf()).apply { add(eventType) }
-        }
+        fun addEventType(eventType: EventType) =
+            apply {
+                eventTypes = (eventTypes ?: mutableListOf()).apply { add(eventType) }
+            }
 
         /** Filter by organization ID */
-        fun organizationId(organizationId: String?) = apply { this.organizationId = organizationId }
+        fun organizationId(organizationId: String?) =
+            apply {
+                this.organizationId = organizationId
+            }
 
         /** Alias for calling [Builder.organizationId] with `organizationId.orElse(null)`. */
-        fun organizationId(organizationId: Optional<String>) =
-            organizationId(organizationId.getOrNull())
+        fun organizationId(organizationId: Optional<String>) = organizationId(organizationId.getOrNull())
 
         /** Filter by project ID */
-        fun projectId(projectId: String?) = apply { this.projectId = projectId }
+        fun projectId(projectId: String?) =
+            apply {
+                this.projectId = projectId
+            }
 
         /** Alias for calling [Builder.projectId] with `projectId.orElse(null)`. */
         fun projectId(projectId: Optional<String>) = projectId(projectId.getOrNull())
 
         /** Filter by user ID */
-        fun userId(userId: String?) = apply { this.userId = userId }
+        fun userId(userId: String?) =
+            apply {
+                this.userId = userId
+            }
 
         /** Alias for calling [Builder.userId] with `userId.orElse(null)`. */
         fun userId(userId: Optional<String>) = userId(userId.getOrNull())
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [UsageMetricAggregateParams].
@@ -266,6 +313,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .dayOnOrAfter()
          * .dayOnOrBefore()
@@ -276,15 +324,21 @@ private constructor(
          */
         fun build(): UsageMetricAggregateParams =
             UsageMetricAggregateParams(
-                checkRequired("dayOnOrAfter", dayOnOrAfter),
-                checkRequired("dayOnOrBefore", dayOnOrBefore),
-                checkRequired("groupBy", groupBy).toImmutable(),
-                eventTypes?.toImmutable(),
-                organizationId,
-                projectId,
-                userId,
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              checkRequired(
+                "dayOnOrAfter", dayOnOrAfter
+              ),
+              checkRequired(
+                "dayOnOrBefore", dayOnOrBefore
+              ),
+              checkRequired(
+                "groupBy", groupBy
+              ).toImmutable(),
+              eventTypes?.toImmutable(),
+              organizationId,
+              projectId,
+              userId,
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -295,8 +349,12 @@ private constructor(
             .apply {
                 put("day_on_or_after", dayOnOrAfter)
                 put("day_on_or_before", dayOnOrBefore)
-                groupBy.forEach { put("group_by", it) }
-                eventTypes?.forEach { put("event_types", it.toString()) }
+                groupBy.forEach {
+                    put("group_by", it)
+                }
+                eventTypes?.forEach {
+                    put("event_types", it.toString())
+                }
                 organizationId?.let { put("organization_id", it) }
                 projectId?.let { put("project_id", it) }
                 userId?.let { put("user_id", it) }
@@ -304,17 +362,20 @@ private constructor(
             }
             .build()
 
-    class EventType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class EventType @JsonCreator private constructor(
+        private val value: JsonField<String>,
+
+    ) : Enum {
 
         /**
          * Returns this class instance's raw value.
          *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
+         * This is usually only useful if this instance was deserialized from data that doesn't match any known
+         * member, and you want to know that value. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new members that the SDK is unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @com.fasterxml.jackson.annotation.JsonValue
+        fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -419,9 +480,11 @@ private constructor(
          * An enum containing [EventType]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [EventType] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
+         *
+         * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+         *   an older version than the API, then the API may respond with new members that the SDK is unaware
+         *   of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -455,18 +518,16 @@ private constructor(
             SPREADSHEET_REGIONS_EXTRACTED,
             STORED_FILE_COUNT,
             STORED_FILE_MB,
-            /**
-             * An enum member indicating that [EventType] was instantiated with an unknown value.
-             */
+            /** An enum member indicating that [EventType] was instantiated with an unknown value. */
             _UNKNOWN,
         }
 
         /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+         * class was instantiated with an unknown value.
          *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
+         * Use the [known] method instead if you're certain the value is always known or if you want to throw
+         * for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -506,11 +567,10 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
+         * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+         * for the unknown case.
          *
-         * @throws LlamaCloudAdminInvalidDataException if this class instance's value is a not a
-         *   known member.
+         * @throws LlamaCloudAdminInvalidDataException if this class instance's value is a not a known member.
          */
         fun known(): Known =
             when (this) {
@@ -550,36 +610,33 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
+         * This differs from the [toString] method because that method is primarily for debugging and generally
+         * doesn't throw.
          *
-         * @throws LlamaCloudAdminInvalidDataException if this class instance's value does not have
-         *   the expected primitive type.
+         * @throws LlamaCloudAdminInvalidDataException if this class instance's value does not have the expected
+         *   primitive type.
          */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                LlamaCloudAdminInvalidDataException("Value is not a String")
-            }
+        fun asString(): String = _value().asString().orElseThrow { LlamaCloudAdminInvalidDataException("Value is not a String") }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't
-         *   match its expected type.
+         * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): EventType = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): EventType =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            known()
-            validated = true
-        }
+                known()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -590,19 +647,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+        @JvmSynthetic
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is EventType && value == other.value
+          return other is EventType && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -611,35 +668,14 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is UsageMetricAggregateParams &&
-            dayOnOrAfter == other.dayOnOrAfter &&
-            dayOnOrBefore == other.dayOnOrBefore &&
-            groupBy == other.groupBy &&
-            eventTypes == other.eventTypes &&
-            organizationId == other.organizationId &&
-            projectId == other.projectId &&
-            userId == other.userId &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is UsageMetricAggregateParams && dayOnOrAfter == other.dayOnOrAfter && dayOnOrBefore == other.dayOnOrBefore && groupBy == other.groupBy && eventTypes == other.eventTypes && organizationId == other.organizationId && projectId == other.projectId && userId == other.userId && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(
-            dayOnOrAfter,
-            dayOnOrBefore,
-            groupBy,
-            eventTypes,
-            organizationId,
-            projectId,
-            userId,
-            additionalHeaders,
-            additionalQueryParams,
-        )
+    override fun hashCode(): Int = Objects.hash(dayOnOrAfter, dayOnOrBefore, groupBy, eventTypes, organizationId, projectId, userId, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "UsageMetricAggregateParams{dayOnOrAfter=$dayOnOrAfter, dayOnOrBefore=$dayOnOrBefore, groupBy=$groupBy, eventTypes=$eventTypes, organizationId=$organizationId, projectId=$projectId, userId=$userId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "UsageMetricAggregateParams{dayOnOrAfter=$dayOnOrAfter, dayOnOrBefore=$dayOnOrBefore, groupBy=$groupBy, eventTypes=$eventTypes, organizationId=$organizationId, projectId=$projectId, userId=$userId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

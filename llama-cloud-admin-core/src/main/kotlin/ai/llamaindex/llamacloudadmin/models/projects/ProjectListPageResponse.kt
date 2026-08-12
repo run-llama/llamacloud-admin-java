@@ -10,6 +10,7 @@ import ai.llamaindex.llamacloudadmin.core.checkKnown
 import ai.llamaindex.llamacloudadmin.core.checkRequired
 import ai.llamaindex.llamacloudadmin.core.toImmutable
 import ai.llamaindex.llamacloudadmin.errors.LlamaCloudAdminInvalidDataException
+import ai.llamaindex.llamacloudadmin.models.projects.Project
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -20,47 +21,44 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** API query response schema for projects. */
-class ProjectListPageResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class ProjectListPageResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val items: JsonField<List<Project>>,
     private val nextPageToken: JsonField<String>,
     private val totalSize: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("items") @ExcludeMissing items: JsonField<List<Project>> = JsonMissing.of(),
-        @JsonProperty("next_page_token")
-        @ExcludeMissing
-        nextPageToken: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("total_size") @ExcludeMissing totalSize: JsonField<Long> = JsonMissing.of(),
-    ) : this(items, nextPageToken, totalSize, mutableMapOf())
+        @JsonProperty("next_page_token") @ExcludeMissing nextPageToken: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("total_size") @ExcludeMissing totalSize: JsonField<Long> = JsonMissing.of()
+    ) : this(
+      items,
+      nextPageToken,
+      totalSize,
+      mutableMapOf(),
+    )
 
     /**
      * The list of items.
      *
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun items(): List<Project> = items.getRequired("items")
 
     /**
-     * A token, which can be sent as page_token to retrieve the next page. If this field is omitted,
-     * there are no subsequent pages.
+     * A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages.
      *
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun nextPageToken(): Optional<String> = nextPageToken.getOptional("next_page_token")
 
     /**
-     * The total number of items available. This is only populated when specifically requested. The
-     * value may be an estimate and can be used for display purposes only.
+     * The total number of items available. This is only populated when specifically requested. The value may be an estimate and can be used for display purposes only.
      *
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun totalSize(): Optional<Long> = totalSize.getOptional("total_size")
 
@@ -69,7 +67,9 @@ private constructor(
      *
      * Unlike [items], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<Project>> = items
+    @JsonProperty("items")
+    @ExcludeMissing
+    fun _items(): JsonField<List<Project>> = items
 
     /**
      * Returns the raw JSON value of [nextPageToken].
@@ -85,17 +85,18 @@ private constructor(
      *
      * Unlike [totalSize], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("total_size") @ExcludeMissing fun _totalSize(): JsonField<Long> = totalSize
+    @JsonProperty("total_size")
+    @ExcludeMissing
+    fun _totalSize(): JsonField<Long> = totalSize
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -105,11 +106,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [ProjectListPageResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .items()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ProjectListPageResponse]. */
@@ -121,12 +124,13 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(projectListPageResponse: ProjectListPageResponse) = apply {
-            items = projectListPageResponse.items.map { it.toMutableList() }
-            nextPageToken = projectListPageResponse.nextPageToken
-            totalSize = projectListPageResponse.totalSize
-            additionalProperties = projectListPageResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(projectListPageResponse: ProjectListPageResponse) =
+            apply {
+                items = projectListPageResponse.items.map { it.toMutableList() }
+                nextPageToken = projectListPageResponse.nextPageToken
+                totalSize = projectListPageResponse.totalSize
+                additionalProperties = projectListPageResponse.additionalProperties.toMutableMap()
+            }
 
         /** The list of items. */
         fun items(items: List<Project>) = items(JsonField.of(items))
@@ -134,50 +138,44 @@ private constructor(
         /**
          * Sets [Builder.items] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.items] with a well-typed `List<Project>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.items] with a well-typed `List<Project>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun items(items: JsonField<List<Project>>) = apply {
-            this.items = items.map { it.toMutableList() }
-        }
+        fun items(items: JsonField<List<Project>>) =
+            apply {
+                this.items = items.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [Project] to [items].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addItem(item: Project) = apply {
-            items =
-                (items ?: JsonField.of(mutableListOf())).also { checkKnown("items", it).add(item) }
-        }
+        fun addItem(item: Project) =
+            apply {
+                items = (items ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("items", it).add(item)
+                }
+            }
 
-        /**
-         * A token, which can be sent as page_token to retrieve the next page. If this field is
-         * omitted, there are no subsequent pages.
-         */
-        fun nextPageToken(nextPageToken: String?) =
-            nextPageToken(JsonField.ofNullable(nextPageToken))
+        /** A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages. */
+        fun nextPageToken(nextPageToken: String?) = nextPageToken(JsonField.ofNullable(nextPageToken))
 
         /** Alias for calling [Builder.nextPageToken] with `nextPageToken.orElse(null)`. */
-        fun nextPageToken(nextPageToken: Optional<String>) =
-            nextPageToken(nextPageToken.getOrNull())
+        fun nextPageToken(nextPageToken: Optional<String>) = nextPageToken(nextPageToken.getOrNull())
 
         /**
          * Sets [Builder.nextPageToken] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.nextPageToken] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.nextPageToken] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun nextPageToken(nextPageToken: JsonField<String>) = apply {
-            this.nextPageToken = nextPageToken
-        }
+        fun nextPageToken(nextPageToken: JsonField<String>) =
+            apply {
+                this.nextPageToken = nextPageToken
+            }
 
-        /**
-         * The total number of items available. This is only populated when specifically requested.
-         * The value may be an estimate and can be used for display purposes only.
-         */
+        /** The total number of items available. This is only populated when specifically requested. The value may be an estimate and can be used for display purposes only. */
         fun totalSize(totalSize: Long?) = totalSize(JsonField.ofNullable(totalSize))
 
         /**
@@ -193,29 +191,39 @@ private constructor(
         /**
          * Sets [Builder.totalSize] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.totalSize] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.totalSize] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun totalSize(totalSize: JsonField<Long>) = apply { this.totalSize = totalSize }
+        fun totalSize(totalSize: JsonField<Long>) =
+            apply {
+                this.totalSize = totalSize
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [ProjectListPageResponse].
@@ -223,6 +231,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .items()
          * ```
@@ -231,10 +240,12 @@ private constructor(
          */
         fun build(): ProjectListPageResponse =
             ProjectListPageResponse(
-                checkRequired("items", items).map { it.toImmutable() },
-                nextPageToken,
-                totalSize,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "items", items
+              ).map { it.toImmutable() },
+              nextPageToken,
+              totalSize,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -245,19 +256,20 @@ private constructor(
      *
      * This method is _not_ forwards compatible with new types from the API for existing fields.
      *
-     * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match
-     *   its expected type.
+     * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
      */
-    fun validate(): ProjectListPageResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): ProjectListPageResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        items().forEach { it.validate() }
-        nextPageToken()
-        totalSize()
-        validated = true
-    }
+            items().forEach { it.validate() }
+            nextPageToken()
+            totalSize()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -273,29 +285,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (nextPageToken.asKnown().isPresent) 1 else 0) +
-            (if (totalSize.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) + (if (nextPageToken.asKnown().isPresent) 1 else 0) + (if (totalSize.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ProjectListPageResponse &&
-            items == other.items &&
-            nextPageToken == other.nextPageToken &&
-            totalSize == other.totalSize &&
-            additionalProperties == other.additionalProperties
+      return other is ProjectListPageResponse && items == other.items && nextPageToken == other.nextPageToken && totalSize == other.totalSize && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(items, nextPageToken, totalSize, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(items, nextPageToken, totalSize, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "ProjectListPageResponse{items=$items, nextPageToken=$nextPageToken, totalSize=$totalSize, additionalProperties=$additionalProperties}"
+    override fun toString() = "ProjectListPageResponse{items=$items, nextPageToken=$nextPageToken, totalSize=$totalSize, additionalProperties=$additionalProperties}"
 }

@@ -8,6 +8,7 @@ import ai.llamaindex.llamacloudadmin.core.JsonMissing
 import ai.llamaindex.llamacloudadmin.core.JsonValue
 import ai.llamaindex.llamacloudadmin.core.checkRequired
 import ai.llamaindex.llamacloudadmin.errors.LlamaCloudAdminInvalidDataException
+import ai.llamaindex.llamacloudadmin.models.admin.users.CustomClaims
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -17,33 +18,34 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 /** A user's fully resolved custom claims after applying system defaults. */
-class UserClaims
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class UserClaims @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val claims: JsonField<CustomClaims>,
     private val userId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("claims") @ExcludeMissing claims: JsonField<CustomClaims> = JsonMissing.of(),
-        @JsonProperty("user_id") @ExcludeMissing userId: JsonField<String> = JsonMissing.of(),
-    ) : this(claims, userId, mutableMapOf())
+        @JsonProperty("user_id") @ExcludeMissing userId: JsonField<String> = JsonMissing.of()
+    ) : this(
+      claims,
+      userId,
+      mutableMapOf(),
+    )
 
     /**
      * The user's resolved custom claims.
      *
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun claims(): CustomClaims = claims.getRequired("claims")
 
     /**
      * The user ID the claims belong to.
      *
-     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun userId(): String = userId.getRequired("user_id")
 
@@ -52,24 +54,27 @@ private constructor(
      *
      * Unlike [claims], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("claims") @ExcludeMissing fun _claims(): JsonField<CustomClaims> = claims
+    @JsonProperty("claims")
+    @ExcludeMissing
+    fun _claims(): JsonField<CustomClaims> = claims
 
     /**
      * Returns the raw JSON value of [userId].
      *
      * Unlike [userId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("user_id") @ExcludeMissing fun _userId(): JsonField<String> = userId
+    @JsonProperty("user_id")
+    @ExcludeMissing
+    fun _userId(): JsonField<String> = userId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -79,12 +84,14 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [UserClaims].
          *
          * The following fields are required:
+         *
          * ```java
          * .claims()
          * .userId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [UserClaims]. */
@@ -95,11 +102,12 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(userClaims: UserClaims) = apply {
-            claims = userClaims.claims
-            userId = userClaims.userId
-            additionalProperties = userClaims.additionalProperties.toMutableMap()
-        }
+        internal fun from(userClaims: UserClaims) =
+            apply {
+                claims = userClaims.claims
+                userId = userClaims.userId
+                additionalProperties = userClaims.additionalProperties.toMutableMap()
+            }
 
         /** The user's resolved custom claims. */
         fun claims(claims: CustomClaims) = claims(JsonField.of(claims))
@@ -107,11 +115,13 @@ private constructor(
         /**
          * Sets [Builder.claims] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.claims] with a well-typed [CustomClaims] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.claims] with a well-typed [CustomClaims] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun claims(claims: JsonField<CustomClaims>) = apply { this.claims = claims }
+        fun claims(claims: JsonField<CustomClaims>) =
+            apply {
+                this.claims = claims
+            }
 
         /** The user ID the claims belong to. */
         fun userId(userId: String) = userId(JsonField.of(userId))
@@ -119,29 +129,39 @@ private constructor(
         /**
          * Sets [Builder.userId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.userId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.userId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun userId(userId: JsonField<String>) = apply { this.userId = userId }
+        fun userId(userId: JsonField<String>) =
+            apply {
+                this.userId = userId
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [UserClaims].
@@ -149,6 +169,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .claims()
          * .userId()
@@ -158,9 +179,13 @@ private constructor(
          */
         fun build(): UserClaims =
             UserClaims(
-                checkRequired("claims", claims),
-                checkRequired("userId", userId),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "claims", claims
+              ),
+              checkRequired(
+                "userId", userId
+              ),
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -171,18 +196,19 @@ private constructor(
      *
      * This method is _not_ forwards compatible with new types from the API for existing fields.
      *
-     * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match
-     *   its expected type.
+     * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
      */
-    fun validate(): UserClaims = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): UserClaims =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        claims().validate()
-        userId()
-        validated = true
-    }
+            claims().validate()
+            userId()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -198,24 +224,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (claims.asKnown().getOrNull()?.validity() ?: 0) + (if (userId.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (claims.asKnown().getOrNull()?.validity() ?: 0) + (if (userId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is UserClaims &&
-            claims == other.claims &&
-            userId == other.userId &&
-            additionalProperties == other.additionalProperties
+      return other is UserClaims && claims == other.claims && userId == other.userId && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(claims, userId, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "UserClaims{claims=$claims, userId=$userId, additionalProperties=$additionalProperties}"
+    override fun toString() = "UserClaims{claims=$claims, userId=$userId, additionalProperties=$additionalProperties}"
 }

@@ -11,28 +11,32 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import java.util.Collections
 import java.util.Objects
 
-class UserAddToProjectResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(private val additionalProperties: MutableMap<String, JsonValue>) {
+class UserAddToProjectResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
+    private val additionalProperties: MutableMap<String, JsonValue>,
 
-    @JsonCreator private constructor() : this(mutableMapOf())
+) {
+
+    @JsonCreator
+    private constructor(
+
+    ) : this(mutableMapOf())
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [UserAddToProjectResponse]. */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [UserAddToProjectResponse]. */
@@ -41,36 +45,43 @@ private constructor(private val additionalProperties: MutableMap<String, JsonVal
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(userAddToProjectResponse: UserAddToProjectResponse) = apply {
-            additionalProperties = userAddToProjectResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(userAddToProjectResponse: UserAddToProjectResponse) =
+            apply {
+                additionalProperties = userAddToProjectResponse.additionalProperties.toMutableMap()
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [UserAddToProjectResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): UserAddToProjectResponse =
-            UserAddToProjectResponse(additionalProperties.toMutableMap())
+        fun build(): UserAddToProjectResponse = UserAddToProjectResponse(additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -80,16 +91,17 @@ private constructor(private val additionalProperties: MutableMap<String, JsonVal
      *
      * This method is _not_ forwards compatible with new types from the API for existing fields.
      *
-     * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match
-     *   its expected type.
+     * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
      */
-    fun validate(): UserAddToProjectResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): UserAddToProjectResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        validated = true
-    }
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -104,15 +116,15 @@ private constructor(private val additionalProperties: MutableMap<String, JsonVal
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = 0
+    @JvmSynthetic
+    internal fun validity(): Int = 0
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is UserAddToProjectResponse &&
-            additionalProperties == other.additionalProperties
+      return other is UserAddToProjectResponse && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(additionalProperties) }

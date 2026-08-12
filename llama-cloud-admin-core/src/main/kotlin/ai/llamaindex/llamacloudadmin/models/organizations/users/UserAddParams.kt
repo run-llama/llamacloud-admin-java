@@ -13,6 +13,7 @@ import ai.llamaindex.llamacloudadmin.core.http.Headers
 import ai.llamaindex.llamacloudadmin.core.http.QueryParams
 import ai.llamaindex.llamacloudadmin.core.toImmutable
 import ai.llamaindex.llamacloudadmin.errors.LlamaCloudAdminInvalidDataException
+import ai.llamaindex.llamacloudadmin.models.organizations.users.UserAddParams
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -23,12 +24,12 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Add a user to an organization. */
-class UserAddParams
-private constructor(
+class UserAddParams private constructor(
     private val organizationId: String?,
     private val body: List<Body>,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     fun organizationId(): Optional<String> = Optional.ofNullable(organizationId)
@@ -49,11 +50,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [UserAddParams].
          *
          * The following fields are required:
+         *
          * ```java
          * .body()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [UserAddParams]. */
@@ -65,127 +68,160 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(userAddParams: UserAddParams) = apply {
-            organizationId = userAddParams.organizationId
-            body = userAddParams.body.toMutableList()
-            additionalHeaders = userAddParams.additionalHeaders.toBuilder()
-            additionalQueryParams = userAddParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(userAddParams: UserAddParams) =
+            apply {
+                organizationId = userAddParams.organizationId
+                body = userAddParams.body.toMutableList()
+                additionalHeaders = userAddParams.additionalHeaders.toBuilder()
+                additionalQueryParams = userAddParams.additionalQueryParams.toBuilder()
+            }
 
-        fun organizationId(organizationId: String?) = apply { this.organizationId = organizationId }
+        fun organizationId(organizationId: String?) =
+            apply {
+                this.organizationId = organizationId
+            }
 
         /** Alias for calling [Builder.organizationId] with `organizationId.orElse(null)`. */
-        fun organizationId(organizationId: Optional<String>) =
-            organizationId(organizationId.getOrNull())
+        fun organizationId(organizationId: Optional<String>) = organizationId(organizationId.getOrNull())
 
-        fun body(body: List<Body>) = apply { this.body = body.toMutableList() }
+        fun body(body: List<Body>) =
+            apply {
+                this.body = body.toMutableList()
+            }
 
         /**
          * Adds a single [Body] to [Builder.body].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addBody(body: Body) = apply {
-            this.body = (this.body ?: mutableListOf()).apply { add(body) }
-        }
+        fun addBody(body: Body) =
+            apply {
+                this.body = (this.body ?: mutableListOf()).apply { add(body) }
+            }
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [UserAddParams].
@@ -193,6 +229,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .body()
          * ```
@@ -201,10 +238,12 @@ private constructor(
          */
         fun build(): UserAddParams =
             UserAddParams(
-                organizationId,
-                checkRequired("body", body).toImmutable(),
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              organizationId,
+              checkRequired(
+                "body", body
+              ).toImmutable(),
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -221,55 +260,54 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     /** Request to add a user to an organization. */
-    class Body
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Body @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val projectIds: JsonField<List<String>>,
         private val email: JsonField<String>,
         private val roleId: JsonField<String>,
         private val userId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("project_ids")
-            @ExcludeMissing
-            projectIds: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("project_ids") @ExcludeMissing projectIds: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("email") @ExcludeMissing email: JsonField<String> = JsonMissing.of(),
             @JsonProperty("role_id") @ExcludeMissing roleId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("user_id") @ExcludeMissing userId: JsonField<String> = JsonMissing.of(),
-        ) : this(projectIds, email, roleId, userId, mutableMapOf())
+            @JsonProperty("user_id") @ExcludeMissing userId: JsonField<String> = JsonMissing.of()
+        ) : this(
+          projectIds,
+          email,
+          roleId,
+          userId,
+          mutableMapOf(),
+        )
 
         /**
          * The project IDs to add the user to.
          *
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun projectIds(): Optional<List<String>> = projectIds.getOptional("project_ids")
 
         /**
          * The user's email address.
          *
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun email(): Optional<String> = email.getOptional("email")
 
         /**
          * The role ID to assign to the user.
          *
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun roleId(): Optional<String> = roleId.getOptional("role_id")
 
         /**
          * The user's ID.
          *
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
+         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun userId(): Optional<String> = userId.getOptional("user_id")
 
@@ -287,31 +325,36 @@ private constructor(
          *
          * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("email") @ExcludeMissing fun _email(): JsonField<String> = email
+        @JsonProperty("email")
+        @ExcludeMissing
+        fun _email(): JsonField<String> = email
 
         /**
          * Returns the raw JSON value of [roleId].
          *
          * Unlike [roleId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("role_id") @ExcludeMissing fun _roleId(): JsonField<String> = roleId
+        @JsonProperty("role_id")
+        @ExcludeMissing
+        fun _roleId(): JsonField<String> = roleId
 
         /**
          * Returns the raw JSON value of [userId].
          *
          * Unlike [userId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("user_id") @ExcludeMissing fun _userId(): JsonField<String> = userId
+        @JsonProperty("user_id")
+        @ExcludeMissing
+        fun _userId(): JsonField<String> = userId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -321,11 +364,13 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [Body].
              *
              * The following fields are required:
+             *
              * ```java
              * .projectIds()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -338,13 +383,14 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(body: Body) = apply {
-                projectIds = body.projectIds.map { it.toMutableList() }
-                email = body.email
-                roleId = body.roleId
-                userId = body.userId
-                additionalProperties = body.additionalProperties.toMutableMap()
-            }
+            internal fun from(body: Body) =
+                apply {
+                    projectIds = body.projectIds.map { it.toMutableList() }
+                    email = body.email
+                    roleId = body.roleId
+                    userId = body.userId
+                    additionalProperties = body.additionalProperties.toMutableMap()
+                }
 
             /** The project IDs to add the user to. */
             fun projectIds(projectIds: List<String>?) = projectIds(JsonField.ofNullable(projectIds))
@@ -355,25 +401,25 @@ private constructor(
             /**
              * Sets [Builder.projectIds] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.projectIds] with a well-typed `List<String>` value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.projectIds] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun projectIds(projectIds: JsonField<List<String>>) = apply {
-                this.projectIds = projectIds.map { it.toMutableList() }
-            }
+            fun projectIds(projectIds: JsonField<List<String>>) =
+                apply {
+                    this.projectIds = projectIds.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [String] to [projectIds].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addProjectId(projectId: String) = apply {
-                projectIds =
-                    (projectIds ?: JsonField.of(mutableListOf())).also {
+            fun addProjectId(projectId: String) =
+                apply {
+                    projectIds = (projectIds ?: JsonField.of(mutableListOf())).also {
                         checkKnown("projectIds", it).add(projectId)
                     }
-            }
+                }
 
             /** The user's email address. */
             fun email(email: String?) = email(JsonField.ofNullable(email))
@@ -384,11 +430,13 @@ private constructor(
             /**
              * Sets [Builder.email] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.email] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.email] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun email(email: JsonField<String>) = apply { this.email = email }
+            fun email(email: JsonField<String>) =
+                apply {
+                    this.email = email
+                }
 
             /** The role ID to assign to the user. */
             fun roleId(roleId: String?) = roleId(JsonField.ofNullable(roleId))
@@ -399,11 +447,13 @@ private constructor(
             /**
              * Sets [Builder.roleId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.roleId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.roleId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun roleId(roleId: JsonField<String>) = apply { this.roleId = roleId }
+            fun roleId(roleId: JsonField<String>) =
+                apply {
+                    this.roleId = roleId
+                }
 
             /** The user's ID. */
             fun userId(userId: String?) = userId(JsonField.ofNullable(userId))
@@ -414,30 +464,39 @@ private constructor(
             /**
              * Sets [Builder.userId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.userId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.userId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun userId(userId: JsonField<String>) = apply { this.userId = userId }
+            fun userId(userId: JsonField<String>) =
+                apply {
+                    this.userId = userId
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Body].
@@ -445,6 +504,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .projectIds()
              * ```
@@ -453,36 +513,38 @@ private constructor(
              */
             fun build(): Body =
                 Body(
-                    checkRequired("projectIds", projectIds).map { it.toImmutable() },
-                    email,
-                    roleId,
-                    userId,
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "projectIds", projectIds
+                  ).map { it.toImmutable() },
+                  email,
+                  roleId,
+                  userId,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't
-         *   match its expected type.
+         * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Body = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Body =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            projectIds()
-            email()
-            roleId()
-            userId()
-            validated = true
-        }
+                projectIds()
+                email()
+                roleId()
+                userId()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -493,56 +555,37 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (projectIds.asKnown().getOrNull()?.size ?: 0) +
-                (if (email.asKnown().isPresent) 1 else 0) +
-                (if (roleId.asKnown().isPresent) 1 else 0) +
-                (if (userId.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (projectIds.asKnown().getOrNull()?.size ?: 0) + (if (email.asKnown().isPresent) 1 else 0) + (if (roleId.asKnown().isPresent) 1 else 0) + (if (userId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Body &&
-                projectIds == other.projectIds &&
-                email == other.email &&
-                roleId == other.roleId &&
-                userId == other.userId &&
-                additionalProperties == other.additionalProperties
+          return other is Body && projectIds == other.projectIds && email == other.email && roleId == other.roleId && userId == other.userId && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(projectIds, email, roleId, userId, additionalProperties)
-        }
+        private val hashCode: Int by lazy { Objects.hash(projectIds, email, roleId, userId, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Body{projectIds=$projectIds, email=$email, roleId=$roleId, userId=$userId, additionalProperties=$additionalProperties}"
+        override fun toString() = "Body{projectIds=$projectIds, email=$email, roleId=$roleId, userId=$userId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is UserAddParams &&
-            organizationId == other.organizationId &&
-            body == other.body &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is UserAddParams && organizationId == other.organizationId && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(organizationId, body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = Objects.hash(organizationId, body, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "UserAddParams{organizationId=$organizationId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "UserAddParams{organizationId=$organizationId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

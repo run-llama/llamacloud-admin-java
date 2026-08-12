@@ -29,325 +29,268 @@ import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjects
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserRemoveFromProjectParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserRemoveFromProjectResponse
+import ai.llamaindex.llamacloudadmin.services.blocking.organizations.UserService
+import ai.llamaindex.llamacloudadmin.services.blocking.organizations.UserServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class UserServiceImpl internal constructor(private val clientOptions: ClientOptions) : UserService {
+class UserServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: UserService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : UserService {
+
+    private val withRawResponse: UserService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): UserService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserService =
-        UserServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserService = UserServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun delete(params: UserDeleteParams, requestOptions: RequestOptions) {
-        // delete /api/v1/organizations/{organization_id}/users/{member_user_id}
-        withRawResponse().delete(params, requestOptions)
+      // delete /api/v1/organizations/{organization_id}/users/{member_user_id}
+      withRawResponse().delete(params, requestOptions)
     }
 
-    override fun add(
-        params: UserAddParams,
-        requestOptions: RequestOptions,
-    ): List<OrganizationMember> =
+    override fun add(params: UserAddParams, requestOptions: RequestOptions): List<OrganizationMember> =
         // put /api/v1/organizations/{organization_id}/users
         withRawResponse().add(params, requestOptions).parse()
 
-    override fun addToProject(
-        params: UserAddToProjectParams,
-        requestOptions: RequestOptions,
-    ): UserAddToProjectResponse =
+    override fun addToProject(params: UserAddToProjectParams, requestOptions: RequestOptions): UserAddToProjectResponse =
         // put /api/v1/organizations/{organization_id}/users/{user_id}/projects
         withRawResponse().addToProject(params, requestOptions).parse()
 
-    override fun assignRole(
-        params: UserAssignRoleParams,
-        requestOptions: RequestOptions,
-    ): UserOrganizationRole =
+    override fun assignRole(params: UserAssignRoleParams, requestOptions: RequestOptions): UserOrganizationRole =
         // put /api/v1/organizations/{organization_id}/users/roles
         withRawResponse().assignRole(params, requestOptions).parse()
 
-    override fun listMembers(
-        params: UserListMembersParams,
-        requestOptions: RequestOptions,
-    ): List<OrganizationMember> =
+    override fun listMembers(params: UserListMembersParams, requestOptions: RequestOptions): List<OrganizationMember> =
         // get /api/v1/organizations/{organization_id}/users
         withRawResponse().listMembers(params, requestOptions).parse()
 
-    override fun listProjects(
-        params: UserListProjectsParams,
-        requestOptions: RequestOptions,
-    ): List<UserListProjectsResponse> =
+    override fun listProjects(params: UserListProjectsParams, requestOptions: RequestOptions): List<UserListProjectsResponse> =
         // get /api/v1/organizations/{organization_id}/users/{user_id}/projects
         withRawResponse().listProjects(params, requestOptions).parse()
 
-    override fun removeFromProject(
-        params: UserRemoveFromProjectParams,
-        requestOptions: RequestOptions,
-    ): UserRemoveFromProjectResponse =
+    override fun removeFromProject(params: UserRemoveFromProjectParams, requestOptions: RequestOptions): UserRemoveFromProjectResponse =
         // delete /api/v1/organizations/{organization_id}/users/{user_id}/projects/{project_id}
         withRawResponse().removeFromProject(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        UserService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : UserService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): UserService.WithRawResponse =
-            UserServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserService.WithRawResponse = UserServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         private val deleteHandler: Handler<Void?> = emptyHandler()
 
-        override fun delete(
-            params: UserDeleteParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("memberUserId", params.memberUserId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.DELETE)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "api",
-                        "v1",
-                        "organizations",
-                        params._pathParam(0),
-                        "users",
-                        params._pathParam(1),
-                    )
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response.use { deleteHandler.handle(it) }
-            }
+        override fun delete(params: UserDeleteParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("memberUserId", params.memberUserId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.DELETE)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("api", "v1", "organizations", params._pathParam(0), "users", params._pathParam(1))
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  deleteHandler.handle(it)
+              }
+          }
         }
 
-        private val addHandler: Handler<List<OrganizationMember>> =
-            jsonHandler<List<OrganizationMember>>(clientOptions.jsonMapper)
+        private val addHandler: Handler<List<OrganizationMember>> = jsonHandler<List<OrganizationMember>>(clientOptions.jsonMapper)
 
-        override fun add(
-            params: UserAddParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<List<OrganizationMember>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("organizationId", params.organizationId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PUT)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("api", "v1", "organizations", params._pathParam(0), "users")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { addHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.forEach { it.validate() }
-                        }
-                    }
-            }
+        override fun add(params: UserAddParams, requestOptions: RequestOptions): HttpResponseFor<List<OrganizationMember>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("organizationId", params.organizationId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PUT)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("api", "v1", "organizations", params._pathParam(0), "users")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  addHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.forEach { it.validate() }
+                  }
+              }
+          }
         }
 
-        private val addToProjectHandler: Handler<UserAddToProjectResponse> =
-            jsonHandler<UserAddToProjectResponse>(clientOptions.jsonMapper)
+        private val addToProjectHandler: Handler<UserAddToProjectResponse> = jsonHandler<UserAddToProjectResponse>(clientOptions.jsonMapper)
 
-        override fun addToProject(
-            params: UserAddToProjectParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<UserAddToProjectResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("userId", params.userId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PUT)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "api",
-                        "v1",
-                        "organizations",
-                        params._pathParam(0),
-                        "users",
-                        params._pathParam(1),
-                        "projects",
-                    )
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { addToProjectHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun addToProject(params: UserAddToProjectParams, requestOptions: RequestOptions): HttpResponseFor<UserAddToProjectResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("userId", params.userId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PUT)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("api", "v1", "organizations", params._pathParam(0), "users", params._pathParam(1), "projects")
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  addToProjectHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val assignRoleHandler: Handler<UserOrganizationRole> =
-            jsonHandler<UserOrganizationRole>(clientOptions.jsonMapper)
+        private val assignRoleHandler: Handler<UserOrganizationRole> = jsonHandler<UserOrganizationRole>(clientOptions.jsonMapper)
 
-        override fun assignRole(
-            params: UserAssignRoleParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<UserOrganizationRole> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("pathOrganizationId", params.pathOrganizationId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PUT)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "api",
-                        "v1",
-                        "organizations",
-                        params._pathParam(0),
-                        "users",
-                        "roles",
-                    )
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { assignRoleHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun assignRole(params: UserAssignRoleParams, requestOptions: RequestOptions): HttpResponseFor<UserOrganizationRole> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("pathOrganizationId", params.pathOrganizationId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PUT)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("api", "v1", "organizations", params._pathParam(0), "users", "roles")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  assignRoleHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val listMembersHandler: Handler<List<OrganizationMember>> =
-            jsonHandler<List<OrganizationMember>>(clientOptions.jsonMapper)
+        private val listMembersHandler: Handler<List<OrganizationMember>> = jsonHandler<List<OrganizationMember>>(clientOptions.jsonMapper)
 
-        override fun listMembers(
-            params: UserListMembersParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<List<OrganizationMember>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("organizationId", params.organizationId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("api", "v1", "organizations", params._pathParam(0), "users")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listMembersHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.forEach { it.validate() }
-                        }
-                    }
-            }
+        override fun listMembers(params: UserListMembersParams, requestOptions: RequestOptions): HttpResponseFor<List<OrganizationMember>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("organizationId", params.organizationId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("api", "v1", "organizations", params._pathParam(0), "users")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listMembersHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.forEach { it.validate() }
+                  }
+              }
+          }
         }
 
-        private val listProjectsHandler: Handler<List<UserListProjectsResponse>> =
-            jsonHandler<List<UserListProjectsResponse>>(clientOptions.jsonMapper)
+        private val listProjectsHandler: Handler<List<UserListProjectsResponse>> = jsonHandler<List<UserListProjectsResponse>>(clientOptions.jsonMapper)
 
-        override fun listProjects(
-            params: UserListProjectsParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<List<UserListProjectsResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("userId", params.userId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "api",
-                        "v1",
-                        "organizations",
-                        params._pathParam(0),
-                        "users",
-                        params._pathParam(1),
-                        "projects",
-                    )
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listProjectsHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.forEach { it.validate() }
-                        }
-                    }
-            }
+        override fun listProjects(params: UserListProjectsParams, requestOptions: RequestOptions): HttpResponseFor<List<UserListProjectsResponse>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("userId", params.userId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("api", "v1", "organizations", params._pathParam(0), "users", params._pathParam(1), "projects")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listProjectsHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.forEach { it.validate() }
+                  }
+              }
+          }
         }
 
-        private val removeFromProjectHandler: Handler<UserRemoveFromProjectResponse> =
-            jsonHandler<UserRemoveFromProjectResponse>(clientOptions.jsonMapper)
+        private val removeFromProjectHandler: Handler<UserRemoveFromProjectResponse> = jsonHandler<UserRemoveFromProjectResponse>(clientOptions.jsonMapper)
 
-        override fun removeFromProject(
-            params: UserRemoveFromProjectParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<UserRemoveFromProjectResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("projectId", params.projectId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.DELETE)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "api",
-                        "v1",
-                        "organizations",
-                        params._pathParam(0),
-                        "users",
-                        params._pathParam(1),
-                        "projects",
-                        params._pathParam(2),
-                    )
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { removeFromProjectHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun removeFromProject(params: UserRemoveFromProjectParams, requestOptions: RequestOptions): HttpResponseFor<UserRemoveFromProjectResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("projectId", params.projectId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.DELETE)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("api", "v1", "organizations", params._pathParam(0), "users", params._pathParam(1), "projects", params._pathParam(2))
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  removeFromProjectHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
     }
 }

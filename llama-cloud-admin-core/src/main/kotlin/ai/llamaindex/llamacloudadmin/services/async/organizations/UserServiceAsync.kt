@@ -18,14 +18,13 @@ import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjects
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserListProjectsResponse
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserRemoveFromProjectParams
 import ai.llamaindex.llamacloudadmin.models.organizations.users.UserRemoveFromProjectResponse
+import ai.llamaindex.llamacloudadmin.services.async.organizations.UserServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface UserServiceAsync {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -37,193 +36,192 @@ interface UserServiceAsync {
 
     /** Remove users from an organization. */
     fun delete(memberUserId: String, params: UserDeleteParams): CompletableFuture<Void?> =
-        delete(memberUserId, params, RequestOptions.none())
+        delete(
+          memberUserId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see delete */
-    fun delete(
-        memberUserId: String,
-        params: UserDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?> =
-        delete(params.toBuilder().memberUserId(memberUserId).build(), requestOptions)
+    fun delete(memberUserId: String, params: UserDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Void?> =
+        delete(
+          params.toBuilder()
+              .memberUserId(memberUserId)
+              .build(), requestOptions
+        )
 
     /** @see delete */
     fun delete(params: UserDeleteParams): CompletableFuture<Void?> =
-        delete(params, RequestOptions.none())
+        delete(
+          params, RequestOptions.none()
+        )
 
     /** @see delete */
-    fun delete(
-        params: UserDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
+    fun delete(params: UserDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Void?>
 
     /** Add a user to an organization. */
-    fun add(
-        organizationId: String,
-        params: UserAddParams,
-    ): CompletableFuture<List<OrganizationMember>> =
-        add(organizationId, params, RequestOptions.none())
+    fun add(organizationId: String, params: UserAddParams): CompletableFuture<List<OrganizationMember>> =
+        add(
+          organizationId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see add */
-    fun add(
-        organizationId: String,
-        params: UserAddParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<OrganizationMember>> =
-        add(params.toBuilder().organizationId(organizationId).build(), requestOptions)
+    fun add(organizationId: String, params: UserAddParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<List<OrganizationMember>> =
+        add(
+          params.toBuilder()
+              .organizationId(organizationId)
+              .build(), requestOptions
+        )
 
     /** @see add */
     fun add(params: UserAddParams): CompletableFuture<List<OrganizationMember>> =
-        add(params, RequestOptions.none())
+        add(
+          params, RequestOptions.none()
+        )
 
     /** @see add */
-    fun add(
-        params: UserAddParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<OrganizationMember>>
+    fun add(params: UserAddParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<List<OrganizationMember>>
 
     /** Add a user to a project. */
-    fun addToProject(
-        userId: String,
-        params: UserAddToProjectParams,
-    ): CompletableFuture<UserAddToProjectResponse> =
-        addToProject(userId, params, RequestOptions.none())
+    fun addToProject(userId: String, params: UserAddToProjectParams): CompletableFuture<UserAddToProjectResponse> =
+        addToProject(
+          userId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see addToProject */
-    fun addToProject(
-        userId: String,
-        params: UserAddToProjectParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<UserAddToProjectResponse> =
-        addToProject(params.toBuilder().userId(userId).build(), requestOptions)
+    fun addToProject(userId: String, params: UserAddToProjectParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<UserAddToProjectResponse> =
+        addToProject(
+          params.toBuilder()
+              .userId(userId)
+              .build(), requestOptions
+        )
 
     /** @see addToProject */
     fun addToProject(params: UserAddToProjectParams): CompletableFuture<UserAddToProjectResponse> =
-        addToProject(params, RequestOptions.none())
+        addToProject(
+          params, RequestOptions.none()
+        )
 
     /** @see addToProject */
-    fun addToProject(
-        params: UserAddToProjectParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<UserAddToProjectResponse>
+    fun addToProject(params: UserAddToProjectParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<UserAddToProjectResponse>
 
     /** Assign a role to a user in an organization. */
-    fun assignRole(
-        pathOrganizationId: String,
-        params: UserAssignRoleParams,
-    ): CompletableFuture<UserOrganizationRole> =
-        assignRole(pathOrganizationId, params, RequestOptions.none())
+    fun assignRole(pathOrganizationId: String, params: UserAssignRoleParams): CompletableFuture<UserOrganizationRole> =
+        assignRole(
+          pathOrganizationId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see assignRole */
-    fun assignRole(
-        pathOrganizationId: String,
-        params: UserAssignRoleParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<UserOrganizationRole> =
+    fun assignRole(pathOrganizationId: String, params: UserAssignRoleParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<UserOrganizationRole> =
         assignRole(
-            params.toBuilder().pathOrganizationId(pathOrganizationId).build(),
-            requestOptions,
+          params.toBuilder()
+              .pathOrganizationId(pathOrganizationId)
+              .build(), requestOptions
         )
 
     /** @see assignRole */
     fun assignRole(params: UserAssignRoleParams): CompletableFuture<UserOrganizationRole> =
-        assignRole(params, RequestOptions.none())
+        assignRole(
+          params, RequestOptions.none()
+        )
 
     /** @see assignRole */
-    fun assignRole(
-        params: UserAssignRoleParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<UserOrganizationRole>
+    fun assignRole(params: UserAssignRoleParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<UserOrganizationRole>
 
     /** Get all users in an organization. */
     fun listMembers(organizationId: String): CompletableFuture<List<OrganizationMember>> =
-        listMembers(organizationId, UserListMembersParams.none())
+        listMembers(
+          organizationId, UserListMembersParams.none()
+        )
 
     /** @see listMembers */
-    fun listMembers(
-        organizationId: String,
-        params: UserListMembersParams = UserListMembersParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<OrganizationMember>> =
-        listMembers(params.toBuilder().organizationId(organizationId).build(), requestOptions)
+    fun listMembers(organizationId: String, params: UserListMembersParams = UserListMembersParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<List<OrganizationMember>> =
+        listMembers(
+          params.toBuilder()
+              .organizationId(organizationId)
+              .build(), requestOptions
+        )
 
     /** @see listMembers */
-    fun listMembers(
-        organizationId: String,
-        params: UserListMembersParams = UserListMembersParams.none(),
-    ): CompletableFuture<List<OrganizationMember>> =
-        listMembers(organizationId, params, RequestOptions.none())
+    fun listMembers(organizationId: String, params: UserListMembersParams = UserListMembersParams.none()): CompletableFuture<List<OrganizationMember>> =
+        listMembers(
+          organizationId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see listMembers */
-    fun listMembers(
-        params: UserListMembersParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<OrganizationMember>>
+    fun listMembers(params: UserListMembersParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<List<OrganizationMember>>
 
     /** @see listMembers */
     fun listMembers(params: UserListMembersParams): CompletableFuture<List<OrganizationMember>> =
-        listMembers(params, RequestOptions.none())
+        listMembers(
+          params, RequestOptions.none()
+        )
 
     /** @see listMembers */
-    fun listMembers(
-        organizationId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<List<OrganizationMember>> =
-        listMembers(organizationId, UserListMembersParams.none(), requestOptions)
+    fun listMembers(organizationId: String, requestOptions: RequestOptions): CompletableFuture<List<OrganizationMember>> =
+        listMembers(
+          organizationId,
+          UserListMembersParams.none(),
+          requestOptions,
+        )
 
     /** List all projects for a user in an organization. */
-    fun listProjects(
-        userId: String,
-        params: UserListProjectsParams,
-    ): CompletableFuture<List<UserListProjectsResponse>> =
-        listProjects(userId, params, RequestOptions.none())
+    fun listProjects(userId: String, params: UserListProjectsParams): CompletableFuture<List<UserListProjectsResponse>> =
+        listProjects(
+          userId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see listProjects */
-    fun listProjects(
-        userId: String,
-        params: UserListProjectsParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<UserListProjectsResponse>> =
-        listProjects(params.toBuilder().userId(userId).build(), requestOptions)
+    fun listProjects(userId: String, params: UserListProjectsParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<List<UserListProjectsResponse>> =
+        listProjects(
+          params.toBuilder()
+              .userId(userId)
+              .build(), requestOptions
+        )
 
     /** @see listProjects */
-    fun listProjects(
-        params: UserListProjectsParams
-    ): CompletableFuture<List<UserListProjectsResponse>> =
-        listProjects(params, RequestOptions.none())
+    fun listProjects(params: UserListProjectsParams): CompletableFuture<List<UserListProjectsResponse>> =
+        listProjects(
+          params, RequestOptions.none()
+        )
 
     /** @see listProjects */
-    fun listProjects(
-        params: UserListProjectsParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<UserListProjectsResponse>>
+    fun listProjects(params: UserListProjectsParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<List<UserListProjectsResponse>>
 
     /** Remove a user from a project. */
-    fun removeFromProject(
-        projectId: String,
-        params: UserRemoveFromProjectParams,
-    ): CompletableFuture<UserRemoveFromProjectResponse> =
-        removeFromProject(projectId, params, RequestOptions.none())
+    fun removeFromProject(projectId: String, params: UserRemoveFromProjectParams): CompletableFuture<UserRemoveFromProjectResponse> =
+        removeFromProject(
+          projectId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see removeFromProject */
-    fun removeFromProject(
-        projectId: String,
-        params: UserRemoveFromProjectParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<UserRemoveFromProjectResponse> =
-        removeFromProject(params.toBuilder().projectId(projectId).build(), requestOptions)
+    fun removeFromProject(projectId: String, params: UserRemoveFromProjectParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<UserRemoveFromProjectResponse> =
+        removeFromProject(
+          params.toBuilder()
+              .projectId(projectId)
+              .build(), requestOptions
+        )
 
     /** @see removeFromProject */
-    fun removeFromProject(
-        params: UserRemoveFromProjectParams
-    ): CompletableFuture<UserRemoveFromProjectResponse> =
-        removeFromProject(params, RequestOptions.none())
+    fun removeFromProject(params: UserRemoveFromProjectParams): CompletableFuture<UserRemoveFromProjectResponse> =
+        removeFromProject(
+          params, RequestOptions.none()
+        )
 
     /** @see removeFromProject */
-    fun removeFromProject(
-        params: UserRemoveFromProjectParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<UserRemoveFromProjectResponse>
+    fun removeFromProject(params: UserRemoveFromProjectParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<UserRemoveFromProjectResponse>
 
     /** A view of [UserServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -235,232 +233,193 @@ interface UserServiceAsync {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): UserServiceAsync.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `delete
-         * /api/v1/organizations/{organization_id}/users/{member_user_id}`, but is otherwise the
-         * same as [UserServiceAsync.delete].
-         */
-        fun delete(
-            memberUserId: String,
-            params: UserDeleteParams,
-        ): CompletableFuture<HttpResponse> = delete(memberUserId, params, RequestOptions.none())
+        /** Returns a raw HTTP response for `delete /api/v1/organizations/{organization_id}/users/{member_user_id}`, but is otherwise the             same as [UserServiceAsync.delete]. */
+        fun delete(memberUserId: String, params: UserDeleteParams): CompletableFuture<HttpResponse> =
+            delete(
+              memberUserId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see delete */
-        fun delete(
-            memberUserId: String,
-            params: UserDeleteParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            delete(params.toBuilder().memberUserId(memberUserId).build(), requestOptions)
+        fun delete(memberUserId: String, params: UserDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse> =
+            delete(
+              params.toBuilder()
+                  .memberUserId(memberUserId)
+                  .build(), requestOptions
+            )
 
         /** @see delete */
         fun delete(params: UserDeleteParams): CompletableFuture<HttpResponse> =
-            delete(params, RequestOptions.none())
+            delete(
+              params, RequestOptions.none()
+            )
 
         /** @see delete */
-        fun delete(
-            params: UserDeleteParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
+        fun delete(params: UserDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse>
 
-        /**
-         * Returns a raw HTTP response for `put /api/v1/organizations/{organization_id}/users`, but
-         * is otherwise the same as [UserServiceAsync.add].
-         */
-        fun add(
-            organizationId: String,
-            params: UserAddParams,
-        ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
-            add(organizationId, params, RequestOptions.none())
+        /** Returns a raw HTTP response for `put /api/v1/organizations/{organization_id}/users`, but is otherwise the             same as [UserServiceAsync.add]. */
+        fun add(organizationId: String, params: UserAddParams): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
+            add(
+              organizationId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see add */
-        fun add(
-            organizationId: String,
-            params: UserAddParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
-            add(params.toBuilder().organizationId(organizationId).build(), requestOptions)
+        fun add(organizationId: String, params: UserAddParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
+            add(
+              params.toBuilder()
+                  .organizationId(organizationId)
+                  .build(), requestOptions
+            )
 
         /** @see add */
-        fun add(
-            params: UserAddParams
-        ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
-            add(params, RequestOptions.none())
+        fun add(params: UserAddParams): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
+            add(
+              params, RequestOptions.none()
+            )
 
         /** @see add */
-        fun add(
-            params: UserAddParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>>
+        fun add(params: UserAddParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<List<OrganizationMember>>>
 
-        /**
-         * Returns a raw HTTP response for `put
-         * /api/v1/organizations/{organization_id}/users/{user_id}/projects`, but is otherwise the
-         * same as [UserServiceAsync.addToProject].
-         */
-        fun addToProject(
-            userId: String,
-            params: UserAddToProjectParams,
-        ): CompletableFuture<HttpResponseFor<UserAddToProjectResponse>> =
-            addToProject(userId, params, RequestOptions.none())
+        /** Returns a raw HTTP response for `put /api/v1/organizations/{organization_id}/users/{user_id}/projects`, but is otherwise the             same as [UserServiceAsync.addToProject]. */
+        fun addToProject(userId: String, params: UserAddToProjectParams): CompletableFuture<HttpResponseFor<UserAddToProjectResponse>> =
+            addToProject(
+              userId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see addToProject */
-        fun addToProject(
-            userId: String,
-            params: UserAddToProjectParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<UserAddToProjectResponse>> =
-            addToProject(params.toBuilder().userId(userId).build(), requestOptions)
+        fun addToProject(userId: String, params: UserAddToProjectParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<UserAddToProjectResponse>> =
+            addToProject(
+              params.toBuilder()
+                  .userId(userId)
+                  .build(), requestOptions
+            )
 
         /** @see addToProject */
-        fun addToProject(
-            params: UserAddToProjectParams
-        ): CompletableFuture<HttpResponseFor<UserAddToProjectResponse>> =
-            addToProject(params, RequestOptions.none())
+        fun addToProject(params: UserAddToProjectParams): CompletableFuture<HttpResponseFor<UserAddToProjectResponse>> =
+            addToProject(
+              params, RequestOptions.none()
+            )
 
         /** @see addToProject */
-        fun addToProject(
-            params: UserAddToProjectParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<UserAddToProjectResponse>>
+        fun addToProject(params: UserAddToProjectParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<UserAddToProjectResponse>>
 
-        /**
-         * Returns a raw HTTP response for `put
-         * /api/v1/organizations/{organization_id}/users/roles`, but is otherwise the same as
-         * [UserServiceAsync.assignRole].
-         */
-        fun assignRole(
-            pathOrganizationId: String,
-            params: UserAssignRoleParams,
-        ): CompletableFuture<HttpResponseFor<UserOrganizationRole>> =
-            assignRole(pathOrganizationId, params, RequestOptions.none())
-
-        /** @see assignRole */
-        fun assignRole(
-            pathOrganizationId: String,
-            params: UserAssignRoleParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<UserOrganizationRole>> =
+        /** Returns a raw HTTP response for `put /api/v1/organizations/{organization_id}/users/roles`, but is otherwise the             same as [UserServiceAsync.assignRole]. */
+        fun assignRole(pathOrganizationId: String, params: UserAssignRoleParams): CompletableFuture<HttpResponseFor<UserOrganizationRole>> =
             assignRole(
-                params.toBuilder().pathOrganizationId(pathOrganizationId).build(),
-                requestOptions,
+              pathOrganizationId,
+              params,
+              RequestOptions.none(),
             )
 
         /** @see assignRole */
-        fun assignRole(
-            params: UserAssignRoleParams
-        ): CompletableFuture<HttpResponseFor<UserOrganizationRole>> =
-            assignRole(params, RequestOptions.none())
+        fun assignRole(pathOrganizationId: String, params: UserAssignRoleParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<UserOrganizationRole>> =
+            assignRole(
+              params.toBuilder()
+                  .pathOrganizationId(pathOrganizationId)
+                  .build(), requestOptions
+            )
 
         /** @see assignRole */
-        fun assignRole(
-            params: UserAssignRoleParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<UserOrganizationRole>>
+        fun assignRole(params: UserAssignRoleParams): CompletableFuture<HttpResponseFor<UserOrganizationRole>> =
+            assignRole(
+              params, RequestOptions.none()
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /api/v1/organizations/{organization_id}/users`, but
-         * is otherwise the same as [UserServiceAsync.listMembers].
-         */
-        fun listMembers(
-            organizationId: String
-        ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
-            listMembers(organizationId, UserListMembersParams.none())
+        /** @see assignRole */
+        fun assignRole(params: UserAssignRoleParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<UserOrganizationRole>>
 
-        /** @see listMembers */
-        fun listMembers(
-            organizationId: String,
-            params: UserListMembersParams = UserListMembersParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
-            listMembers(params.toBuilder().organizationId(organizationId).build(), requestOptions)
+        /** Returns a raw HTTP response for `get /api/v1/organizations/{organization_id}/users`, but is otherwise the             same as [UserServiceAsync.listMembers]. */
+        fun listMembers(organizationId: String): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
+            listMembers(
+              organizationId, UserListMembersParams.none()
+            )
 
         /** @see listMembers */
-        fun listMembers(
-            organizationId: String,
-            params: UserListMembersParams = UserListMembersParams.none(),
-        ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
-            listMembers(organizationId, params, RequestOptions.none())
+        fun listMembers(organizationId: String, params: UserListMembersParams = UserListMembersParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
+            listMembers(
+              params.toBuilder()
+                  .organizationId(organizationId)
+                  .build(), requestOptions
+            )
 
         /** @see listMembers */
-        fun listMembers(
-            params: UserListMembersParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>>
+        fun listMembers(organizationId: String, params: UserListMembersParams = UserListMembersParams.none()): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
+            listMembers(
+              organizationId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see listMembers */
-        fun listMembers(
-            params: UserListMembersParams
-        ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
-            listMembers(params, RequestOptions.none())
+        fun listMembers(params: UserListMembersParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<List<OrganizationMember>>>
 
         /** @see listMembers */
-        fun listMembers(
-            organizationId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
-            listMembers(organizationId, UserListMembersParams.none(), requestOptions)
+        fun listMembers(params: UserListMembersParams): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
+            listMembers(
+              params, RequestOptions.none()
+            )
 
-        /**
-         * Returns a raw HTTP response for `get
-         * /api/v1/organizations/{organization_id}/users/{user_id}/projects`, but is otherwise the
-         * same as [UserServiceAsync.listProjects].
-         */
-        fun listProjects(
-            userId: String,
-            params: UserListProjectsParams,
-        ): CompletableFuture<HttpResponseFor<List<UserListProjectsResponse>>> =
-            listProjects(userId, params, RequestOptions.none())
+        /** @see listMembers */
+        fun listMembers(organizationId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
+            listMembers(
+              organizationId,
+              UserListMembersParams.none(),
+              requestOptions,
+            )
+
+        /** Returns a raw HTTP response for `get /api/v1/organizations/{organization_id}/users/{user_id}/projects`, but is otherwise the             same as [UserServiceAsync.listProjects]. */
+        fun listProjects(userId: String, params: UserListProjectsParams): CompletableFuture<HttpResponseFor<List<UserListProjectsResponse>>> =
+            listProjects(
+              userId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see listProjects */
-        fun listProjects(
-            userId: String,
-            params: UserListProjectsParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<UserListProjectsResponse>>> =
-            listProjects(params.toBuilder().userId(userId).build(), requestOptions)
+        fun listProjects(userId: String, params: UserListProjectsParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<List<UserListProjectsResponse>>> =
+            listProjects(
+              params.toBuilder()
+                  .userId(userId)
+                  .build(), requestOptions
+            )
 
         /** @see listProjects */
-        fun listProjects(
-            params: UserListProjectsParams
-        ): CompletableFuture<HttpResponseFor<List<UserListProjectsResponse>>> =
-            listProjects(params, RequestOptions.none())
+        fun listProjects(params: UserListProjectsParams): CompletableFuture<HttpResponseFor<List<UserListProjectsResponse>>> =
+            listProjects(
+              params, RequestOptions.none()
+            )
 
         /** @see listProjects */
-        fun listProjects(
-            params: UserListProjectsParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<UserListProjectsResponse>>>
+        fun listProjects(params: UserListProjectsParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<List<UserListProjectsResponse>>>
 
-        /**
-         * Returns a raw HTTP response for `delete
-         * /api/v1/organizations/{organization_id}/users/{user_id}/projects/{project_id}`, but is
-         * otherwise the same as [UserServiceAsync.removeFromProject].
-         */
-        fun removeFromProject(
-            projectId: String,
-            params: UserRemoveFromProjectParams,
-        ): CompletableFuture<HttpResponseFor<UserRemoveFromProjectResponse>> =
-            removeFromProject(projectId, params, RequestOptions.none())
+        /** Returns a raw HTTP response for `delete /api/v1/organizations/{organization_id}/users/{user_id}/projects/{project_id}`, but is otherwise the             same as [UserServiceAsync.removeFromProject]. */
+        fun removeFromProject(projectId: String, params: UserRemoveFromProjectParams): CompletableFuture<HttpResponseFor<UserRemoveFromProjectResponse>> =
+            removeFromProject(
+              projectId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see removeFromProject */
-        fun removeFromProject(
-            projectId: String,
-            params: UserRemoveFromProjectParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<UserRemoveFromProjectResponse>> =
-            removeFromProject(params.toBuilder().projectId(projectId).build(), requestOptions)
+        fun removeFromProject(projectId: String, params: UserRemoveFromProjectParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<UserRemoveFromProjectResponse>> =
+            removeFromProject(
+              params.toBuilder()
+                  .projectId(projectId)
+                  .build(), requestOptions
+            )
 
         /** @see removeFromProject */
-        fun removeFromProject(
-            params: UserRemoveFromProjectParams
-        ): CompletableFuture<HttpResponseFor<UserRemoveFromProjectResponse>> =
-            removeFromProject(params, RequestOptions.none())
+        fun removeFromProject(params: UserRemoveFromProjectParams): CompletableFuture<HttpResponseFor<UserRemoveFromProjectResponse>> =
+            removeFromProject(
+              params, RequestOptions.none()
+            )
 
         /** @see removeFromProject */
-        fun removeFromProject(
-            params: UserRemoveFromProjectParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<UserRemoveFromProjectResponse>>
+        fun removeFromProject(params: UserRemoveFromProjectParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<UserRemoveFromProjectResponse>>
     }
 }
