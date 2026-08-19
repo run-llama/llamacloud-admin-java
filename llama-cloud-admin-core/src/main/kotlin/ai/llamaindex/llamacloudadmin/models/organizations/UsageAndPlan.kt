@@ -206,8 +206,6 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val limits: JsonField<Limits>,
-        private val metronomePlanType: JsonField<MetronomePlanType>,
-        private val metronomeRateCardAlias: JsonField<String>,
         private val name: JsonField<Name>,
         private val planFrequency: JsonField<PlanFrequency>,
         private val id: JsonField<String>,
@@ -215,7 +213,6 @@ private constructor(
         private val endingBefore: JsonField<OffsetDateTime>,
         private val failureCount: JsonField<Long>,
         private val isPaymentFailed: JsonField<Boolean>,
-        private val metronomeCustomerId: JsonField<String>,
         private val recurringCredits: JsonField<List<RecurringCredit>>,
         private val startingOn: JsonField<OffsetDateTime>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -224,12 +221,6 @@ private constructor(
         @JsonCreator
         private constructor(
             @JsonProperty("limits") @ExcludeMissing limits: JsonField<Limits> = JsonMissing.of(),
-            @JsonProperty("metronome_plan_type")
-            @ExcludeMissing
-            metronomePlanType: JsonField<MetronomePlanType> = JsonMissing.of(),
-            @JsonProperty("metronome_rate_card_alias")
-            @ExcludeMissing
-            metronomeRateCardAlias: JsonField<String> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<Name> = JsonMissing.of(),
             @JsonProperty("plan_frequency")
             @ExcludeMissing
@@ -247,9 +238,6 @@ private constructor(
             @JsonProperty("is_payment_failed")
             @ExcludeMissing
             isPaymentFailed: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("metronome_customer_id")
-            @ExcludeMissing
-            metronomeCustomerId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("recurring_credits")
             @ExcludeMissing
             recurringCredits: JsonField<List<RecurringCredit>> = JsonMissing.of(),
@@ -258,8 +246,6 @@ private constructor(
             startingOn: JsonField<OffsetDateTime> = JsonMissing.of(),
         ) : this(
             limits,
-            metronomePlanType,
-            metronomeRateCardAlias,
             name,
             planFrequency,
             id,
@@ -267,7 +253,6 @@ private constructor(
             endingBefore,
             failureCount,
             isPaymentFailed,
-            metronomeCustomerId,
             recurringCredits,
             startingOn,
             mutableMapOf(),
@@ -279,21 +264,6 @@ private constructor(
          *   value).
          */
         fun limits(): Limits = limits.getRequired("limits")
-
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or
-         *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-         *   value).
-         */
-        fun metronomePlanType(): MetronomePlanType =
-            metronomePlanType.getRequired("metronome_plan_type")
-
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun metronomeRateCardAlias(): Optional<String> =
-            metronomeRateCardAlias.getOptional("metronome_rate_card_alias")
 
         /**
          * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type or
@@ -351,15 +321,6 @@ private constructor(
         fun isPaymentFailed(): Optional<Boolean> = isPaymentFailed.getOptional("is_payment_failed")
 
         /**
-         * The ID of the customer in Metronome
-         *
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun metronomeCustomerId(): Optional<String> =
-            metronomeCustomerId.getOptional("metronome_customer_id")
-
-        /**
          * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
          *   (e.g. if the server responded with an unexpected value).
          */
@@ -380,26 +341,6 @@ private constructor(
          * Unlike [limits], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("limits") @ExcludeMissing fun _limits(): JsonField<Limits> = limits
-
-        /**
-         * Returns the raw JSON value of [metronomePlanType].
-         *
-         * Unlike [metronomePlanType], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("metronome_plan_type")
-        @ExcludeMissing
-        fun _metronomePlanType(): JsonField<MetronomePlanType> = metronomePlanType
-
-        /**
-         * Returns the raw JSON value of [metronomeRateCardAlias].
-         *
-         * Unlike [metronomeRateCardAlias], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("metronome_rate_card_alias")
-        @ExcludeMissing
-        fun _metronomeRateCardAlias(): JsonField<String> = metronomeRateCardAlias
 
         /**
          * Returns the raw JSON value of [name].
@@ -466,16 +407,6 @@ private constructor(
         fun _isPaymentFailed(): JsonField<Boolean> = isPaymentFailed
 
         /**
-         * Returns the raw JSON value of [metronomeCustomerId].
-         *
-         * Unlike [metronomeCustomerId], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("metronome_customer_id")
-        @ExcludeMissing
-        fun _metronomeCustomerId(): JsonField<String> = metronomeCustomerId
-
-        /**
          * Returns the raw JSON value of [recurringCredits].
          *
          * Unlike [recurringCredits], this method doesn't throw if the JSON field has an unexpected
@@ -514,8 +445,6 @@ private constructor(
              * The following fields are required:
              * ```java
              * .limits()
-             * .metronomePlanType()
-             * .metronomeRateCardAlias()
              * .name()
              * .planFrequency()
              * ```
@@ -527,8 +456,6 @@ private constructor(
         class Builder internal constructor() {
 
             private var limits: JsonField<Limits>? = null
-            private var metronomePlanType: JsonField<MetronomePlanType>? = null
-            private var metronomeRateCardAlias: JsonField<String>? = null
             private var name: JsonField<Name>? = null
             private var planFrequency: JsonField<PlanFrequency>? = null
             private var id: JsonField<String> = JsonMissing.of()
@@ -536,7 +463,6 @@ private constructor(
             private var endingBefore: JsonField<OffsetDateTime> = JsonMissing.of()
             private var failureCount: JsonField<Long> = JsonMissing.of()
             private var isPaymentFailed: JsonField<Boolean> = JsonMissing.of()
-            private var metronomeCustomerId: JsonField<String> = JsonMissing.of()
             private var recurringCredits: JsonField<MutableList<RecurringCredit>>? = null
             private var startingOn: JsonField<OffsetDateTime> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -544,8 +470,6 @@ private constructor(
             @JvmSynthetic
             internal fun from(plan: Plan) = apply {
                 limits = plan.limits
-                metronomePlanType = plan.metronomePlanType
-                metronomeRateCardAlias = plan.metronomeRateCardAlias
                 name = plan.name
                 planFrequency = plan.planFrequency
                 id = plan.id
@@ -553,7 +477,6 @@ private constructor(
                 endingBefore = plan.endingBefore
                 failureCount = plan.failureCount
                 isPaymentFailed = plan.isPaymentFailed
-                metronomeCustomerId = plan.metronomeCustomerId
                 recurringCredits = plan.recurringCredits.map { it.toMutableList() }
                 startingOn = plan.startingOn
                 additionalProperties = plan.additionalProperties.toMutableMap()
@@ -569,41 +492,6 @@ private constructor(
              * supported value.
              */
             fun limits(limits: JsonField<Limits>) = apply { this.limits = limits }
-
-            fun metronomePlanType(metronomePlanType: MetronomePlanType) =
-                metronomePlanType(JsonField.of(metronomePlanType))
-
-            /**
-             * Sets [Builder.metronomePlanType] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.metronomePlanType] with a well-typed
-             * [MetronomePlanType] value instead. This method is primarily for setting the field to
-             * an undocumented or not yet supported value.
-             */
-            fun metronomePlanType(metronomePlanType: JsonField<MetronomePlanType>) = apply {
-                this.metronomePlanType = metronomePlanType
-            }
-
-            fun metronomeRateCardAlias(metronomeRateCardAlias: String?) =
-                metronomeRateCardAlias(JsonField.ofNullable(metronomeRateCardAlias))
-
-            /**
-             * Alias for calling [Builder.metronomeRateCardAlias] with
-             * `metronomeRateCardAlias.orElse(null)`.
-             */
-            fun metronomeRateCardAlias(metronomeRateCardAlias: Optional<String>) =
-                metronomeRateCardAlias(metronomeRateCardAlias.getOrNull())
-
-            /**
-             * Sets [Builder.metronomeRateCardAlias] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.metronomeRateCardAlias] with a well-typed [String]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
-            fun metronomeRateCardAlias(metronomeRateCardAlias: JsonField<String>) = apply {
-                this.metronomeRateCardAlias = metronomeRateCardAlias
-            }
 
             fun name(name: Name) = name(JsonField.of(name))
 
@@ -716,28 +604,6 @@ private constructor(
                 this.isPaymentFailed = isPaymentFailed
             }
 
-            /** The ID of the customer in Metronome */
-            fun metronomeCustomerId(metronomeCustomerId: String?) =
-                metronomeCustomerId(JsonField.ofNullable(metronomeCustomerId))
-
-            /**
-             * Alias for calling [Builder.metronomeCustomerId] with
-             * `metronomeCustomerId.orElse(null)`.
-             */
-            fun metronomeCustomerId(metronomeCustomerId: Optional<String>) =
-                metronomeCustomerId(metronomeCustomerId.getOrNull())
-
-            /**
-             * Sets [Builder.metronomeCustomerId] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.metronomeCustomerId] with a well-typed [String]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
-            fun metronomeCustomerId(metronomeCustomerId: JsonField<String>) = apply {
-                this.metronomeCustomerId = metronomeCustomerId
-            }
-
             fun recurringCredits(recurringCredits: List<RecurringCredit>?) =
                 recurringCredits(JsonField.ofNullable(recurringCredits))
 
@@ -816,8 +682,6 @@ private constructor(
              * The following fields are required:
              * ```java
              * .limits()
-             * .metronomePlanType()
-             * .metronomeRateCardAlias()
              * .name()
              * .planFrequency()
              * ```
@@ -827,8 +691,6 @@ private constructor(
             fun build(): Plan =
                 Plan(
                     checkRequired("limits", limits),
-                    checkRequired("metronomePlanType", metronomePlanType),
-                    checkRequired("metronomeRateCardAlias", metronomeRateCardAlias),
                     checkRequired("name", name),
                     checkRequired("planFrequency", planFrequency),
                     id,
@@ -836,7 +698,6 @@ private constructor(
                     endingBefore,
                     failureCount,
                     isPaymentFailed,
-                    metronomeCustomerId,
                     (recurringCredits ?: JsonMissing.of()).map { it.toImmutable() },
                     startingOn,
                     additionalProperties.toMutableMap(),
@@ -860,8 +721,6 @@ private constructor(
             }
 
             limits().validate()
-            metronomePlanType().validate()
-            metronomeRateCardAlias()
             name().validate()
             planFrequency().validate()
             id()
@@ -869,7 +728,6 @@ private constructor(
             endingBefore()
             failureCount()
             isPaymentFailed()
-            metronomeCustomerId()
             recurringCredits().ifPresent { it.forEach { it.validate() } }
             startingOn()
             validated = true
@@ -892,8 +750,6 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (limits.asKnown().getOrNull()?.validity() ?: 0) +
-                (metronomePlanType.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (metronomeRateCardAlias.asKnown().isPresent) 1 else 0) +
                 (name.asKnown().getOrNull()?.validity() ?: 0) +
                 (planFrequency.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (id.asKnown().isPresent) 1 else 0) +
@@ -901,7 +757,6 @@ private constructor(
                 (if (endingBefore.asKnown().isPresent) 1 else 0) +
                 (if (failureCount.asKnown().isPresent) 1 else 0) +
                 (if (isPaymentFailed.asKnown().isPresent) 1 else 0) +
-                (if (metronomeCustomerId.asKnown().isPresent) 1 else 0) +
                 (recurringCredits.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (startingOn.asKnown().isPresent) 1 else 0)
 
@@ -2584,152 +2439,6 @@ private constructor(
                 "Limits{allowPayAsYouGo=$allowPayAsYouGo, maxConcurrentIndexJobs=$maxConcurrentIndexJobs, maxConcurrentParseJobsOther=$maxConcurrentParseJobsOther, maxConcurrentParseJobsPremium=$maxConcurrentParseJobsPremium, maxDataSinks=$maxDataSinks, maxDataSources=$maxDataSources, maxEmbeddingModels=$maxEmbeddingModels, maxExtractionAgents=$maxExtractionAgents, maxExtractionJobs=$maxExtractionJobs, maxExtractionRuns=$maxExtractionRuns, maxFilesPerIndex=$maxFilesPerIndex, maxIndexes=$maxIndexes, maxMonthlyInvoiceTotalUsd=$maxMonthlyInvoiceTotalUsd, maxOrganizations=$maxOrganizations, maxPagesPerIndex=$maxPagesPerIndex, maxProjects=$maxProjects, maxPublishedAgents=$maxPublishedAgents, maxReportAgentSessions=$maxReportAgentSessions, maxUsers=$maxUsers, mfaEnabled=$mfaEnabled, ssoEnabled=$ssoEnabled, subscriptionCostUsd=$subscriptionCostUsd, maxDirectories=$maxDirectories, maxDirectoryFilesPerDirectory=$maxDirectoryFilesPerDirectory, maxDirectoryIngestFiles=$maxDirectoryIngestFiles, maxDirectorySyncPlanActions=$maxDirectorySyncPlanActions, spendingSoftAlertsUsdCents=$spendingSoftAlertsUsdCents, additionalProperties=$additionalProperties}"
         }
 
-        class MetronomePlanType
-        @JsonCreator
-        private constructor(private val value: JsonField<String>) : Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val CONTRACT = of("contract")
-
-                @JvmField val PLAN = of("plan")
-
-                @JvmStatic fun of(value: String) = MetronomePlanType(JsonField.of(value))
-            }
-
-            /** An enum containing [MetronomePlanType]'s known values. */
-            enum class Known {
-                CONTRACT,
-                PLAN,
-            }
-
-            /**
-             * An enum containing [MetronomePlanType]'s known values, as well as an [_UNKNOWN]
-             * member.
-             *
-             * An instance of [MetronomePlanType] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                CONTRACT,
-                PLAN,
-                /**
-                 * An enum member indicating that [MetronomePlanType] was instantiated with an
-                 * unknown value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    CONTRACT -> Value.CONTRACT
-                    PLAN -> Value.PLAN
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws LlamaCloudAdminInvalidDataException if this class instance's value is a not a
-             *   known member.
-             */
-            fun known(): Known =
-                when (this) {
-                    CONTRACT -> Known.CONTRACT
-                    PLAN -> Known.PLAN
-                    else ->
-                        throw LlamaCloudAdminInvalidDataException(
-                            "Unknown MetronomePlanType: $value"
-                        )
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws LlamaCloudAdminInvalidDataException if this class instance's value does not
-             *   have the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    LlamaCloudAdminInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
-             */
-            fun validate(): MetronomePlanType = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: LlamaCloudAdminInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is MetronomePlanType && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
-
         class Name @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
             /**
@@ -3979,8 +3688,6 @@ private constructor(
 
             return other is Plan &&
                 limits == other.limits &&
-                metronomePlanType == other.metronomePlanType &&
-                metronomeRateCardAlias == other.metronomeRateCardAlias &&
                 name == other.name &&
                 planFrequency == other.planFrequency &&
                 id == other.id &&
@@ -3988,7 +3695,6 @@ private constructor(
                 endingBefore == other.endingBefore &&
                 failureCount == other.failureCount &&
                 isPaymentFailed == other.isPaymentFailed &&
-                metronomeCustomerId == other.metronomeCustomerId &&
                 recurringCredits == other.recurringCredits &&
                 startingOn == other.startingOn &&
                 additionalProperties == other.additionalProperties
@@ -3997,8 +3703,6 @@ private constructor(
         private val hashCode: Int by lazy {
             Objects.hash(
                 limits,
-                metronomePlanType,
-                metronomeRateCardAlias,
                 name,
                 planFrequency,
                 id,
@@ -4006,7 +3710,6 @@ private constructor(
                 endingBefore,
                 failureCount,
                 isPaymentFailed,
-                metronomeCustomerId,
                 recurringCredits,
                 startingOn,
                 additionalProperties,
@@ -4016,7 +3719,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Plan{limits=$limits, metronomePlanType=$metronomePlanType, metronomeRateCardAlias=$metronomeRateCardAlias, name=$name, planFrequency=$planFrequency, id=$id, currentBillingPeriod=$currentBillingPeriod, endingBefore=$endingBefore, failureCount=$failureCount, isPaymentFailed=$isPaymentFailed, metronomeCustomerId=$metronomeCustomerId, recurringCredits=$recurringCredits, startingOn=$startingOn, additionalProperties=$additionalProperties}"
+            "Plan{limits=$limits, name=$name, planFrequency=$planFrequency, id=$id, currentBillingPeriod=$currentBillingPeriod, endingBefore=$endingBefore, failureCount=$failureCount, isPaymentFailed=$isPaymentFailed, recurringCredits=$recurringCredits, startingOn=$startingOn, additionalProperties=$additionalProperties}"
     }
 
     /** Account usage totals shown alongside the plan. */
