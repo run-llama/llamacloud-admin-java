@@ -3,11 +3,11 @@
 [![Maven Central](https://img.shields.io/maven-central/v/ai.llamaindex.llamacloudadmin/llama-cloud-admin)](https://central.sonatype.com/artifact/ai.llamaindex.llamacloudadmin/llama-cloud-admin/0.0.1)
 [![javadoc](https://javadoc.io/badge2/ai.llamaindex.llamacloudadmin/llama-cloud-admin/0.0.1/javadoc.svg)](https://javadoc.io/doc/ai.llamaindex.llamacloudadmin/llama-cloud-admin/0.0.1)
 
-The Llama Cloud Admin Java SDK provides convenient access to the [Llama Cloud Admin REST API](https://developers.llamaindex.ai/) from applications written in Java.
+The Llama Cloud Admin Java SDK provides convenient access to the [Llama Cloud Admin REST API](https://admin.api.llamaindex.ai/) from applications written in Java.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The REST API documentation can be found on [developers.llamaindex.ai](https://developers.llamaindex.ai/). Javadocs are available on [javadoc.io](https://javadoc.io/doc/ai.llamaindex.llamacloudadmin/llama-cloud-admin/0.0.1).
+The REST API documentation can be found on [admin.api.llamaindex.ai](https://admin.api.llamaindex.ai/). Javadocs are available on [javadoc.io](https://javadoc.io/doc/ai.llamaindex.llamacloudadmin/llama-cloud-admin/0.0.1).
 
 ## Installation
 

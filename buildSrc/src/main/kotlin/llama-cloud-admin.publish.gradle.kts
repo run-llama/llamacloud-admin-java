@@ -44,7 +44,7 @@ configure<MavenPublishBaseExtension> {
     pom {
         name.set("Llama Platform")
         description.set("An SDK library for llama-cloud-admin")
-        url.set("https://developers.llamaindex.ai/")
+        url.set("https://admin.api.llamaindex.ai/")
 
         licenses {
             license {
