@@ -1,6 +1,6 @@
 # Llama Cloud Admin Java API Library
 
-The Llama Cloud Admin Java SDK provides convenient access to the Llama Cloud Admin REST API from applications written in Java.
+The Llama Cloud Admin Java SDK provides convenient access to the [Llama Cloud Admin REST API](https://admin.api.llamaindex.ai/) from applications written in Java.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
@@ -8,9 +8,9 @@ This SDK covers the LlamaCloud organization- and project-administration API — 
 organizations (`client.organizations()`), organization members and roles
 (`client.organizations().users()`, `client.organizations().roles()`), projects (`client.projects()`),
 invites (`client.invites()`), and the deployment-operator surface under `/api/v1/admin/*`
-(`client.admin()`). These endpoints are not covered by the public documentation on
-developers.llamaindex.ai. For the full method surface, generate the Javadoc with
-`./gradlew :llama-cloud-admin:dokkaJavadoc`, or read the service interfaces under
+(`client.admin()`). The full reference is at
+[admin.api.llamaindex.ai](https://admin.api.llamaindex.ai/); for API docs offline, generate the
+Javadoc with `./gradlew :llama-cloud-admin:dokkaJavadoc`, or read the service interfaces under
 `llama-cloud-admin-core/src/main/kotlin/ai/llamaindex/llamacloudadmin/services/blocking/`.
 
 ## Installation
