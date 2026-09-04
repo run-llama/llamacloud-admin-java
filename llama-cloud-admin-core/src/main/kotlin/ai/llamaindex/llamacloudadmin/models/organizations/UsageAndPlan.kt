@@ -4026,7 +4026,6 @@ private constructor(
         private val activeAlerts: JsonField<List<ActiveAlert>>,
         private val activeFreeCreditsUsage: JsonField<List<ActiveFreeCreditsUsage>>,
         private val currentInvoiceTotalUsdCents: JsonField<Long>,
-        private val totalExtractionAgents: JsonField<Long>,
         private val totalIndexedPages: JsonField<Long>,
         private val totalIndexes: JsonField<Long>,
         private val totalUsers: JsonField<Long>,
@@ -4044,9 +4043,6 @@ private constructor(
             @JsonProperty("current_invoice_total_usd_cents")
             @ExcludeMissing
             currentInvoiceTotalUsdCents: JsonField<Long> = JsonMissing.of(),
-            @JsonProperty("total_extraction_agents")
-            @ExcludeMissing
-            totalExtractionAgents: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("total_indexed_pages")
             @ExcludeMissing
             totalIndexedPages: JsonField<Long> = JsonMissing.of(),
@@ -4060,7 +4056,6 @@ private constructor(
             activeAlerts,
             activeFreeCreditsUsage,
             currentInvoiceTotalUsdCents,
-            totalExtractionAgents,
             totalIndexedPages,
             totalIndexes,
             totalUsers,
@@ -4086,13 +4081,6 @@ private constructor(
          */
         fun currentInvoiceTotalUsdCents(): Optional<Long> =
             currentInvoiceTotalUsdCents.getOptional("current_invoice_total_usd_cents")
-
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun totalExtractionAgents(): Optional<Long> =
-            totalExtractionAgents.getOptional("total_extraction_agents")
 
         /**
          * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
@@ -4143,16 +4131,6 @@ private constructor(
         @JsonProperty("current_invoice_total_usd_cents")
         @ExcludeMissing
         fun _currentInvoiceTotalUsdCents(): JsonField<Long> = currentInvoiceTotalUsdCents
-
-        /**
-         * Returns the raw JSON value of [totalExtractionAgents].
-         *
-         * Unlike [totalExtractionAgents], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("total_extraction_agents")
-        @ExcludeMissing
-        fun _totalExtractionAgents(): JsonField<Long> = totalExtractionAgents
 
         /**
          * Returns the raw JSON value of [totalIndexedPages].
@@ -4206,7 +4184,6 @@ private constructor(
             private var activeFreeCreditsUsage: JsonField<MutableList<ActiveFreeCreditsUsage>>? =
                 null
             private var currentInvoiceTotalUsdCents: JsonField<Long> = JsonMissing.of()
-            private var totalExtractionAgents: JsonField<Long> = JsonMissing.of()
             private var totalIndexedPages: JsonField<Long> = JsonMissing.of()
             private var totalIndexes: JsonField<Long> = JsonMissing.of()
             private var totalUsers: JsonField<Long> = JsonMissing.of()
@@ -4217,7 +4194,6 @@ private constructor(
                 activeAlerts = usage.activeAlerts.map { it.toMutableList() }
                 activeFreeCreditsUsage = usage.activeFreeCreditsUsage.map { it.toMutableList() }
                 currentInvoiceTotalUsdCents = usage.currentInvoiceTotalUsdCents
-                totalExtractionAgents = usage.totalExtractionAgents
                 totalIndexedPages = usage.totalIndexedPages
                 totalIndexes = usage.totalIndexes
                 totalUsers = usage.totalUsers
@@ -4307,20 +4283,6 @@ private constructor(
                 this.currentInvoiceTotalUsdCents = currentInvoiceTotalUsdCents
             }
 
-            fun totalExtractionAgents(totalExtractionAgents: Long) =
-                totalExtractionAgents(JsonField.of(totalExtractionAgents))
-
-            /**
-             * Sets [Builder.totalExtractionAgents] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.totalExtractionAgents] with a well-typed [Long]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
-            fun totalExtractionAgents(totalExtractionAgents: JsonField<Long>) = apply {
-                this.totalExtractionAgents = totalExtractionAgents
-            }
-
             fun totalIndexedPages(totalIndexedPages: Long) =
                 totalIndexedPages(JsonField.of(totalIndexedPages))
 
@@ -4388,7 +4350,6 @@ private constructor(
                     (activeAlerts ?: JsonMissing.of()).map { it.toImmutable() },
                     (activeFreeCreditsUsage ?: JsonMissing.of()).map { it.toImmutable() },
                     currentInvoiceTotalUsdCents,
-                    totalExtractionAgents,
                     totalIndexedPages,
                     totalIndexes,
                     totalUsers,
@@ -4415,7 +4376,6 @@ private constructor(
             activeAlerts().ifPresent { it.forEach { it.validate() } }
             activeFreeCreditsUsage().ifPresent { it.forEach { it.validate() } }
             currentInvoiceTotalUsdCents()
-            totalExtractionAgents()
             totalIndexedPages()
             totalIndexes()
             totalUsers()
@@ -4442,7 +4402,6 @@ private constructor(
                 (activeFreeCreditsUsage.asKnown().getOrNull()?.sumOf { it.validity().toInt() }
                     ?: 0) +
                 (if (currentInvoiceTotalUsdCents.asKnown().isPresent) 1 else 0) +
-                (if (totalExtractionAgents.asKnown().isPresent) 1 else 0) +
                 (if (totalIndexedPages.asKnown().isPresent) 1 else 0) +
                 (if (totalIndexes.asKnown().isPresent) 1 else 0) +
                 (if (totalUsers.asKnown().isPresent) 1 else 0)
@@ -4937,7 +4896,6 @@ private constructor(
                 activeAlerts == other.activeAlerts &&
                 activeFreeCreditsUsage == other.activeFreeCreditsUsage &&
                 currentInvoiceTotalUsdCents == other.currentInvoiceTotalUsdCents &&
-                totalExtractionAgents == other.totalExtractionAgents &&
                 totalIndexedPages == other.totalIndexedPages &&
                 totalIndexes == other.totalIndexes &&
                 totalUsers == other.totalUsers &&
@@ -4949,7 +4907,6 @@ private constructor(
                 activeAlerts,
                 activeFreeCreditsUsage,
                 currentInvoiceTotalUsdCents,
-                totalExtractionAgents,
                 totalIndexedPages,
                 totalIndexes,
                 totalUsers,
@@ -4960,7 +4917,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Usage{activeAlerts=$activeAlerts, activeFreeCreditsUsage=$activeFreeCreditsUsage, currentInvoiceTotalUsdCents=$currentInvoiceTotalUsdCents, totalExtractionAgents=$totalExtractionAgents, totalIndexedPages=$totalIndexedPages, totalIndexes=$totalIndexes, totalUsers=$totalUsers, additionalProperties=$additionalProperties}"
+            "Usage{activeAlerts=$activeAlerts, activeFreeCreditsUsage=$activeFreeCreditsUsage, currentInvoiceTotalUsdCents=$currentInvoiceTotalUsdCents, totalIndexedPages=$totalIndexedPages, totalIndexes=$totalIndexes, totalUsers=$totalUsers, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
