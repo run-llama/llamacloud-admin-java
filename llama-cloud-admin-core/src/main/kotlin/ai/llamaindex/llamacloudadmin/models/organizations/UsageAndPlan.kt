@@ -4026,7 +4026,6 @@ private constructor(
         private val activeAlerts: JsonField<List<ActiveAlert>>,
         private val activeFreeCreditsUsage: JsonField<List<ActiveFreeCreditsUsage>>,
         private val currentInvoiceTotalUsdCents: JsonField<Long>,
-        private val totalIndexes: JsonField<Long>,
         private val totalUsers: JsonField<Long>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -4042,9 +4041,6 @@ private constructor(
             @JsonProperty("current_invoice_total_usd_cents")
             @ExcludeMissing
             currentInvoiceTotalUsdCents: JsonField<Long> = JsonMissing.of(),
-            @JsonProperty("total_indexes")
-            @ExcludeMissing
-            totalIndexes: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("total_users")
             @ExcludeMissing
             totalUsers: JsonField<Long> = JsonMissing.of(),
@@ -4052,7 +4048,6 @@ private constructor(
             activeAlerts,
             activeFreeCreditsUsage,
             currentInvoiceTotalUsdCents,
-            totalIndexes,
             totalUsers,
             mutableMapOf(),
         )
@@ -4076,12 +4071,6 @@ private constructor(
          */
         fun currentInvoiceTotalUsdCents(): Optional<Long> =
             currentInvoiceTotalUsdCents.getOptional("current_invoice_total_usd_cents")
-
-        /**
-         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
-         *   (e.g. if the server responded with an unexpected value).
-         */
-        fun totalIndexes(): Optional<Long> = totalIndexes.getOptional("total_indexes")
 
         /**
          * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
@@ -4121,16 +4110,6 @@ private constructor(
         fun _currentInvoiceTotalUsdCents(): JsonField<Long> = currentInvoiceTotalUsdCents
 
         /**
-         * Returns the raw JSON value of [totalIndexes].
-         *
-         * Unlike [totalIndexes], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("total_indexes")
-        @ExcludeMissing
-        fun _totalIndexes(): JsonField<Long> = totalIndexes
-
-        /**
          * Returns the raw JSON value of [totalUsers].
          *
          * Unlike [totalUsers], this method doesn't throw if the JSON field has an unexpected type.
@@ -4162,7 +4141,6 @@ private constructor(
             private var activeFreeCreditsUsage: JsonField<MutableList<ActiveFreeCreditsUsage>>? =
                 null
             private var currentInvoiceTotalUsdCents: JsonField<Long> = JsonMissing.of()
-            private var totalIndexes: JsonField<Long> = JsonMissing.of()
             private var totalUsers: JsonField<Long> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -4171,7 +4149,6 @@ private constructor(
                 activeAlerts = usage.activeAlerts.map { it.toMutableList() }
                 activeFreeCreditsUsage = usage.activeFreeCreditsUsage.map { it.toMutableList() }
                 currentInvoiceTotalUsdCents = usage.currentInvoiceTotalUsdCents
-                totalIndexes = usage.totalIndexes
                 totalUsers = usage.totalUsers
                 additionalProperties = usage.additionalProperties.toMutableMap()
             }
@@ -4259,19 +4236,6 @@ private constructor(
                 this.currentInvoiceTotalUsdCents = currentInvoiceTotalUsdCents
             }
 
-            fun totalIndexes(totalIndexes: Long) = totalIndexes(JsonField.of(totalIndexes))
-
-            /**
-             * Sets [Builder.totalIndexes] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.totalIndexes] with a well-typed [Long] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun totalIndexes(totalIndexes: JsonField<Long>) = apply {
-                this.totalIndexes = totalIndexes
-            }
-
             fun totalUsers(totalUsers: Long) = totalUsers(JsonField.of(totalUsers))
 
             /**
@@ -4312,7 +4276,6 @@ private constructor(
                     (activeAlerts ?: JsonMissing.of()).map { it.toImmutable() },
                     (activeFreeCreditsUsage ?: JsonMissing.of()).map { it.toImmutable() },
                     currentInvoiceTotalUsdCents,
-                    totalIndexes,
                     totalUsers,
                     additionalProperties.toMutableMap(),
                 )
@@ -4337,7 +4300,6 @@ private constructor(
             activeAlerts().ifPresent { it.forEach { it.validate() } }
             activeFreeCreditsUsage().ifPresent { it.forEach { it.validate() } }
             currentInvoiceTotalUsdCents()
-            totalIndexes()
             totalUsers()
             validated = true
         }
@@ -4362,7 +4324,6 @@ private constructor(
                 (activeFreeCreditsUsage.asKnown().getOrNull()?.sumOf { it.validity().toInt() }
                     ?: 0) +
                 (if (currentInvoiceTotalUsdCents.asKnown().isPresent) 1 else 0) +
-                (if (totalIndexes.asKnown().isPresent) 1 else 0) +
                 (if (totalUsers.asKnown().isPresent) 1 else 0)
 
         class ActiveAlert @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -4855,7 +4816,6 @@ private constructor(
                 activeAlerts == other.activeAlerts &&
                 activeFreeCreditsUsage == other.activeFreeCreditsUsage &&
                 currentInvoiceTotalUsdCents == other.currentInvoiceTotalUsdCents &&
-                totalIndexes == other.totalIndexes &&
                 totalUsers == other.totalUsers &&
                 additionalProperties == other.additionalProperties
         }
@@ -4865,7 +4825,6 @@ private constructor(
                 activeAlerts,
                 activeFreeCreditsUsage,
                 currentInvoiceTotalUsdCents,
-                totalIndexes,
                 totalUsers,
                 additionalProperties,
             )
@@ -4874,7 +4833,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Usage{activeAlerts=$activeAlerts, activeFreeCreditsUsage=$activeFreeCreditsUsage, currentInvoiceTotalUsdCents=$currentInvoiceTotalUsdCents, totalIndexes=$totalIndexes, totalUsers=$totalUsers, additionalProperties=$additionalProperties}"
+            "Usage{activeAlerts=$activeAlerts, activeFreeCreditsUsage=$activeFreeCreditsUsage, currentInvoiceTotalUsdCents=$currentInvoiceTotalUsdCents, totalUsers=$totalUsers, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
