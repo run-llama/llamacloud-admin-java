@@ -1,33 +1,33 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package ai.llamaindex.llamacloudadmin.models.organizations.users
+package ai.llamaindex.llamacloudadmin.models.quotamanagement
 
+import ai.llamaindex.llamacloudadmin.core.JsonValue
 import ai.llamaindex.llamacloudadmin.core.Params
 import ai.llamaindex.llamacloudadmin.core.checkRequired
 import ai.llamaindex.llamacloudadmin.core.http.Headers
 import ai.llamaindex.llamacloudadmin.core.http.QueryParams
+import ai.llamaindex.llamacloudadmin.core.toImmutable
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * List all projects for a user in an organization.
- *
- * Deprecated: use `GET /api/v2/organizations/{organization_id}/users/{user_id}/projects`, which is
- * paginated.
- */
-@Deprecated("deprecated")
-class UserListProjectsParams
+/** Delete a quota configuration by removing the override. */
+class QuotaManagementDeleteParams
 private constructor(
+    private val quotaId: String?,
     private val organizationId: String,
-    private val userId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+    private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
+
+    fun quotaId(): Optional<String> = Optional.ofNullable(quotaId)
 
     fun organizationId(): String = organizationId
 
-    fun userId(): Optional<String> = Optional.ofNullable(userId)
+    /** Additional body properties to send with the request. */
+    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -40,7 +40,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [UserListProjectsParams].
+         * Returns a mutable builder for constructing an instance of [QuotaManagementDeleteParams].
          *
          * The following fields are required:
          * ```java
@@ -50,28 +50,31 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [UserListProjectsParams]. */
+    /** A builder for [QuotaManagementDeleteParams]. */
     class Builder internal constructor() {
 
+        private var quotaId: String? = null
         private var organizationId: String? = null
-        private var userId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
+        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(userListProjectsParams: UserListProjectsParams) = apply {
-            organizationId = userListProjectsParams.organizationId
-            userId = userListProjectsParams.userId
-            additionalHeaders = userListProjectsParams.additionalHeaders.toBuilder()
-            additionalQueryParams = userListProjectsParams.additionalQueryParams.toBuilder()
+        internal fun from(quotaManagementDeleteParams: QuotaManagementDeleteParams) = apply {
+            quotaId = quotaManagementDeleteParams.quotaId
+            organizationId = quotaManagementDeleteParams.organizationId
+            additionalHeaders = quotaManagementDeleteParams.additionalHeaders.toBuilder()
+            additionalQueryParams = quotaManagementDeleteParams.additionalQueryParams.toBuilder()
+            additionalBodyProperties =
+                quotaManagementDeleteParams.additionalBodyProperties.toMutableMap()
         }
 
+        fun quotaId(quotaId: String?) = apply { this.quotaId = quotaId }
+
+        /** Alias for calling [Builder.quotaId] with `quotaId.orElse(null)`. */
+        fun quotaId(quotaId: Optional<String>) = quotaId(quotaId.getOrNull())
+
         fun organizationId(organizationId: String) = apply { this.organizationId = organizationId }
-
-        fun userId(userId: String?) = apply { this.userId = userId }
-
-        /** Alias for calling [Builder.userId] with `userId.orElse(null)`. */
-        fun userId(userId: Optional<String>) = userId(userId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -171,8 +174,30 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
+            this.additionalBodyProperties.clear()
+            putAllAdditionalBodyProperties(additionalBodyProperties)
+        }
+
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
+            additionalBodyProperties.put(key, value)
+        }
+
+        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalBodyProperties.putAll(additionalBodyProperties)
+            }
+
+        fun removeAdditionalBodyProperty(key: String) = apply {
+            additionalBodyProperties.remove(key)
+        }
+
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalBodyProperty)
+        }
+
         /**
-         * Returns an immutable instance of [UserListProjectsParams].
+         * Returns an immutable instance of [QuotaManagementDeleteParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -183,41 +208,57 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): UserListProjectsParams =
-            UserListProjectsParams(
+        fun build(): QuotaManagementDeleteParams =
+            QuotaManagementDeleteParams(
+                quotaId,
                 checkRequired("organizationId", organizationId),
-                userId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
+                additionalBodyProperties.toImmutable(),
             )
     }
 
+    fun _body(): Optional<Map<String, JsonValue>> =
+        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
+
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> organizationId
-            1 -> userId ?: ""
+            0 -> quotaId ?: ""
             else -> ""
         }
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                put("organization_id", organizationId)
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is UserListProjectsParams &&
+        return other is QuotaManagementDeleteParams &&
+            quotaId == other.quotaId &&
             organizationId == other.organizationId &&
-            userId == other.userId &&
             additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+            additionalQueryParams == other.additionalQueryParams &&
+            additionalBodyProperties == other.additionalBodyProperties
     }
 
     override fun hashCode(): Int =
-        Objects.hash(organizationId, userId, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            quotaId,
+            organizationId,
+            additionalHeaders,
+            additionalQueryParams,
+            additionalBodyProperties,
+        )
 
     override fun toString() =
-        "UserListProjectsParams{organizationId=$organizationId, userId=$userId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "QuotaManagementDeleteParams{quotaId=$quotaId, organizationId=$organizationId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

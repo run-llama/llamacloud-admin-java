@@ -171,7 +171,13 @@ interface UserServiceAsync {
     ): CompletableFuture<List<OrganizationMember>> =
         listMembers(organizationId, UserListMembersParams.none(), requestOptions)
 
-    /** List all projects for a user in an organization. */
+    /**
+     * List all projects for a user in an organization.
+     *
+     * Deprecated: use `GET /api/v2/organizations/{organization_id}/users/{user_id}/projects`, which
+     * is paginated.
+     */
+    @Deprecated("deprecated")
     fun listProjects(
         userId: String,
         params: UserListProjectsParams,
@@ -179,6 +185,7 @@ interface UserServiceAsync {
         listProjects(userId, params, RequestOptions.none())
 
     /** @see listProjects */
+    @Deprecated("deprecated")
     fun listProjects(
         userId: String,
         params: UserListProjectsParams,
@@ -187,12 +194,14 @@ interface UserServiceAsync {
         listProjects(params.toBuilder().userId(userId).build(), requestOptions)
 
     /** @see listProjects */
+    @Deprecated("deprecated")
     fun listProjects(
         params: UserListProjectsParams
     ): CompletableFuture<List<UserListProjectsResponse>> =
         listProjects(params, RequestOptions.none())
 
     /** @see listProjects */
+    @Deprecated("deprecated")
     fun listProjects(
         params: UserListProjectsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -406,6 +415,7 @@ interface UserServiceAsync {
          * /api/v1/organizations/{organization_id}/users/{user_id}/projects`, but is otherwise the
          * same as [UserServiceAsync.listProjects].
          */
+        @Deprecated("deprecated")
         fun listProjects(
             userId: String,
             params: UserListProjectsParams,
@@ -413,6 +423,7 @@ interface UserServiceAsync {
             listProjects(userId, params, RequestOptions.none())
 
         /** @see listProjects */
+        @Deprecated("deprecated")
         fun listProjects(
             userId: String,
             params: UserListProjectsParams,
@@ -421,12 +432,14 @@ interface UserServiceAsync {
             listProjects(params.toBuilder().userId(userId).build(), requestOptions)
 
         /** @see listProjects */
+        @Deprecated("deprecated")
         fun listProjects(
             params: UserListProjectsParams
         ): CompletableFuture<HttpResponseFor<List<UserListProjectsResponse>>> =
             listProjects(params, RequestOptions.none())
 
         /** @see listProjects */
+        @Deprecated("deprecated")
         fun listProjects(
             params: UserListProjectsParams,
             requestOptions: RequestOptions = RequestOptions.none(),

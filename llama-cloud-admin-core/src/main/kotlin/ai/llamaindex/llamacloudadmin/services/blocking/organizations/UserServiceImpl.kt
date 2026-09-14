@@ -76,6 +76,7 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
         // get /api/v1/organizations/{organization_id}/users
         withRawResponse().listMembers(params, requestOptions).parse()
 
+    @Deprecated("deprecated")
     override fun listProjects(
         params: UserListProjectsParams,
         requestOptions: RequestOptions,
@@ -275,6 +276,7 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
         private val listProjectsHandler: Handler<List<UserListProjectsResponse>> =
             jsonHandler<List<UserListProjectsResponse>>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun listProjects(
             params: UserListProjectsParams,
             requestOptions: RequestOptions,
