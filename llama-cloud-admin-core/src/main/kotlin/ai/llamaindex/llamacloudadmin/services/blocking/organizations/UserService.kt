@@ -155,13 +155,20 @@ interface UserService {
     ): List<OrganizationMember> =
         listMembers(organizationId, UserListMembersParams.none(), requestOptions)
 
-    /** List all projects for a user in an organization. */
+    /**
+     * List all projects for a user in an organization.
+     *
+     * Deprecated: use `GET /api/v2/organizations/{organization_id}/users/{user_id}/projects`, which
+     * is paginated.
+     */
+    @Deprecated("deprecated")
     fun listProjects(
         userId: String,
         params: UserListProjectsParams,
     ): List<UserListProjectsResponse> = listProjects(userId, params, RequestOptions.none())
 
     /** @see listProjects */
+    @Deprecated("deprecated")
     fun listProjects(
         userId: String,
         params: UserListProjectsParams,
@@ -170,10 +177,12 @@ interface UserService {
         listProjects(params.toBuilder().userId(userId).build(), requestOptions)
 
     /** @see listProjects */
+    @Deprecated("deprecated")
     fun listProjects(params: UserListProjectsParams): List<UserListProjectsResponse> =
         listProjects(params, RequestOptions.none())
 
     /** @see listProjects */
+    @Deprecated("deprecated")
     fun listProjects(
         params: UserListProjectsParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -394,6 +403,7 @@ interface UserService {
          * /api/v1/organizations/{organization_id}/users/{user_id}/projects`, but is otherwise the
          * same as [UserService.listProjects].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun listProjects(
             userId: String,
@@ -402,6 +412,7 @@ interface UserService {
             listProjects(userId, params, RequestOptions.none())
 
         /** @see listProjects */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun listProjects(
             userId: String,
@@ -411,6 +422,7 @@ interface UserService {
             listProjects(params.toBuilder().userId(userId).build(), requestOptions)
 
         /** @see listProjects */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun listProjects(
             params: UserListProjectsParams
@@ -418,6 +430,7 @@ interface UserService {
             listProjects(params, RequestOptions.none())
 
         /** @see listProjects */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun listProjects(
             params: UserListProjectsParams,

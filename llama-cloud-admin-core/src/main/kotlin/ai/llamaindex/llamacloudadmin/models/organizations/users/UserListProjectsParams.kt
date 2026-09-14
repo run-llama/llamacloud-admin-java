@@ -10,7 +10,13 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** List all projects for a user in an organization. */
+/**
+ * List all projects for a user in an organization.
+ *
+ * Deprecated: use `GET /api/v2/organizations/{organization_id}/users/{user_id}/projects`, which is
+ * paginated.
+ */
+@Deprecated("deprecated")
 class UserListProjectsParams
 private constructor(
     private val organizationId: String,
