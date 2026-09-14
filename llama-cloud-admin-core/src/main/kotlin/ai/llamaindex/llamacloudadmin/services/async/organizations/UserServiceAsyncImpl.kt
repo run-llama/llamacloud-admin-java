@@ -80,6 +80,7 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
         // get /api/v1/organizations/{organization_id}/users
         withRawResponse().listMembers(params, requestOptions).thenApply { it.parse() }
 
+    @Deprecated("deprecated")
     override fun listProjects(
         params: UserListProjectsParams,
         requestOptions: RequestOptions,
@@ -294,6 +295,7 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
         private val listProjectsHandler: Handler<List<UserListProjectsResponse>> =
             jsonHandler<List<UserListProjectsResponse>>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun listProjects(
             params: UserListProjectsParams,
             requestOptions: RequestOptions,

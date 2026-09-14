@@ -1,33 +1,35 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package ai.llamaindex.llamacloudadmin.models.organizations.users
+package ai.llamaindex.llamacloudadmin.models.apikeys
 
+import ai.llamaindex.llamacloudadmin.core.JsonValue
 import ai.llamaindex.llamacloudadmin.core.Params
-import ai.llamaindex.llamacloudadmin.core.checkRequired
 import ai.llamaindex.llamacloudadmin.core.http.Headers
 import ai.llamaindex.llamacloudadmin.core.http.QueryParams
+import ai.llamaindex.llamacloudadmin.core.toImmutable
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * List all projects for a user in an organization.
+ * Revoke an API key.
  *
- * Deprecated: use `GET /api/v2/organizations/{organization_id}/users/{user_id}/projects`, which is
- * paginated.
+ * Revoking a project key takes access away from everyone using it, so it needs key-management
+ * permission on that project. Your own unscoped keys need only that you own them. A project-scoped
+ * key revokes only within its own project, unscoped keys included.
  */
-@Deprecated("deprecated")
-class UserListProjectsParams
+class ApiKeyDeleteParams
 private constructor(
-    private val organizationId: String,
-    private val userId: String?,
+    private val apiKeyId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+    private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
-    fun organizationId(): String = organizationId
+    fun apiKeyId(): Optional<String> = Optional.ofNullable(apiKeyId)
 
-    fun userId(): Optional<String> = Optional.ofNullable(userId)
+    /** Additional body properties to send with the request. */
+    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -39,39 +41,32 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [UserListProjectsParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .organizationId()
-         * ```
-         */
+        @JvmStatic fun none(): ApiKeyDeleteParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [ApiKeyDeleteParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [UserListProjectsParams]. */
+    /** A builder for [ApiKeyDeleteParams]. */
     class Builder internal constructor() {
 
-        private var organizationId: String? = null
-        private var userId: String? = null
+        private var apiKeyId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
+        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(userListProjectsParams: UserListProjectsParams) = apply {
-            organizationId = userListProjectsParams.organizationId
-            userId = userListProjectsParams.userId
-            additionalHeaders = userListProjectsParams.additionalHeaders.toBuilder()
-            additionalQueryParams = userListProjectsParams.additionalQueryParams.toBuilder()
+        internal fun from(apiKeyDeleteParams: ApiKeyDeleteParams) = apply {
+            apiKeyId = apiKeyDeleteParams.apiKeyId
+            additionalHeaders = apiKeyDeleteParams.additionalHeaders.toBuilder()
+            additionalQueryParams = apiKeyDeleteParams.additionalQueryParams.toBuilder()
+            additionalBodyProperties = apiKeyDeleteParams.additionalBodyProperties.toMutableMap()
         }
 
-        fun organizationId(organizationId: String) = apply { this.organizationId = organizationId }
+        fun apiKeyId(apiKeyId: String?) = apply { this.apiKeyId = apiKeyId }
 
-        fun userId(userId: String?) = apply { this.userId = userId }
-
-        /** Alias for calling [Builder.userId] with `userId.orElse(null)`. */
-        fun userId(userId: Optional<String>) = userId(userId.getOrNull())
+        /** Alias for calling [Builder.apiKeyId] with `apiKeyId.orElse(null)`. */
+        fun apiKeyId(apiKeyId: Optional<String>) = apiKeyId(apiKeyId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -171,31 +166,48 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
+            this.additionalBodyProperties.clear()
+            putAllAdditionalBodyProperties(additionalBodyProperties)
+        }
+
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
+            additionalBodyProperties.put(key, value)
+        }
+
+        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalBodyProperties.putAll(additionalBodyProperties)
+            }
+
+        fun removeAdditionalBodyProperty(key: String) = apply {
+            additionalBodyProperties.remove(key)
+        }
+
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalBodyProperty)
+        }
+
         /**
-         * Returns an immutable instance of [UserListProjectsParams].
+         * Returns an immutable instance of [ApiKeyDeleteParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .organizationId()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): UserListProjectsParams =
-            UserListProjectsParams(
-                checkRequired("organizationId", organizationId),
-                userId,
+        fun build(): ApiKeyDeleteParams =
+            ApiKeyDeleteParams(
+                apiKeyId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
+                additionalBodyProperties.toImmutable(),
             )
     }
 
+    fun _body(): Optional<Map<String, JsonValue>> =
+        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
+
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> organizationId
-            1 -> userId ?: ""
+            0 -> apiKeyId ?: ""
             else -> ""
         }
 
@@ -208,16 +220,16 @@ private constructor(
             return true
         }
 
-        return other is UserListProjectsParams &&
-            organizationId == other.organizationId &&
-            userId == other.userId &&
+        return other is ApiKeyDeleteParams &&
+            apiKeyId == other.apiKeyId &&
             additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+            additionalQueryParams == other.additionalQueryParams &&
+            additionalBodyProperties == other.additionalBodyProperties
     }
 
     override fun hashCode(): Int =
-        Objects.hash(organizationId, userId, additionalHeaders, additionalQueryParams)
+        Objects.hash(apiKeyId, additionalHeaders, additionalQueryParams, additionalBodyProperties)
 
     override fun toString() =
-        "UserListProjectsParams{organizationId=$organizationId, userId=$userId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ApiKeyDeleteParams{apiKeyId=$apiKeyId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }
