@@ -54,6 +54,8 @@ internal class ProGuardCompatibilityTest {
         assertThat(client.organizations()).isNotNull()
         assertThat(client.projects()).isNotNull()
         assertThat(client.invites()).isNotNull()
+        assertThat(client.apiKeys()).isNotNull()
+        assertThat(client.quotaManagement()).isNotNull()
         assertThat(client.admin()).isNotNull()
     }
 
