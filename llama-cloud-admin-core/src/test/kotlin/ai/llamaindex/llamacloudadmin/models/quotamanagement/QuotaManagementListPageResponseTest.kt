@@ -9,12 +9,12 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class QuotaManagementListResponseTest {
+internal class QuotaManagementListPageResponseTest {
 
     @Test
     fun create() {
-        val quotaManagementListResponse =
-            QuotaManagementListResponse.builder()
+        val quotaManagementListPageResponse =
+            QuotaManagementListPageResponse.builder()
                 .addItem(
                     QuotaConfiguration.builder()
                         .configurationMetadata(
@@ -49,7 +49,7 @@ internal class QuotaManagementListResponseTest {
                 .total(0L)
                 .build()
 
-        assertThat(quotaManagementListResponse.items())
+        assertThat(quotaManagementListPageResponse.items())
             .containsExactly(
                 QuotaConfiguration.builder()
                     .configurationMetadata(
@@ -78,17 +78,17 @@ internal class QuotaManagementListResponseTest {
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
-        assertThat(quotaManagementListResponse.page()).isEqualTo(0L)
-        assertThat(quotaManagementListResponse.pages()).isEqualTo(0L)
-        assertThat(quotaManagementListResponse.size()).isEqualTo(0L)
-        assertThat(quotaManagementListResponse.total()).isEqualTo(0L)
+        assertThat(quotaManagementListPageResponse.page()).isEqualTo(0L)
+        assertThat(quotaManagementListPageResponse.pages()).isEqualTo(0L)
+        assertThat(quotaManagementListPageResponse.size()).isEqualTo(0L)
+        assertThat(quotaManagementListPageResponse.total()).isEqualTo(0L)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val quotaManagementListResponse =
-            QuotaManagementListResponse.builder()
+        val quotaManagementListPageResponse =
+            QuotaManagementListPageResponse.builder()
                 .addItem(
                     QuotaConfiguration.builder()
                         .configurationMetadata(
@@ -123,12 +123,13 @@ internal class QuotaManagementListResponseTest {
                 .total(0L)
                 .build()
 
-        val roundtrippedQuotaManagementListResponse =
+        val roundtrippedQuotaManagementListPageResponse =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(quotaManagementListResponse),
-                jacksonTypeRef<QuotaManagementListResponse>(),
+                jsonMapper.writeValueAsString(quotaManagementListPageResponse),
+                jacksonTypeRef<QuotaManagementListPageResponse>(),
             )
 
-        assertThat(roundtrippedQuotaManagementListResponse).isEqualTo(quotaManagementListResponse)
+        assertThat(roundtrippedQuotaManagementListPageResponse)
+            .isEqualTo(quotaManagementListPageResponse)
     }
 }

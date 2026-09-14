@@ -20,8 +20,9 @@ import ai.llamaindex.llamacloudadmin.core.prepareAsync
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaConfiguration
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementCreateParams
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementDeleteParams
+import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListPageAsync
+import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListPageResponse
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListParams
-import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -50,7 +51,7 @@ internal constructor(private val clientOptions: ClientOptions) : QuotaManagement
     override fun list(
         params: QuotaManagementListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<QuotaManagementListResponse> =
+    ): CompletableFuture<QuotaManagementListPageAsync> =
         // get /api/v1/beta/quota-management
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -105,13 +106,13 @@ internal constructor(private val clientOptions: ClientOptions) : QuotaManagement
                 }
         }
 
-        private val listHandler: Handler<QuotaManagementListResponse> =
-            jsonHandler<QuotaManagementListResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<QuotaManagementListPageResponse> =
+            jsonHandler<QuotaManagementListPageResponse>(clientOptions.jsonMapper)
 
         override fun list(
             params: QuotaManagementListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<QuotaManagementListResponse>> {
+        ): CompletableFuture<HttpResponseFor<QuotaManagementListPageAsync>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -130,6 +131,14 @@ internal constructor(private val clientOptions: ClientOptions) : QuotaManagement
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
                                 }
+                            }
+                            .let {
+                                QuotaManagementListPageAsync.builder()
+                                    .service(QuotaManagementServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .params(params)
+                                    .response(it)
+                                    .build()
                             }
                     }
                 }

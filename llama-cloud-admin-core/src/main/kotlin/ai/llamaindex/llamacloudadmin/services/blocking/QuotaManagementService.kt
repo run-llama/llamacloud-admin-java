@@ -9,8 +9,8 @@ import ai.llamaindex.llamacloudadmin.core.http.HttpResponseFor
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaConfiguration
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementCreateParams
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementDeleteParams
+import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListPage
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListParams
-import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListResponse
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -43,14 +43,14 @@ interface QuotaManagementService {
      * returns resolved quotas (effective values after fallback chain) and pagination parameters are
      * ignored.
      */
-    fun list(params: QuotaManagementListParams): QuotaManagementListResponse =
+    fun list(params: QuotaManagementListParams): QuotaManagementListPage =
         list(params, RequestOptions.none())
 
     /** @see list */
     fun list(
         params: QuotaManagementListParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): QuotaManagementListResponse
+    ): QuotaManagementListPage
 
     /** Delete a quota configuration by removing the override. */
     fun delete(quotaId: String, params: QuotaManagementDeleteParams) =
@@ -107,7 +107,7 @@ interface QuotaManagementService {
          * same as [QuotaManagementService.list].
          */
         @MustBeClosed
-        fun list(params: QuotaManagementListParams): HttpResponseFor<QuotaManagementListResponse> =
+        fun list(params: QuotaManagementListParams): HttpResponseFor<QuotaManagementListPage> =
             list(params, RequestOptions.none())
 
         /** @see list */
@@ -115,7 +115,7 @@ interface QuotaManagementService {
         fun list(
             params: QuotaManagementListParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<QuotaManagementListResponse>
+        ): HttpResponseFor<QuotaManagementListPage>
 
         /**
          * Returns a raw HTTP response for `delete /api/v1/beta/quota-management/{quota_id}`, but is

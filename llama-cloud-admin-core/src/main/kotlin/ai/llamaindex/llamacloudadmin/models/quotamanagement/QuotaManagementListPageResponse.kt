@@ -19,7 +19,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 /** Paginated list of quota configurations. */
-class QuotaManagementListResponse
+class QuotaManagementListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val items: JsonField<List<QuotaConfiguration>>,
@@ -121,7 +121,8 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [QuotaManagementListResponse].
+         * Returns a mutable builder for constructing an instance of
+         * [QuotaManagementListPageResponse].
          *
          * The following fields are required:
          * ```java
@@ -135,7 +136,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [QuotaManagementListResponse]. */
+    /** A builder for [QuotaManagementListPageResponse]. */
     class Builder internal constructor() {
 
         private var items: JsonField<MutableList<QuotaConfiguration>>? = null
@@ -146,14 +147,16 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(quotaManagementListResponse: QuotaManagementListResponse) = apply {
-            items = quotaManagementListResponse.items.map { it.toMutableList() }
-            page = quotaManagementListResponse.page
-            pages = quotaManagementListResponse.pages
-            size = quotaManagementListResponse.size
-            total = quotaManagementListResponse.total
-            additionalProperties = quotaManagementListResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(quotaManagementListPageResponse: QuotaManagementListPageResponse) =
+            apply {
+                items = quotaManagementListPageResponse.items.map { it.toMutableList() }
+                page = quotaManagementListPageResponse.page
+                pages = quotaManagementListPageResponse.pages
+                size = quotaManagementListPageResponse.size
+                total = quotaManagementListPageResponse.total
+                additionalProperties =
+                    quotaManagementListPageResponse.additionalProperties.toMutableMap()
+            }
 
         fun items(items: List<QuotaConfiguration>) = items(JsonField.of(items))
 
@@ -238,7 +241,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [QuotaManagementListResponse].
+         * Returns an immutable instance of [QuotaManagementListPageResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -253,8 +256,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): QuotaManagementListResponse =
-            QuotaManagementListResponse(
+        fun build(): QuotaManagementListPageResponse =
+            QuotaManagementListPageResponse(
                 checkRequired("items", items).map { it.toImmutable() },
                 checkRequired("page", page),
                 checkRequired("pages", pages),
@@ -274,7 +277,7 @@ private constructor(
      * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't match
      *   its expected type.
      */
-    fun validate(): QuotaManagementListResponse = apply {
+    fun validate(): QuotaManagementListPageResponse = apply {
         if (validated) {
             return@apply
         }
@@ -313,7 +316,7 @@ private constructor(
             return true
         }
 
-        return other is QuotaManagementListResponse &&
+        return other is QuotaManagementListPageResponse &&
             items == other.items &&
             page == other.page &&
             pages == other.pages &&
@@ -329,5 +332,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "QuotaManagementListResponse{items=$items, page=$page, pages=$pages, size=$size, total=$total, additionalProperties=$additionalProperties}"
+        "QuotaManagementListPageResponse{items=$items, page=$page, pages=$pages, size=$size, total=$total, additionalProperties=$additionalProperties}"
 }

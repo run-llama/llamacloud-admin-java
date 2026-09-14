@@ -9,8 +9,8 @@ import ai.llamaindex.llamacloudadmin.core.http.HttpResponseFor
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaConfiguration
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementCreateParams
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementDeleteParams
+import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListPageAsync
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListParams
-import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -43,14 +43,14 @@ interface QuotaManagementServiceAsync {
      * returns resolved quotas (effective values after fallback chain) and pagination parameters are
      * ignored.
      */
-    fun list(params: QuotaManagementListParams): CompletableFuture<QuotaManagementListResponse> =
+    fun list(params: QuotaManagementListParams): CompletableFuture<QuotaManagementListPageAsync> =
         list(params, RequestOptions.none())
 
     /** @see list */
     fun list(
         params: QuotaManagementListParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<QuotaManagementListResponse>
+    ): CompletableFuture<QuotaManagementListPageAsync>
 
     /** Delete a quota configuration by removing the override. */
     fun delete(quotaId: String, params: QuotaManagementDeleteParams): CompletableFuture<Void?> =
@@ -110,14 +110,14 @@ interface QuotaManagementServiceAsync {
          */
         fun list(
             params: QuotaManagementListParams
-        ): CompletableFuture<HttpResponseFor<QuotaManagementListResponse>> =
+        ): CompletableFuture<HttpResponseFor<QuotaManagementListPageAsync>> =
             list(params, RequestOptions.none())
 
         /** @see list */
         fun list(
             params: QuotaManagementListParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<QuotaManagementListResponse>>
+        ): CompletableFuture<HttpResponseFor<QuotaManagementListPageAsync>>
 
         /**
          * Returns a raw HTTP response for `delete /api/v1/beta/quota-management/{quota_id}`, but is

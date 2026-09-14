@@ -20,8 +20,9 @@ import ai.llamaindex.llamacloudadmin.core.prepare
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaConfiguration
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementCreateParams
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementDeleteParams
+import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListPage
+import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListPageResponse
 import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListParams
-import ai.llamaindex.llamacloudadmin.models.quotamanagement.QuotaManagementListResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -47,7 +48,7 @@ class QuotaManagementServiceImpl internal constructor(private val clientOptions:
     override fun list(
         params: QuotaManagementListParams,
         requestOptions: RequestOptions,
-    ): QuotaManagementListResponse =
+    ): QuotaManagementListPage =
         // get /api/v1/beta/quota-management
         withRawResponse().list(params, requestOptions).parse()
 
@@ -97,13 +98,13 @@ class QuotaManagementServiceImpl internal constructor(private val clientOptions:
             }
         }
 
-        private val listHandler: Handler<QuotaManagementListResponse> =
-            jsonHandler<QuotaManagementListResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<QuotaManagementListPageResponse> =
+            jsonHandler<QuotaManagementListPageResponse>(clientOptions.jsonMapper)
 
         override fun list(
             params: QuotaManagementListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<QuotaManagementListResponse> {
+        ): HttpResponseFor<QuotaManagementListPage> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -120,6 +121,13 @@ class QuotaManagementServiceImpl internal constructor(private val clientOptions:
                         if (requestOptions.responseValidation!!) {
                             it.validate()
                         }
+                    }
+                    .let {
+                        QuotaManagementListPage.builder()
+                            .service(QuotaManagementServiceImpl(clientOptions))
+                            .params(params)
+                            .response(it)
+                            .build()
                     }
             }
         }

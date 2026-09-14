@@ -37,23 +37,16 @@ internal class QuotaManagementServiceAsyncTest {
         val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
         val quotaManagementServiceAsync = client.quotaManagement()
 
-        val quotaManagementsFuture =
+        val pageFuture =
             quotaManagementServiceAsync.list(
                 QuotaManagementListParams.builder()
                     .sourceId("source_id")
                     .sourceType(QuotaManagementListParams.SourceType.GLOBAL)
-                    .configurationType(
-                        QuotaManagementListParams.ConfigurationType.ALLOW_PAY_AS_YOU_GO
-                    )
-                    .excludeSelfService(true)
-                    .expand(true)
-                    .page(0L)
-                    .pageSize(1L)
                     .build()
             )
 
-        val quotaManagements = quotaManagementsFuture.get()
-        quotaManagements.validate()
+        val page = pageFuture.get()
+        page.response().validate()
     }
 
     @Disabled("Mock server tests are disabled")
