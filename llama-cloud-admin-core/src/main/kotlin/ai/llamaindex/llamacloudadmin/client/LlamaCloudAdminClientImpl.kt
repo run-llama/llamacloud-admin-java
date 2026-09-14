@@ -6,12 +6,16 @@ import ai.llamaindex.llamacloudadmin.core.ClientOptions
 import ai.llamaindex.llamacloudadmin.core.getPackageVersion
 import ai.llamaindex.llamacloudadmin.services.blocking.AdminService
 import ai.llamaindex.llamacloudadmin.services.blocking.AdminServiceImpl
+import ai.llamaindex.llamacloudadmin.services.blocking.ApiKeyService
+import ai.llamaindex.llamacloudadmin.services.blocking.ApiKeyServiceImpl
 import ai.llamaindex.llamacloudadmin.services.blocking.InviteService
 import ai.llamaindex.llamacloudadmin.services.blocking.InviteServiceImpl
 import ai.llamaindex.llamacloudadmin.services.blocking.OrganizationService
 import ai.llamaindex.llamacloudadmin.services.blocking.OrganizationServiceImpl
 import ai.llamaindex.llamacloudadmin.services.blocking.ProjectService
 import ai.llamaindex.llamacloudadmin.services.blocking.ProjectServiceImpl
+import ai.llamaindex.llamacloudadmin.services.blocking.QuotaManagementService
+import ai.llamaindex.llamacloudadmin.services.blocking.QuotaManagementServiceImpl
 import java.util.function.Consumer
 
 class LlamaCloudAdminClientImpl(private val clientOptions: ClientOptions) : LlamaCloudAdminClient {
@@ -41,6 +45,12 @@ class LlamaCloudAdminClientImpl(private val clientOptions: ClientOptions) : Llam
 
     private val invites: InviteService by lazy { InviteServiceImpl(clientOptionsWithUserAgent) }
 
+    private val apiKeys: ApiKeyService by lazy { ApiKeyServiceImpl(clientOptionsWithUserAgent) }
+
+    private val quotaManagement: QuotaManagementService by lazy {
+        QuotaManagementServiceImpl(clientOptionsWithUserAgent)
+    }
+
     private val admin: AdminService by lazy { AdminServiceImpl(clientOptionsWithUserAgent) }
 
     override fun async(): LlamaCloudAdminClientAsync = async
@@ -55,6 +65,10 @@ class LlamaCloudAdminClientImpl(private val clientOptions: ClientOptions) : Llam
     override fun projects(): ProjectService = projects
 
     override fun invites(): InviteService = invites
+
+    override fun apiKeys(): ApiKeyService = apiKeys
+
+    override fun quotaManagement(): QuotaManagementService = quotaManagement
 
     override fun admin(): AdminService = admin
 
@@ -75,6 +89,14 @@ class LlamaCloudAdminClientImpl(private val clientOptions: ClientOptions) : Llam
             InviteServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val apiKeys: ApiKeyService.WithRawResponse by lazy {
+            ApiKeyServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val quotaManagement: QuotaManagementService.WithRawResponse by lazy {
+            QuotaManagementServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val admin: AdminService.WithRawResponse by lazy {
             AdminServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -91,6 +113,10 @@ class LlamaCloudAdminClientImpl(private val clientOptions: ClientOptions) : Llam
         override fun projects(): ProjectService.WithRawResponse = projects
 
         override fun invites(): InviteService.WithRawResponse = invites
+
+        override fun apiKeys(): ApiKeyService.WithRawResponse = apiKeys
+
+        override fun quotaManagement(): QuotaManagementService.WithRawResponse = quotaManagement
 
         override fun admin(): AdminService.WithRawResponse = admin
     }

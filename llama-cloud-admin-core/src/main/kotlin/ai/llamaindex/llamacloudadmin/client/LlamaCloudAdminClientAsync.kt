@@ -4,9 +4,11 @@ package ai.llamaindex.llamacloudadmin.client
 
 import ai.llamaindex.llamacloudadmin.core.ClientOptions
 import ai.llamaindex.llamacloudadmin.services.async.AdminServiceAsync
+import ai.llamaindex.llamacloudadmin.services.async.ApiKeyServiceAsync
 import ai.llamaindex.llamacloudadmin.services.async.InviteServiceAsync
 import ai.llamaindex.llamacloudadmin.services.async.OrganizationServiceAsync
 import ai.llamaindex.llamacloudadmin.services.async.ProjectServiceAsync
+import ai.llamaindex.llamacloudadmin.services.async.QuotaManagementServiceAsync
 import java.util.function.Consumer
 
 /**
@@ -51,6 +53,10 @@ interface LlamaCloudAdminClientAsync {
 
     fun invites(): InviteServiceAsync
 
+    fun apiKeys(): ApiKeyServiceAsync
+
+    fun quotaManagement(): QuotaManagementServiceAsync
+
     fun admin(): AdminServiceAsync
 
     /**
@@ -86,6 +92,10 @@ interface LlamaCloudAdminClientAsync {
         fun projects(): ProjectServiceAsync.WithRawResponse
 
         fun invites(): InviteServiceAsync.WithRawResponse
+
+        fun apiKeys(): ApiKeyServiceAsync.WithRawResponse
+
+        fun quotaManagement(): QuotaManagementServiceAsync.WithRawResponse
 
         fun admin(): AdminServiceAsync.WithRawResponse
     }
