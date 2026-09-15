@@ -135,11 +135,19 @@ interface UserServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<UserOrganizationRole>
 
-    /** Get all users in an organization. */
+    /**
+     * Get all users in an organization.
+     *
+     * Deprecated: use `GET /api/v2/organizations/{organization_id}/users`, which is paginated. This
+     * one collapses grants to members in memory after reading up to 10,000 of them, so a large
+     * organization silently loses members.
+     */
+    @Deprecated("deprecated")
     fun listMembers(organizationId: String): CompletableFuture<List<OrganizationMember>> =
         listMembers(organizationId, UserListMembersParams.none())
 
     /** @see listMembers */
+    @Deprecated("deprecated")
     fun listMembers(
         organizationId: String,
         params: UserListMembersParams = UserListMembersParams.none(),
@@ -148,6 +156,7 @@ interface UserServiceAsync {
         listMembers(params.toBuilder().organizationId(organizationId).build(), requestOptions)
 
     /** @see listMembers */
+    @Deprecated("deprecated")
     fun listMembers(
         organizationId: String,
         params: UserListMembersParams = UserListMembersParams.none(),
@@ -155,16 +164,19 @@ interface UserServiceAsync {
         listMembers(organizationId, params, RequestOptions.none())
 
     /** @see listMembers */
+    @Deprecated("deprecated")
     fun listMembers(
         params: UserListMembersParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<List<OrganizationMember>>
 
     /** @see listMembers */
+    @Deprecated("deprecated")
     fun listMembers(params: UserListMembersParams): CompletableFuture<List<OrganizationMember>> =
         listMembers(params, RequestOptions.none())
 
     /** @see listMembers */
+    @Deprecated("deprecated")
     fun listMembers(
         organizationId: String,
         requestOptions: RequestOptions,
@@ -371,12 +383,14 @@ interface UserServiceAsync {
          * Returns a raw HTTP response for `get /api/v1/organizations/{organization_id}/users`, but
          * is otherwise the same as [UserServiceAsync.listMembers].
          */
+        @Deprecated("deprecated")
         fun listMembers(
             organizationId: String
         ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
             listMembers(organizationId, UserListMembersParams.none())
 
         /** @see listMembers */
+        @Deprecated("deprecated")
         fun listMembers(
             organizationId: String,
             params: UserListMembersParams = UserListMembersParams.none(),
@@ -385,6 +399,7 @@ interface UserServiceAsync {
             listMembers(params.toBuilder().organizationId(organizationId).build(), requestOptions)
 
         /** @see listMembers */
+        @Deprecated("deprecated")
         fun listMembers(
             organizationId: String,
             params: UserListMembersParams = UserListMembersParams.none(),
@@ -392,18 +407,21 @@ interface UserServiceAsync {
             listMembers(organizationId, params, RequestOptions.none())
 
         /** @see listMembers */
+        @Deprecated("deprecated")
         fun listMembers(
             params: UserListMembersParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>>
 
         /** @see listMembers */
+        @Deprecated("deprecated")
         fun listMembers(
             params: UserListMembersParams
         ): CompletableFuture<HttpResponseFor<List<OrganizationMember>>> =
             listMembers(params, RequestOptions.none())
 
         /** @see listMembers */
+        @Deprecated("deprecated")
         fun listMembers(
             organizationId: String,
             requestOptions: RequestOptions,
