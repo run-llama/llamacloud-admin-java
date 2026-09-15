@@ -73,6 +73,7 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
         // put /api/v1/organizations/{organization_id}/users/roles
         withRawResponse().assignRole(params, requestOptions).thenApply { it.parse() }
 
+    @Deprecated("deprecated")
     override fun listMembers(
         params: UserListMembersParams,
         requestOptions: RequestOptions,
@@ -262,6 +263,7 @@ class UserServiceAsyncImpl internal constructor(private val clientOptions: Clien
         private val listMembersHandler: Handler<List<OrganizationMember>> =
             jsonHandler<List<OrganizationMember>>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun listMembers(
             params: UserListMembersParams,
             requestOptions: RequestOptions,

@@ -69,6 +69,7 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
         // put /api/v1/organizations/{organization_id}/users/roles
         withRawResponse().assignRole(params, requestOptions).parse()
 
+    @Deprecated("deprecated")
     override fun listMembers(
         params: UserListMembersParams,
         requestOptions: RequestOptions,
@@ -246,6 +247,7 @@ class UserServiceImpl internal constructor(private val clientOptions: ClientOpti
         private val listMembersHandler: Handler<List<OrganizationMember>> =
             jsonHandler<List<OrganizationMember>>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun listMembers(
             params: UserListMembersParams,
             requestOptions: RequestOptions,
