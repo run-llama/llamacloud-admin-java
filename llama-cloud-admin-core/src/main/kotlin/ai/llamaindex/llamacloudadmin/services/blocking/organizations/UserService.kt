@@ -120,11 +120,19 @@ interface UserService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): UserOrganizationRole
 
-    /** Get all users in an organization. */
+    /**
+     * Get all users in an organization.
+     *
+     * Deprecated: use `GET /api/v2/organizations/{organization_id}/users`, which is paginated. This
+     * one collapses grants to members in memory after reading up to 10,000 of them, so a large
+     * organization silently loses members.
+     */
+    @Deprecated("deprecated")
     fun listMembers(organizationId: String): List<OrganizationMember> =
         listMembers(organizationId, UserListMembersParams.none())
 
     /** @see listMembers */
+    @Deprecated("deprecated")
     fun listMembers(
         organizationId: String,
         params: UserListMembersParams = UserListMembersParams.none(),
@@ -133,22 +141,26 @@ interface UserService {
         listMembers(params.toBuilder().organizationId(organizationId).build(), requestOptions)
 
     /** @see listMembers */
+    @Deprecated("deprecated")
     fun listMembers(
         organizationId: String,
         params: UserListMembersParams = UserListMembersParams.none(),
     ): List<OrganizationMember> = listMembers(organizationId, params, RequestOptions.none())
 
     /** @see listMembers */
+    @Deprecated("deprecated")
     fun listMembers(
         params: UserListMembersParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): List<OrganizationMember>
 
     /** @see listMembers */
+    @Deprecated("deprecated")
     fun listMembers(params: UserListMembersParams): List<OrganizationMember> =
         listMembers(params, RequestOptions.none())
 
     /** @see listMembers */
+    @Deprecated("deprecated")
     fun listMembers(
         organizationId: String,
         requestOptions: RequestOptions,
@@ -357,11 +369,13 @@ interface UserService {
          * Returns a raw HTTP response for `get /api/v1/organizations/{organization_id}/users`, but
          * is otherwise the same as [UserService.listMembers].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun listMembers(organizationId: String): HttpResponseFor<List<OrganizationMember>> =
             listMembers(organizationId, UserListMembersParams.none())
 
         /** @see listMembers */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun listMembers(
             organizationId: String,
@@ -371,6 +385,7 @@ interface UserService {
             listMembers(params.toBuilder().organizationId(organizationId).build(), requestOptions)
 
         /** @see listMembers */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun listMembers(
             organizationId: String,
@@ -379,6 +394,7 @@ interface UserService {
             listMembers(organizationId, params, RequestOptions.none())
 
         /** @see listMembers */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun listMembers(
             params: UserListMembersParams,
@@ -386,11 +402,13 @@ interface UserService {
         ): HttpResponseFor<List<OrganizationMember>>
 
         /** @see listMembers */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun listMembers(params: UserListMembersParams): HttpResponseFor<List<OrganizationMember>> =
             listMembers(params, RequestOptions.none())
 
         /** @see listMembers */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun listMembers(
             organizationId: String,

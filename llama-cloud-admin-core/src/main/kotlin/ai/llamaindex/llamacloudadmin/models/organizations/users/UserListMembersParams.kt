@@ -9,7 +9,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get all users in an organization. */
+/**
+ * Get all users in an organization.
+ *
+ * Deprecated: use `GET /api/v2/organizations/{organization_id}/users`, which is paginated. This one
+ * collapses grants to members in memory after reading up to 10,000 of them, so a large organization
+ * silently loses members.
+ */
+@Deprecated("deprecated")
 class UserListMembersParams
 private constructor(
     private val organizationId: String?,
