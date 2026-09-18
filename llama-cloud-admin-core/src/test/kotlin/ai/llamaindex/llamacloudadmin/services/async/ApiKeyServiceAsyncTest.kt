@@ -48,8 +48,9 @@ internal class ApiKeyServiceAsyncTest {
         val client = LlamaCloudAdminOkHttpClientAsync.builder().apiKey("My API Key").build()
         val apiKeyServiceAsync = client.apiKeys()
 
-        val future = apiKeyServiceAsync.delete("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+        val apiKeyFuture = apiKeyServiceAsync.delete("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
 
-        val response = future.get()
+        val apiKey = apiKeyFuture.get()
+        apiKey.validate()
     }
 }
