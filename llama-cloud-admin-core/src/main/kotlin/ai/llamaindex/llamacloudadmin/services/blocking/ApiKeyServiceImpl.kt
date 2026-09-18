@@ -5,7 +5,6 @@ package ai.llamaindex.llamacloudadmin.services.blocking
 import ai.llamaindex.llamacloudadmin.core.ClientOptions
 import ai.llamaindex.llamacloudadmin.core.RequestOptions
 import ai.llamaindex.llamacloudadmin.core.checkRequired
-import ai.llamaindex.llamacloudadmin.core.handlers.emptyHandler
 import ai.llamaindex.llamacloudadmin.core.handlers.errorBodyHandler
 import ai.llamaindex.llamacloudadmin.core.handlers.errorHandler
 import ai.llamaindex.llamacloudadmin.core.handlers.jsonHandler
@@ -20,6 +19,7 @@ import ai.llamaindex.llamacloudadmin.core.prepare
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKey
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyCreateParams
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyDeleteParams
+import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyDeleteResponse
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyListPage
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyListPageResponse
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyListParams
@@ -46,10 +46,12 @@ class ApiKeyServiceImpl internal constructor(private val clientOptions: ClientOp
         // get /api/v1/beta/api-keys
         withRawResponse().list(params, requestOptions).parse()
 
-    override fun delete(params: ApiKeyDeleteParams, requestOptions: RequestOptions) {
+    override fun delete(
+        params: ApiKeyDeleteParams,
+        requestOptions: RequestOptions,
+    ): ApiKeyDeleteResponse =
         // delete /api/v1/beta/api-keys/{api_key_id}
-        withRawResponse().delete(params, requestOptions)
-    }
+        withRawResponse().delete(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ApiKeyService.WithRawResponse {
@@ -125,12 +127,13 @@ class ApiKeyServiceImpl internal constructor(private val clientOptions: ClientOp
             }
         }
 
-        private val deleteHandler: Handler<Void?> = emptyHandler()
+        private val deleteHandler: Handler<ApiKeyDeleteResponse> =
+            jsonHandler<ApiKeyDeleteResponse>(clientOptions.jsonMapper)
 
         override fun delete(
             params: ApiKeyDeleteParams,
             requestOptions: RequestOptions,
-        ): HttpResponse {
+        ): HttpResponseFor<ApiKeyDeleteResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("apiKeyId", params.apiKeyId().getOrNull())
@@ -145,7 +148,13 @@ class ApiKeyServiceImpl internal constructor(private val clientOptions: ClientOp
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response.use { deleteHandler.handle(it) }
+                response
+                    .use { deleteHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
     }

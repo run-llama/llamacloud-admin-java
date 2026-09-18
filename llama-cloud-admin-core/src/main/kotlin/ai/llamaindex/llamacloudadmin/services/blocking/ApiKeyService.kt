@@ -4,11 +4,11 @@ package ai.llamaindex.llamacloudadmin.services.blocking
 
 import ai.llamaindex.llamacloudadmin.core.ClientOptions
 import ai.llamaindex.llamacloudadmin.core.RequestOptions
-import ai.llamaindex.llamacloudadmin.core.http.HttpResponse
 import ai.llamaindex.llamacloudadmin.core.http.HttpResponseFor
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKey
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyCreateParams
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyDeleteParams
+import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyDeleteResponse
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyListPage
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyListParams
 import com.google.errorprone.annotations.MustBeClosed
@@ -82,27 +82,33 @@ interface ApiKeyService {
      * permission on that project. Your own unscoped keys need only that you own them. A
      * project-scoped key revokes only within its own project, unscoped keys included.
      */
-    fun delete(apiKeyId: String) = delete(apiKeyId, ApiKeyDeleteParams.none())
+    fun delete(apiKeyId: String): ApiKeyDeleteResponse = delete(apiKeyId, ApiKeyDeleteParams.none())
 
     /** @see delete */
     fun delete(
         apiKeyId: String,
         params: ApiKeyDeleteParams = ApiKeyDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ) = delete(params.toBuilder().apiKeyId(apiKeyId).build(), requestOptions)
+    ): ApiKeyDeleteResponse = delete(params.toBuilder().apiKeyId(apiKeyId).build(), requestOptions)
 
     /** @see delete */
-    fun delete(apiKeyId: String, params: ApiKeyDeleteParams = ApiKeyDeleteParams.none()) =
-        delete(apiKeyId, params, RequestOptions.none())
+    fun delete(
+        apiKeyId: String,
+        params: ApiKeyDeleteParams = ApiKeyDeleteParams.none(),
+    ): ApiKeyDeleteResponse = delete(apiKeyId, params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(params: ApiKeyDeleteParams, requestOptions: RequestOptions = RequestOptions.none())
+    fun delete(
+        params: ApiKeyDeleteParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ApiKeyDeleteResponse
 
     /** @see delete */
-    fun delete(params: ApiKeyDeleteParams) = delete(params, RequestOptions.none())
+    fun delete(params: ApiKeyDeleteParams): ApiKeyDeleteResponse =
+        delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(apiKeyId: String, requestOptions: RequestOptions) =
+    fun delete(apiKeyId: String, requestOptions: RequestOptions): ApiKeyDeleteResponse =
         delete(apiKeyId, ApiKeyDeleteParams.none(), requestOptions)
 
     /** A view of [ApiKeyService] that provides access to raw HTTP responses for each method. */
@@ -168,7 +174,8 @@ interface ApiKeyService {
          * otherwise the same as [ApiKeyService.delete].
          */
         @MustBeClosed
-        fun delete(apiKeyId: String): HttpResponse = delete(apiKeyId, ApiKeyDeleteParams.none())
+        fun delete(apiKeyId: String): HttpResponseFor<ApiKeyDeleteResponse> =
+            delete(apiKeyId, ApiKeyDeleteParams.none())
 
         /** @see delete */
         @MustBeClosed
@@ -176,29 +183,34 @@ interface ApiKeyService {
             apiKeyId: String,
             params: ApiKeyDeleteParams = ApiKeyDeleteParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = delete(params.toBuilder().apiKeyId(apiKeyId).build(), requestOptions)
+        ): HttpResponseFor<ApiKeyDeleteResponse> =
+            delete(params.toBuilder().apiKeyId(apiKeyId).build(), requestOptions)
 
         /** @see delete */
         @MustBeClosed
         fun delete(
             apiKeyId: String,
             params: ApiKeyDeleteParams = ApiKeyDeleteParams.none(),
-        ): HttpResponse = delete(apiKeyId, params, RequestOptions.none())
+        ): HttpResponseFor<ApiKeyDeleteResponse> = delete(apiKeyId, params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
         fun delete(
             params: ApiKeyDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        ): HttpResponseFor<ApiKeyDeleteResponse>
 
         /** @see delete */
         @MustBeClosed
-        fun delete(params: ApiKeyDeleteParams): HttpResponse = delete(params, RequestOptions.none())
+        fun delete(params: ApiKeyDeleteParams): HttpResponseFor<ApiKeyDeleteResponse> =
+            delete(params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
-        fun delete(apiKeyId: String, requestOptions: RequestOptions): HttpResponse =
+        fun delete(
+            apiKeyId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<ApiKeyDeleteResponse> =
             delete(apiKeyId, ApiKeyDeleteParams.none(), requestOptions)
     }
 }

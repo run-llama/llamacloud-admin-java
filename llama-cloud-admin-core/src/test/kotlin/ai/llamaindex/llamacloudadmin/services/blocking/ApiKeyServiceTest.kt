@@ -46,6 +46,8 @@ internal class ApiKeyServiceTest {
         val client = LlamaCloudAdminOkHttpClient.builder().apiKey("My API Key").build()
         val apiKeyService = client.apiKeys()
 
-        apiKeyService.delete("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+        val apiKey = apiKeyService.delete("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+
+        apiKey.validate()
     }
 }

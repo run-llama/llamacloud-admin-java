@@ -5,7 +5,6 @@ package ai.llamaindex.llamacloudadmin.services.async
 import ai.llamaindex.llamacloudadmin.core.ClientOptions
 import ai.llamaindex.llamacloudadmin.core.RequestOptions
 import ai.llamaindex.llamacloudadmin.core.checkRequired
-import ai.llamaindex.llamacloudadmin.core.handlers.emptyHandler
 import ai.llamaindex.llamacloudadmin.core.handlers.errorBodyHandler
 import ai.llamaindex.llamacloudadmin.core.handlers.errorHandler
 import ai.llamaindex.llamacloudadmin.core.handlers.jsonHandler
@@ -20,6 +19,7 @@ import ai.llamaindex.llamacloudadmin.core.prepareAsync
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKey
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyCreateParams
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyDeleteParams
+import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyDeleteResponse
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyListPageAsync
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyListPageResponse
 import ai.llamaindex.llamacloudadmin.models.apikeys.ApiKeyListParams
@@ -56,9 +56,9 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
     override fun delete(
         params: ApiKeyDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
+    ): CompletableFuture<ApiKeyDeleteResponse> =
         // delete /api/v1/beta/api-keys/{api_key_id}
-        withRawResponse().delete(params, requestOptions).thenAccept {}
+        withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ApiKeyServiceAsync.WithRawResponse {
@@ -141,12 +141,13 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 }
         }
 
-        private val deleteHandler: Handler<Void?> = emptyHandler()
+        private val deleteHandler: Handler<ApiKeyDeleteResponse> =
+            jsonHandler<ApiKeyDeleteResponse>(clientOptions.jsonMapper)
 
         override fun delete(
             params: ApiKeyDeleteParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> {
+        ): CompletableFuture<HttpResponseFor<ApiKeyDeleteResponse>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("apiKeyId", params.apiKeyId().getOrNull())
@@ -163,7 +164,13 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
-                        response.use { deleteHandler.handle(it) }
+                        response
+                            .use { deleteHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
                     }
                 }
         }
