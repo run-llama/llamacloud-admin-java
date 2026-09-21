@@ -15,6 +15,7 @@ internal class ApiKeyCreateParamsTest {
             .keyType(ApiKeyCreateParams.KeyType.AGENT)
             .name("name")
             .projectId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+            .role(ApiKeyCreateParams.Role.VIEWER_V2)
             .build()
     }
 
@@ -26,6 +27,7 @@ internal class ApiKeyCreateParamsTest {
                 .keyType(ApiKeyCreateParams.KeyType.AGENT)
                 .name("name")
                 .projectId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+                .role(ApiKeyCreateParams.Role.VIEWER_V2)
                 .build()
 
         val body = params._body()
@@ -34,6 +36,7 @@ internal class ApiKeyCreateParamsTest {
         assertThat(body.keyType()).contains(ApiKeyCreateParams.KeyType.AGENT)
         assertThat(body.name()).contains("name")
         assertThat(body.projectId()).contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+        assertThat(body.role()).contains(ApiKeyCreateParams.Role.VIEWER_V2)
     }
 
     @Test
