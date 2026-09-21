@@ -28,6 +28,7 @@ internal class ApiKeyTest {
                 )
                 .name("name")
                 .projectId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+                .role(ApiKey.Role.ADMIN)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
@@ -45,6 +46,7 @@ internal class ApiKeyTest {
             )
         assertThat(apiKey.name()).contains("name")
         assertThat(apiKey.projectId()).contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+        assertThat(apiKey.role()).contains(ApiKey.Role.ADMIN)
         assertThat(apiKey.updatedAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
 
@@ -66,6 +68,7 @@ internal class ApiKeyTest {
                 )
                 .name("name")
                 .projectId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+                .role(ApiKey.Role.ADMIN)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 

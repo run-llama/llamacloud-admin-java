@@ -65,6 +65,15 @@ private constructor(
     fun projectId(): Optional<String> = body.projectId()
 
     /**
+     * Role capping what this key may do. A key can only ever be narrower than the user who created
+     * it, never broader. If not set, the key authorizes as its owner.
+     *
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun role(): Optional<Role> = body.role()
+
+    /**
      * Returns the raw JSON value of [expiresAt].
      *
      * Unlike [expiresAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -91,6 +100,13 @@ private constructor(
      * Unlike [projectId], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _projectId(): JsonField<String> = body._projectId()
+
+    /**
+     * Returns the raw JSON value of [role].
+     *
+     * Unlike [role], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _role(): JsonField<Role> = body._role()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -133,6 +149,8 @@ private constructor(
          * - [keyType]
          * - [name]
          * - [projectId]
+         * - [role]
+         * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -188,6 +206,23 @@ private constructor(
          * value.
          */
         fun projectId(projectId: JsonField<String>) = apply { body.projectId(projectId) }
+
+        /**
+         * Role capping what this key may do. A key can only ever be narrower than the user who
+         * created it, never broader. If not set, the key authorizes as its owner.
+         */
+        fun role(role: Role?) = apply { body.role(role) }
+
+        /** Alias for calling [Builder.role] with `role.orElse(null)`. */
+        fun role(role: Optional<Role>) = role(role.getOrNull())
+
+        /**
+         * Sets [Builder.role] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.role] with a well-typed [Role] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun role(role: JsonField<Role>) = apply { body.role(role) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -333,6 +368,7 @@ private constructor(
         private val keyType: JsonField<KeyType>,
         private val name: JsonField<String>,
         private val projectId: JsonField<String>,
+        private val role: JsonField<Role>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -348,7 +384,8 @@ private constructor(
             @JsonProperty("project_id")
             @ExcludeMissing
             projectId: JsonField<String> = JsonMissing.of(),
-        ) : this(expiresAt, keyType, name, projectId, mutableMapOf())
+            @JsonProperty("role") @ExcludeMissing role: JsonField<Role> = JsonMissing.of(),
+        ) : this(expiresAt, keyType, name, projectId, role, mutableMapOf())
 
         /**
          * When the API key should expire. If not set, the key never expires.
@@ -377,6 +414,15 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun projectId(): Optional<String> = projectId.getOptional("project_id")
+
+        /**
+         * Role capping what this key may do. A key can only ever be narrower than the user who
+         * created it, never broader. If not set, the key authorizes as its owner.
+         *
+         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun role(): Optional<Role> = role.getOptional("role")
 
         /**
          * Returns the raw JSON value of [expiresAt].
@@ -408,6 +454,13 @@ private constructor(
          */
         @JsonProperty("project_id") @ExcludeMissing fun _projectId(): JsonField<String> = projectId
 
+        /**
+         * Returns the raw JSON value of [role].
+         *
+         * Unlike [role], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("role") @ExcludeMissing fun _role(): JsonField<Role> = role
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -433,6 +486,7 @@ private constructor(
             private var keyType: JsonField<KeyType> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
             private var projectId: JsonField<String> = JsonMissing.of()
+            private var role: JsonField<Role> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -441,6 +495,7 @@ private constructor(
                 keyType = body.keyType
                 name = body.name
                 projectId = body.projectId
+                role = body.role
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -501,6 +556,24 @@ private constructor(
              */
             fun projectId(projectId: JsonField<String>) = apply { this.projectId = projectId }
 
+            /**
+             * Role capping what this key may do. A key can only ever be narrower than the user who
+             * created it, never broader. If not set, the key authorizes as its owner.
+             */
+            fun role(role: Role?) = role(JsonField.ofNullable(role))
+
+            /** Alias for calling [Builder.role] with `role.orElse(null)`. */
+            fun role(role: Optional<Role>) = role(role.getOrNull())
+
+            /**
+             * Sets [Builder.role] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.role] with a well-typed [Role] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun role(role: JsonField<Role>) = apply { this.role = role }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -526,7 +599,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              */
             fun build(): Body =
-                Body(expiresAt, keyType, name, projectId, additionalProperties.toMutableMap())
+                Body(expiresAt, keyType, name, projectId, role, additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
@@ -549,6 +622,7 @@ private constructor(
             keyType().ifPresent { it.validate() }
             name()
             projectId()
+            role().ifPresent { it.validate() }
             validated = true
         }
 
@@ -571,7 +645,8 @@ private constructor(
             (if (expiresAt.asKnown().isPresent) 1 else 0) +
                 (keyType.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
-                (if (projectId.asKnown().isPresent) 1 else 0)
+                (if (projectId.asKnown().isPresent) 1 else 0) +
+                (role.asKnown().getOrNull()?.validity() ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -583,17 +658,18 @@ private constructor(
                 keyType == other.keyType &&
                 name == other.name &&
                 projectId == other.projectId &&
+                role == other.role &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(expiresAt, keyType, name, projectId, additionalProperties)
+            Objects.hash(expiresAt, keyType, name, projectId, role, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{expiresAt=$expiresAt, keyType=$keyType, name=$name, projectId=$projectId, additionalProperties=$additionalProperties}"
+            "Body{expiresAt=$expiresAt, keyType=$keyType, name=$name, projectId=$projectId, role=$role, additionalProperties=$additionalProperties}"
     }
 
     class KeyType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -725,6 +801,158 @@ private constructor(
             }
 
             return other is KeyType && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    /**
+     * Role capping what this key may do. A key can only ever be narrower than the user who created
+     * it, never broader. If not set, the key authorizes as its owner.
+     */
+    class Role @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val ADMIN = of("admin")
+
+            @JvmField val AGENT_VIEWER = of("agent_viewer")
+
+            @JvmField val VIEWER = of("viewer")
+
+            @JvmField val VIEWER_V2 = of("viewer_v2")
+
+            @JvmStatic fun of(value: String) = Role(JsonField.of(value))
+        }
+
+        /** An enum containing [Role]'s known values. */
+        enum class Known {
+            ADMIN,
+            AGENT_VIEWER,
+            VIEWER,
+            VIEWER_V2,
+        }
+
+        /**
+         * An enum containing [Role]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Role] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            ADMIN,
+            AGENT_VIEWER,
+            VIEWER,
+            VIEWER_V2,
+            /** An enum member indicating that [Role] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                ADMIN -> Value.ADMIN
+                AGENT_VIEWER -> Value.AGENT_VIEWER
+                VIEWER -> Value.VIEWER
+                VIEWER_V2 -> Value.VIEWER_V2
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws LlamaCloudAdminInvalidDataException if this class instance's value is a not a
+         *   known member.
+         */
+        fun known(): Known =
+            when (this) {
+                ADMIN -> Known.ADMIN
+                AGENT_VIEWER -> Known.AGENT_VIEWER
+                VIEWER -> Known.VIEWER
+                VIEWER_V2 -> Known.VIEWER_V2
+                else -> throw LlamaCloudAdminInvalidDataException("Unknown Role: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws LlamaCloudAdminInvalidDataException if this class instance's value does not have
+         *   the expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                LlamaCloudAdminInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't
+         *   match its expected type.
+         */
+        fun validate(): Role = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: LlamaCloudAdminInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Role && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
