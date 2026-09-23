@@ -3729,6 +3729,7 @@ private constructor(
         private val activeAlerts: JsonField<List<ActiveAlert>>,
         private val activeFreeCreditsUsage: JsonField<List<ActiveFreeCreditsUsage>>,
         private val currentInvoiceTotalUsdCents: JsonField<Long>,
+        private val proUpgradeOfferEligible: JsonField<Boolean>,
         private val totalUsers: JsonField<Long>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -3744,6 +3745,9 @@ private constructor(
             @JsonProperty("current_invoice_total_usd_cents")
             @ExcludeMissing
             currentInvoiceTotalUsdCents: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("pro_upgrade_offer_eligible")
+            @ExcludeMissing
+            proUpgradeOfferEligible: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("total_users")
             @ExcludeMissing
             totalUsers: JsonField<Long> = JsonMissing.of(),
@@ -3751,6 +3755,7 @@ private constructor(
             activeAlerts,
             activeFreeCreditsUsage,
             currentInvoiceTotalUsdCents,
+            proUpgradeOfferEligible,
             totalUsers,
             mutableMapOf(),
         )
@@ -3774,6 +3779,16 @@ private constructor(
          */
         fun currentInvoiceTotalUsdCents(): Optional<Long> =
             currentInvoiceTotalUsdCents.getOptional("current_invoice_total_usd_cents")
+
+        /**
+         * Whether upgrading to Pro now would earn the one-time Pro bonus credits. Only computed
+         * when requested with include=offers.
+         *
+         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun proUpgradeOfferEligible(): Optional<Boolean> =
+            proUpgradeOfferEligible.getOptional("pro_upgrade_offer_eligible")
 
         /**
          * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
@@ -3813,6 +3828,16 @@ private constructor(
         fun _currentInvoiceTotalUsdCents(): JsonField<Long> = currentInvoiceTotalUsdCents
 
         /**
+         * Returns the raw JSON value of [proUpgradeOfferEligible].
+         *
+         * Unlike [proUpgradeOfferEligible], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("pro_upgrade_offer_eligible")
+        @ExcludeMissing
+        fun _proUpgradeOfferEligible(): JsonField<Boolean> = proUpgradeOfferEligible
+
+        /**
          * Returns the raw JSON value of [totalUsers].
          *
          * Unlike [totalUsers], this method doesn't throw if the JSON field has an unexpected type.
@@ -3844,6 +3869,7 @@ private constructor(
             private var activeFreeCreditsUsage: JsonField<MutableList<ActiveFreeCreditsUsage>>? =
                 null
             private var currentInvoiceTotalUsdCents: JsonField<Long> = JsonMissing.of()
+            private var proUpgradeOfferEligible: JsonField<Boolean> = JsonMissing.of()
             private var totalUsers: JsonField<Long> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -3852,6 +3878,7 @@ private constructor(
                 activeAlerts = usage.activeAlerts.map { it.toMutableList() }
                 activeFreeCreditsUsage = usage.activeFreeCreditsUsage.map { it.toMutableList() }
                 currentInvoiceTotalUsdCents = usage.currentInvoiceTotalUsdCents
+                proUpgradeOfferEligible = usage.proUpgradeOfferEligible
                 totalUsers = usage.totalUsers
                 additionalProperties = usage.additionalProperties.toMutableMap()
             }
@@ -3939,6 +3966,24 @@ private constructor(
                 this.currentInvoiceTotalUsdCents = currentInvoiceTotalUsdCents
             }
 
+            /**
+             * Whether upgrading to Pro now would earn the one-time Pro bonus credits. Only computed
+             * when requested with include=offers.
+             */
+            fun proUpgradeOfferEligible(proUpgradeOfferEligible: Boolean) =
+                proUpgradeOfferEligible(JsonField.of(proUpgradeOfferEligible))
+
+            /**
+             * Sets [Builder.proUpgradeOfferEligible] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.proUpgradeOfferEligible] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun proUpgradeOfferEligible(proUpgradeOfferEligible: JsonField<Boolean>) = apply {
+                this.proUpgradeOfferEligible = proUpgradeOfferEligible
+            }
+
             fun totalUsers(totalUsers: Long) = totalUsers(JsonField.of(totalUsers))
 
             /**
@@ -3979,6 +4024,7 @@ private constructor(
                     (activeAlerts ?: JsonMissing.of()).map { it.toImmutable() },
                     (activeFreeCreditsUsage ?: JsonMissing.of()).map { it.toImmutable() },
                     currentInvoiceTotalUsdCents,
+                    proUpgradeOfferEligible,
                     totalUsers,
                     additionalProperties.toMutableMap(),
                 )
@@ -4003,6 +4049,7 @@ private constructor(
             activeAlerts().ifPresent { it.forEach { it.validate() } }
             activeFreeCreditsUsage().ifPresent { it.forEach { it.validate() } }
             currentInvoiceTotalUsdCents()
+            proUpgradeOfferEligible()
             totalUsers()
             validated = true
         }
@@ -4027,6 +4074,7 @@ private constructor(
                 (activeFreeCreditsUsage.asKnown().getOrNull()?.sumOf { it.validity().toInt() }
                     ?: 0) +
                 (if (currentInvoiceTotalUsdCents.asKnown().isPresent) 1 else 0) +
+                (if (proUpgradeOfferEligible.asKnown().isPresent) 1 else 0) +
                 (if (totalUsers.asKnown().isPresent) 1 else 0)
 
         class ActiveAlert @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -4519,6 +4567,7 @@ private constructor(
                 activeAlerts == other.activeAlerts &&
                 activeFreeCreditsUsage == other.activeFreeCreditsUsage &&
                 currentInvoiceTotalUsdCents == other.currentInvoiceTotalUsdCents &&
+                proUpgradeOfferEligible == other.proUpgradeOfferEligible &&
                 totalUsers == other.totalUsers &&
                 additionalProperties == other.additionalProperties
         }
@@ -4528,6 +4577,7 @@ private constructor(
                 activeAlerts,
                 activeFreeCreditsUsage,
                 currentInvoiceTotalUsdCents,
+                proUpgradeOfferEligible,
                 totalUsers,
                 additionalProperties,
             )
@@ -4536,7 +4586,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Usage{activeAlerts=$activeAlerts, activeFreeCreditsUsage=$activeFreeCreditsUsage, currentInvoiceTotalUsdCents=$currentInvoiceTotalUsdCents, totalUsers=$totalUsers, additionalProperties=$additionalProperties}"
+            "Usage{activeAlerts=$activeAlerts, activeFreeCreditsUsage=$activeFreeCreditsUsage, currentInvoiceTotalUsdCents=$currentInvoiceTotalUsdCents, proUpgradeOfferEligible=$proUpgradeOfferEligible, totalUsers=$totalUsers, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
