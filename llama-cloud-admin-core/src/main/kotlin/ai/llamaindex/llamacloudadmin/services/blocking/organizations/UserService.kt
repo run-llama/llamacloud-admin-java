@@ -95,7 +95,7 @@ interface UserService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): UserAddToProjectResponse
 
-    /** Assign a role to a user in an organization. */
+    /** Assign a role to a user in an organization, optionally limited to some of its projects. */
     fun assignRole(pathOrganizationId: String, params: UserAssignRoleParams): UserOrganizationRole =
         assignRole(pathOrganizationId, params, RequestOptions.none())
 
