@@ -13,6 +13,7 @@ internal class OrganizationGetUsageParamsTest {
         OrganizationGetUsageParams.builder()
             .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
             .getCurrentInvoiceTotal(true)
+            .addInclude(OrganizationGetUsageParams.Include.OFFERS)
             .build()
     }
 
@@ -34,12 +35,18 @@ internal class OrganizationGetUsageParamsTest {
             OrganizationGetUsageParams.builder()
                 .organizationId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                 .getCurrentInvoiceTotal(true)
+                .addInclude(OrganizationGetUsageParams.Include.OFFERS)
                 .build()
 
         val queryParams = params._queryParams()
 
         assertThat(queryParams)
-            .isEqualTo(QueryParams.builder().put("get_current_invoice_total", "true").build())
+            .isEqualTo(
+                QueryParams.builder()
+                    .put("get_current_invoice_total", "true")
+                    .put("include", "offers")
+                    .build()
+            )
     }
 
     @Test
