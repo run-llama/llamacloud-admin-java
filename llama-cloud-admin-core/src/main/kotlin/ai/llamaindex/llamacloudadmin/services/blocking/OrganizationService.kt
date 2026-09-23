@@ -146,7 +146,10 @@ interface OrganizationService {
     fun get(organizationId: String, requestOptions: RequestOptions): Organization =
         get(organizationId, OrganizationGetParams.none(), requestOptions)
 
-    /** Get usage for a specific organization. */
+    /**
+     * Get usage for a specific organization. Pass ``include=offers`` to also compute upgrade-offer
+     * eligibility.
+     */
     fun getUsage(organizationId: String): UsageAndPlan =
         getUsage(organizationId, OrganizationGetUsageParams.none())
 
