@@ -25,9 +25,8 @@ import kotlin.jvm.optionals.getOrNull
  * Create an API key.
  *
  * Scope it to a project with `project_id`, which requires read access to that project; omit it for
- * a key that reaches every project you can read. A project-scoped key cannot escape its own
- * project: it confines an omitted `project_id` to that project and refuses any other. The response
- * carries the secret in `redacted_api_key`, and only this once.
+ * a key that reaches every project you can read. A project-scoped or agent key cannot create an API
+ * key. The response carries the secret in `redacted_api_key`, and only this once.
  */
 class ApiKeyCreateParams
 private constructor(
