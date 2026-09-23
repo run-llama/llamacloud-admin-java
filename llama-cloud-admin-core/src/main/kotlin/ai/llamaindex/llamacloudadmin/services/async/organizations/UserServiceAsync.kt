@@ -107,7 +107,7 @@ interface UserServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<UserAddToProjectResponse>
 
-    /** Assign a role to a user in an organization. */
+    /** Assign a role to a user in an organization, optionally limited to some of its projects. */
     fun assignRole(
         pathOrganizationId: String,
         params: UserAssignRoleParams,
