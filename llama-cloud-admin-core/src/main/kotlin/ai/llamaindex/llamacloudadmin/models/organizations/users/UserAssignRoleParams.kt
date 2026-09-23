@@ -7,9 +7,11 @@ import ai.llamaindex.llamacloudadmin.core.JsonField
 import ai.llamaindex.llamacloudadmin.core.JsonMissing
 import ai.llamaindex.llamacloudadmin.core.JsonValue
 import ai.llamaindex.llamacloudadmin.core.Params
+import ai.llamaindex.llamacloudadmin.core.checkKnown
 import ai.llamaindex.llamacloudadmin.core.checkRequired
 import ai.llamaindex.llamacloudadmin.core.http.Headers
 import ai.llamaindex.llamacloudadmin.core.http.QueryParams
+import ai.llamaindex.llamacloudadmin.core.toImmutable
 import ai.llamaindex.llamacloudadmin.errors.LlamaCloudAdminInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -20,7 +22,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Assign a role to a user in an organization. */
+/** Assign a role to a user in an organization, optionally limited to some of its projects. */
 class UserAssignRoleParams
 private constructor(
     private val pathOrganizationId: String?,
@@ -56,6 +58,15 @@ private constructor(
     fun userId(): String = body.userId()
 
     /**
+     * Projects to limit the role to. Empty: organization-wide, per-project roles removed. Omitted:
+     * organization-wide, per-project roles kept.
+     *
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun projectIds(): Optional<List<String>> = body.projectIds()
+
+    /**
      * Returns the raw JSON value of [bodyOrganizationId].
      *
      * Unlike [bodyOrganizationId], this method doesn't throw if the JSON field has an unexpected
@@ -76,6 +87,13 @@ private constructor(
      * Unlike [userId], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _userId(): JsonField<String> = body._userId()
+
+    /**
+     * Returns the raw JSON value of [projectIds].
+     *
+     * Unlike [projectIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _projectIds(): JsonField<List<String>> = body._projectIds()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -136,6 +154,7 @@ private constructor(
          * - [bodyOrganizationId]
          * - [roleId]
          * - [userId]
+         * - [projectIds]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -176,6 +195,31 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun userId(userId: JsonField<String>) = apply { body.userId(userId) }
+
+        /**
+         * Projects to limit the role to. Empty: organization-wide, per-project roles removed.
+         * Omitted: organization-wide, per-project roles kept.
+         */
+        fun projectIds(projectIds: List<String>?) = apply { body.projectIds(projectIds) }
+
+        /** Alias for calling [Builder.projectIds] with `projectIds.orElse(null)`. */
+        fun projectIds(projectIds: Optional<List<String>>) = projectIds(projectIds.getOrNull())
+
+        /**
+         * Sets [Builder.projectIds] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.projectIds] with a well-typed `List<String>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun projectIds(projectIds: JsonField<List<String>>) = apply { body.projectIds(projectIds) }
+
+        /**
+         * Adds a single [String] to [projectIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addProjectId(projectId: String) = apply { body.addProjectId(projectId) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -336,6 +380,7 @@ private constructor(
         private val bodyOrganizationId: JsonField<String>,
         private val roleId: JsonField<String>,
         private val userId: JsonField<String>,
+        private val projectIds: JsonField<List<String>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -346,7 +391,10 @@ private constructor(
             bodyOrganizationId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("role_id") @ExcludeMissing roleId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("user_id") @ExcludeMissing userId: JsonField<String> = JsonMissing.of(),
-        ) : this(bodyOrganizationId, roleId, userId, mutableMapOf())
+            @JsonProperty("project_ids")
+            @ExcludeMissing
+            projectIds: JsonField<List<String>> = JsonMissing.of(),
+        ) : this(bodyOrganizationId, roleId, userId, projectIds, mutableMapOf())
 
         /**
          * The organization's ID.
@@ -376,6 +424,15 @@ private constructor(
         fun userId(): String = userId.getRequired("user_id")
 
         /**
+         * Projects to limit the role to. Empty: organization-wide, per-project roles removed.
+         * Omitted: organization-wide, per-project roles kept.
+         *
+         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun projectIds(): Optional<List<String>> = projectIds.getOptional("project_ids")
+
+        /**
          * Returns the raw JSON value of [bodyOrganizationId].
          *
          * Unlike [bodyOrganizationId], this method doesn't throw if the JSON field has an
@@ -398,6 +455,15 @@ private constructor(
          * Unlike [userId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("user_id") @ExcludeMissing fun _userId(): JsonField<String> = userId
+
+        /**
+         * Returns the raw JSON value of [projectIds].
+         *
+         * Unlike [projectIds], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("project_ids")
+        @ExcludeMissing
+        fun _projectIds(): JsonField<List<String>> = projectIds
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -432,6 +498,7 @@ private constructor(
             private var bodyOrganizationId: JsonField<String>? = null
             private var roleId: JsonField<String>? = null
             private var userId: JsonField<String>? = null
+            private var projectIds: JsonField<MutableList<String>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -439,6 +506,7 @@ private constructor(
                 bodyOrganizationId = body.bodyOrganizationId
                 roleId = body.roleId
                 userId = body.userId
+                projectIds = body.projectIds.map { it.toMutableList() }
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -481,6 +549,38 @@ private constructor(
              */
             fun userId(userId: JsonField<String>) = apply { this.userId = userId }
 
+            /**
+             * Projects to limit the role to. Empty: organization-wide, per-project roles removed.
+             * Omitted: organization-wide, per-project roles kept.
+             */
+            fun projectIds(projectIds: List<String>?) = projectIds(JsonField.ofNullable(projectIds))
+
+            /** Alias for calling [Builder.projectIds] with `projectIds.orElse(null)`. */
+            fun projectIds(projectIds: Optional<List<String>>) = projectIds(projectIds.getOrNull())
+
+            /**
+             * Sets [Builder.projectIds] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.projectIds] with a well-typed `List<String>` value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun projectIds(projectIds: JsonField<List<String>>) = apply {
+                this.projectIds = projectIds.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [String] to [projectIds].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addProjectId(projectId: String) = apply {
+                projectIds =
+                    (projectIds ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("projectIds", it).add(projectId)
+                    }
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -519,6 +619,7 @@ private constructor(
                     checkRequired("bodyOrganizationId", bodyOrganizationId),
                     checkRequired("roleId", roleId),
                     checkRequired("userId", userId),
+                    (projectIds ?: JsonMissing.of()).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -542,6 +643,7 @@ private constructor(
             bodyOrganizationId()
             roleId()
             userId()
+            projectIds()
             validated = true
         }
 
@@ -563,7 +665,8 @@ private constructor(
         internal fun validity(): Int =
             (if (bodyOrganizationId.asKnown().isPresent) 1 else 0) +
                 (if (roleId.asKnown().isPresent) 1 else 0) +
-                (if (userId.asKnown().isPresent) 1 else 0)
+                (if (userId.asKnown().isPresent) 1 else 0) +
+                (projectIds.asKnown().getOrNull()?.size ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -574,17 +677,18 @@ private constructor(
                 bodyOrganizationId == other.bodyOrganizationId &&
                 roleId == other.roleId &&
                 userId == other.userId &&
+                projectIds == other.projectIds &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(bodyOrganizationId, roleId, userId, additionalProperties)
+            Objects.hash(bodyOrganizationId, roleId, userId, projectIds, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{bodyOrganizationId=$bodyOrganizationId, roleId=$roleId, userId=$userId, additionalProperties=$additionalProperties}"
+            "Body{bodyOrganizationId=$bodyOrganizationId, roleId=$roleId, userId=$userId, projectIds=$projectIds, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
