@@ -2469,6 +2469,8 @@ private constructor(
 
                 @JvmField val LLAMA_PARSE = of("llama_parse")
 
+                @JvmField val PAYG_V1 = of("payg_v1")
+
                 @JvmField val PRO = of("pro")
 
                 @JvmField val PRO_V1 = of("pro_v1")
@@ -2496,6 +2498,7 @@ private constructor(
                 FREE_V1,
                 FREE_V2,
                 LLAMA_PARSE,
+                PAYG_V1,
                 PRO,
                 PRO_V1,
                 PRO_V2,
@@ -2523,6 +2526,7 @@ private constructor(
                 FREE_V1,
                 FREE_V2,
                 LLAMA_PARSE,
+                PAYG_V1,
                 PRO,
                 PRO_V1,
                 PRO_V2,
@@ -2551,6 +2555,7 @@ private constructor(
                     FREE_V1 -> Value.FREE_V1
                     FREE_V2 -> Value.FREE_V2
                     LLAMA_PARSE -> Value.LLAMA_PARSE
+                    PAYG_V1 -> Value.PAYG_V1
                     PRO -> Value.PRO
                     PRO_V1 -> Value.PRO_V1
                     PRO_V2 -> Value.PRO_V2
@@ -2580,6 +2585,7 @@ private constructor(
                     FREE_V1 -> Known.FREE_V1
                     FREE_V2 -> Known.FREE_V2
                     LLAMA_PARSE -> Known.LLAMA_PARSE
+                    PAYG_V1 -> Known.PAYG_V1
                     PRO -> Known.PRO
                     PRO_V1 -> Known.PRO_V1
                     PRO_V2 -> Known.PRO_V2
