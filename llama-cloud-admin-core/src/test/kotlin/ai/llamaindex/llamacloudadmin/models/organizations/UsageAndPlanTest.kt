@@ -80,9 +80,7 @@ internal class UsageAndPlanTest {
                 )
                 .usage(
                     UsageAndPlan.Usage.builder()
-                        .addActiveAlert(
-                            UsageAndPlan.Usage.ActiveAlert.CONFIGURED_SPEND_LIMIT_EXCEEDED
-                        )
+                        .addActiveAlert(UsageAndPlan.Usage.ActiveAlert.AUTO_RELOAD_FAILED)
                         .addActiveFreeCreditsUsage(
                             UsageAndPlan.Usage.ActiveFreeCreditsUsage.builder()
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -166,7 +164,7 @@ internal class UsageAndPlanTest {
         assertThat(usageAndPlan.usage())
             .isEqualTo(
                 UsageAndPlan.Usage.builder()
-                    .addActiveAlert(UsageAndPlan.Usage.ActiveAlert.CONFIGURED_SPEND_LIMIT_EXCEEDED)
+                    .addActiveAlert(UsageAndPlan.Usage.ActiveAlert.AUTO_RELOAD_FAILED)
                     .addActiveFreeCreditsUsage(
                         UsageAndPlan.Usage.ActiveFreeCreditsUsage.builder()
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -253,9 +251,7 @@ internal class UsageAndPlanTest {
                 )
                 .usage(
                     UsageAndPlan.Usage.builder()
-                        .addActiveAlert(
-                            UsageAndPlan.Usage.ActiveAlert.CONFIGURED_SPEND_LIMIT_EXCEEDED
-                        )
+                        .addActiveAlert(UsageAndPlan.Usage.ActiveAlert.AUTO_RELOAD_FAILED)
                         .addActiveFreeCreditsUsage(
                             UsageAndPlan.Usage.ActiveFreeCreditsUsage.builder()
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
