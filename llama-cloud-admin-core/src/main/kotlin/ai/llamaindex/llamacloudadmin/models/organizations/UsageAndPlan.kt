@@ -2469,6 +2469,8 @@ private constructor(
 
                 @JvmField val LLAMA_PARSE = of("llama_parse")
 
+                @JvmField val PAYG_V1 = of("payg_v1")
+
                 @JvmField val PRO = of("pro")
 
                 @JvmField val PRO_V1 = of("pro_v1")
@@ -2496,6 +2498,7 @@ private constructor(
                 FREE_V1,
                 FREE_V2,
                 LLAMA_PARSE,
+                PAYG_V1,
                 PRO,
                 PRO_V1,
                 PRO_V2,
@@ -2523,6 +2526,7 @@ private constructor(
                 FREE_V1,
                 FREE_V2,
                 LLAMA_PARSE,
+                PAYG_V1,
                 PRO,
                 PRO_V1,
                 PRO_V2,
@@ -2551,6 +2555,7 @@ private constructor(
                     FREE_V1 -> Value.FREE_V1
                     FREE_V2 -> Value.FREE_V2
                     LLAMA_PARSE -> Value.LLAMA_PARSE
+                    PAYG_V1 -> Value.PAYG_V1
                     PRO -> Value.PRO
                     PRO_V1 -> Value.PRO_V1
                     PRO_V2 -> Value.PRO_V2
@@ -2580,6 +2585,7 @@ private constructor(
                     FREE_V1 -> Known.FREE_V1
                     FREE_V2 -> Known.FREE_V2
                     LLAMA_PARSE -> Known.LLAMA_PARSE
+                    PAYG_V1 -> Known.PAYG_V1
                     PRO -> Known.PRO
                     PRO_V1 -> Known.PRO_V1
                     PRO_V2 -> Known.PRO_V2
@@ -4092,6 +4098,8 @@ private constructor(
 
             companion object {
 
+                @JvmField val AUTO_RELOAD_FAILED = of("auto_reload_failed")
+
                 @JvmField
                 val CONFIGURED_SPEND_LIMIT_EXCEEDED = of("configured_spend_limit_exceeded")
 
@@ -4100,6 +4108,8 @@ private constructor(
                 @JvmField val HAS_SPENDING_ALERT = of("has_spending_alert")
 
                 @JvmField val INTERNAL_SPENDING_ALERT = of("internal_spending_alert")
+
+                @JvmField val LOW_BALANCE = of("low_balance")
 
                 @JvmField val PLAN_SPEND_LIMIT_EXCEEDED = of("plan_spend_limit_exceeded")
 
@@ -4110,10 +4120,12 @@ private constructor(
 
             /** An enum containing [ActiveAlert]'s known values. */
             enum class Known {
+                AUTO_RELOAD_FAILED,
                 CONFIGURED_SPEND_LIMIT_EXCEEDED,
                 FREE_CREDITS_EXHAUSTED,
                 HAS_SPENDING_ALERT,
                 INTERNAL_SPENDING_ALERT,
+                LOW_BALANCE,
                 PLAN_SPEND_LIMIT_EXCEEDED,
                 PLAN_SPEND_LIMIT_SOFT_ALERT,
             }
@@ -4128,10 +4140,12 @@ private constructor(
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
+                AUTO_RELOAD_FAILED,
                 CONFIGURED_SPEND_LIMIT_EXCEEDED,
                 FREE_CREDITS_EXHAUSTED,
                 HAS_SPENDING_ALERT,
                 INTERNAL_SPENDING_ALERT,
+                LOW_BALANCE,
                 PLAN_SPEND_LIMIT_EXCEEDED,
                 PLAN_SPEND_LIMIT_SOFT_ALERT,
                 /**
@@ -4150,10 +4164,12 @@ private constructor(
              */
             fun value(): Value =
                 when (this) {
+                    AUTO_RELOAD_FAILED -> Value.AUTO_RELOAD_FAILED
                     CONFIGURED_SPEND_LIMIT_EXCEEDED -> Value.CONFIGURED_SPEND_LIMIT_EXCEEDED
                     FREE_CREDITS_EXHAUSTED -> Value.FREE_CREDITS_EXHAUSTED
                     HAS_SPENDING_ALERT -> Value.HAS_SPENDING_ALERT
                     INTERNAL_SPENDING_ALERT -> Value.INTERNAL_SPENDING_ALERT
+                    LOW_BALANCE -> Value.LOW_BALANCE
                     PLAN_SPEND_LIMIT_EXCEEDED -> Value.PLAN_SPEND_LIMIT_EXCEEDED
                     PLAN_SPEND_LIMIT_SOFT_ALERT -> Value.PLAN_SPEND_LIMIT_SOFT_ALERT
                     else -> Value._UNKNOWN
@@ -4170,10 +4186,12 @@ private constructor(
              */
             fun known(): Known =
                 when (this) {
+                    AUTO_RELOAD_FAILED -> Known.AUTO_RELOAD_FAILED
                     CONFIGURED_SPEND_LIMIT_EXCEEDED -> Known.CONFIGURED_SPEND_LIMIT_EXCEEDED
                     FREE_CREDITS_EXHAUSTED -> Known.FREE_CREDITS_EXHAUSTED
                     HAS_SPENDING_ALERT -> Known.HAS_SPENDING_ALERT
                     INTERNAL_SPENDING_ALERT -> Known.INTERNAL_SPENDING_ALERT
+                    LOW_BALANCE -> Known.LOW_BALANCE
                     PLAN_SPEND_LIMIT_EXCEEDED -> Known.PLAN_SPEND_LIMIT_EXCEEDED
                     PLAN_SPEND_LIMIT_SOFT_ALERT -> Known.PLAN_SPEND_LIMIT_SOFT_ALERT
                     else -> throw LlamaCloudAdminInvalidDataException("Unknown ActiveAlert: $value")
