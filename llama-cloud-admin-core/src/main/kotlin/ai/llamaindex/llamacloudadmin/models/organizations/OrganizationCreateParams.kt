@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 
 /** Create a new organization. */
 class OrganizationCreateParams
@@ -35,11 +36,27 @@ private constructor(
     fun name(): String = body.name()
 
     /**
+     * Also create the organization's default project.
+     *
+     * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun createDefaultProject(): Optional<Boolean> = body.createDefaultProject()
+
+    /**
      * Returns the raw JSON value of [name].
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _name(): JsonField<String> = body._name()
+
+    /**
+     * Returns the raw JSON value of [createDefaultProject].
+     *
+     * Unlike [createDefaultProject], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _createDefaultProject(): JsonField<Boolean> = body._createDefaultProject()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -84,6 +101,7 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [name]
+         * - [createDefaultProject]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -97,6 +115,22 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun name(name: JsonField<String>) = apply { body.name(name) }
+
+        /** Also create the organization's default project. */
+        fun createDefaultProject(createDefaultProject: Boolean) = apply {
+            body.createDefaultProject(createDefaultProject)
+        }
+
+        /**
+         * Sets [Builder.createDefaultProject] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.createDefaultProject] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun createDefaultProject(createDefaultProject: JsonField<Boolean>) = apply {
+            body.createDefaultProject(createDefaultProject)
+        }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -246,13 +280,17 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val name: JsonField<String>,
+        private val createDefaultProject: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of()
-        ) : this(name, mutableMapOf())
+            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("create_default_project")
+            @ExcludeMissing
+            createDefaultProject: JsonField<Boolean> = JsonMissing.of(),
+        ) : this(name, createDefaultProject, mutableMapOf())
 
         /**
          * The organization's display name.
@@ -264,11 +302,30 @@ private constructor(
         fun name(): String = name.getRequired("name")
 
         /**
+         * Also create the organization's default project.
+         *
+         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun createDefaultProject(): Optional<Boolean> =
+            createDefaultProject.getOptional("create_default_project")
+
+        /**
          * Returns the raw JSON value of [name].
          *
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [createDefaultProject].
+         *
+         * Unlike [createDefaultProject], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("create_default_project")
+        @ExcludeMissing
+        fun _createDefaultProject(): JsonField<Boolean> = createDefaultProject
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -299,11 +356,13 @@ private constructor(
         class Builder internal constructor() {
 
             private var name: JsonField<String>? = null
+            private var createDefaultProject: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 name = body.name
+                createDefaultProject = body.createDefaultProject
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -318,6 +377,21 @@ private constructor(
              * value.
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
+
+            /** Also create the organization's default project. */
+            fun createDefaultProject(createDefaultProject: Boolean) =
+                createDefaultProject(JsonField.of(createDefaultProject))
+
+            /**
+             * Sets [Builder.createDefaultProject] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.createDefaultProject] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun createDefaultProject(createDefaultProject: JsonField<Boolean>) = apply {
+                this.createDefaultProject = createDefaultProject
+            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -351,7 +425,11 @@ private constructor(
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Body =
-                Body(checkRequired("name", name), additionalProperties.toMutableMap())
+                Body(
+                    checkRequired("name", name),
+                    createDefaultProject,
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
@@ -371,6 +449,7 @@ private constructor(
             }
 
             name()
+            createDefaultProject()
             validated = true
         }
 
@@ -388,7 +467,10 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = (if (name.asKnown().isPresent) 1 else 0)
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (name.asKnown().isPresent) 1 else 0) +
+                (if (createDefaultProject.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -397,14 +479,18 @@ private constructor(
 
             return other is Body &&
                 name == other.name &&
+                createDefaultProject == other.createDefaultProject &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(name, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(name, createDefaultProject, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() = "Body{name=$name, additionalProperties=$additionalProperties}"
+        override fun toString() =
+            "Body{name=$name, createDefaultProject=$createDefaultProject, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

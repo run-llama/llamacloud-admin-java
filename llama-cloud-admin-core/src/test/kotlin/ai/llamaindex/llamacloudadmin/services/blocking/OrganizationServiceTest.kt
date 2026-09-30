@@ -18,7 +18,9 @@ internal class OrganizationServiceTest {
         val organizationService = client.organizations()
 
         val organization =
-            organizationService.create(OrganizationCreateParams.builder().name("x").build())
+            organizationService.create(
+                OrganizationCreateParams.builder().name("x").createDefaultProject(true).build()
+            )
 
         organization.validate()
     }
