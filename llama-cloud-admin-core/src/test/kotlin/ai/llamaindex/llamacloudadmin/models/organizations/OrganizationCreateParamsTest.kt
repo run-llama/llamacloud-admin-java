@@ -9,11 +9,21 @@ internal class OrganizationCreateParamsTest {
 
     @Test
     fun create() {
-        OrganizationCreateParams.builder().name("x").build()
+        OrganizationCreateParams.builder().name("x").createDefaultProject(true).build()
     }
 
     @Test
     fun body() {
+        val params = OrganizationCreateParams.builder().name("x").createDefaultProject(true).build()
+
+        val body = params._body()
+
+        assertThat(body.name()).isEqualTo("x")
+        assertThat(body.createDefaultProject()).contains(true)
+    }
+
+    @Test
+    fun bodyWithoutOptionalFields() {
         val params = OrganizationCreateParams.builder().name("x").build()
 
         val body = params._body()

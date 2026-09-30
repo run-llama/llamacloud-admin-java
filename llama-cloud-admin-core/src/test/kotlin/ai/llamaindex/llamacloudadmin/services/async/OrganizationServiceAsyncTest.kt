@@ -18,7 +18,9 @@ internal class OrganizationServiceAsyncTest {
         val organizationServiceAsync = client.organizations()
 
         val organizationFuture =
-            organizationServiceAsync.create(OrganizationCreateParams.builder().name("x").build())
+            organizationServiceAsync.create(
+                OrganizationCreateParams.builder().name("x").createDefaultProject(true).build()
+            )
 
         val organization = organizationFuture.get()
         organization.validate()
