@@ -4098,6 +4098,8 @@ private constructor(
 
             companion object {
 
+                @JvmField val AUTO_RELOAD_CAP_REACHED = of("auto_reload_cap_reached")
+
                 @JvmField val AUTO_RELOAD_FAILED = of("auto_reload_failed")
 
                 @JvmField
@@ -4120,6 +4122,7 @@ private constructor(
 
             /** An enum containing [ActiveAlert]'s known values. */
             enum class Known {
+                AUTO_RELOAD_CAP_REACHED,
                 AUTO_RELOAD_FAILED,
                 CONFIGURED_SPEND_LIMIT_EXCEEDED,
                 FREE_CREDITS_EXHAUSTED,
@@ -4140,6 +4143,7 @@ private constructor(
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
+                AUTO_RELOAD_CAP_REACHED,
                 AUTO_RELOAD_FAILED,
                 CONFIGURED_SPEND_LIMIT_EXCEEDED,
                 FREE_CREDITS_EXHAUSTED,
@@ -4164,6 +4168,7 @@ private constructor(
              */
             fun value(): Value =
                 when (this) {
+                    AUTO_RELOAD_CAP_REACHED -> Value.AUTO_RELOAD_CAP_REACHED
                     AUTO_RELOAD_FAILED -> Value.AUTO_RELOAD_FAILED
                     CONFIGURED_SPEND_LIMIT_EXCEEDED -> Value.CONFIGURED_SPEND_LIMIT_EXCEEDED
                     FREE_CREDITS_EXHAUSTED -> Value.FREE_CREDITS_EXHAUSTED
@@ -4186,6 +4191,7 @@ private constructor(
              */
             fun known(): Known =
                 when (this) {
+                    AUTO_RELOAD_CAP_REACHED -> Known.AUTO_RELOAD_CAP_REACHED
                     AUTO_RELOAD_FAILED -> Known.AUTO_RELOAD_FAILED
                     CONFIGURED_SPEND_LIMIT_EXCEEDED -> Known.CONFIGURED_SPEND_LIMIT_EXCEEDED
                     FREE_CREDITS_EXHAUSTED -> Known.FREE_CREDITS_EXHAUSTED
