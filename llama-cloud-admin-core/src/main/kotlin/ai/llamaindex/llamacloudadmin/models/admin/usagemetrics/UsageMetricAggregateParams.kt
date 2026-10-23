@@ -340,6 +340,8 @@ private constructor(
 
             @JvmField val DIRECTORY_PAGES_EXPORTED = of("directory_pages_exported")
 
+            @JvmField val EXTRACTION_EFFORT_MAX_CREDITS = of("extraction_effort_max_credits")
+
             @JvmField val EXTRACTION_NUM_PAGES = of("extraction_num_pages")
 
             @JvmField val FORM_PARSING_PAGES = of("form_parsing_pages")
@@ -394,6 +396,7 @@ private constructor(
             DIRECTORY_FILES_EXPORTED,
             DIRECTORY_FILES_INGESTED,
             DIRECTORY_PAGES_EXPORTED,
+            EXTRACTION_EFFORT_MAX_CREDITS,
             EXTRACTION_NUM_PAGES,
             FORM_PARSING_PAGES,
             IMAGE_CLASSIFIED,
@@ -436,6 +439,7 @@ private constructor(
             DIRECTORY_FILES_EXPORTED,
             DIRECTORY_FILES_INGESTED,
             DIRECTORY_PAGES_EXPORTED,
+            EXTRACTION_EFFORT_MAX_CREDITS,
             EXTRACTION_NUM_PAGES,
             FORM_PARSING_PAGES,
             IMAGE_CLASSIFIED,
@@ -481,6 +485,7 @@ private constructor(
                 DIRECTORY_FILES_EXPORTED -> Value.DIRECTORY_FILES_EXPORTED
                 DIRECTORY_FILES_INGESTED -> Value.DIRECTORY_FILES_INGESTED
                 DIRECTORY_PAGES_EXPORTED -> Value.DIRECTORY_PAGES_EXPORTED
+                EXTRACTION_EFFORT_MAX_CREDITS -> Value.EXTRACTION_EFFORT_MAX_CREDITS
                 EXTRACTION_NUM_PAGES -> Value.EXTRACTION_NUM_PAGES
                 FORM_PARSING_PAGES -> Value.FORM_PARSING_PAGES
                 IMAGE_CLASSIFIED -> Value.IMAGE_CLASSIFIED
@@ -525,6 +530,7 @@ private constructor(
                 DIRECTORY_FILES_EXPORTED -> Known.DIRECTORY_FILES_EXPORTED
                 DIRECTORY_FILES_INGESTED -> Known.DIRECTORY_FILES_INGESTED
                 DIRECTORY_PAGES_EXPORTED -> Known.DIRECTORY_PAGES_EXPORTED
+                EXTRACTION_EFFORT_MAX_CREDITS -> Known.EXTRACTION_EFFORT_MAX_CREDITS
                 EXTRACTION_NUM_PAGES -> Known.EXTRACTION_NUM_PAGES
                 FORM_PARSING_PAGES -> Known.FORM_PARSING_PAGES
                 IMAGE_CLASSIFIED -> Known.IMAGE_CLASSIFIED
