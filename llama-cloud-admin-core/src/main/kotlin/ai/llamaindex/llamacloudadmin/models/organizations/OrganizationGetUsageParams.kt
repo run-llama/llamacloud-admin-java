@@ -16,7 +16,8 @@ import kotlin.jvm.optionals.getOrNull
 
 /**
  * Get usage for a specific organization. Pass ``include=offers`` to also compute upgrade-offer
- * eligibility.
+ * eligibility, and ``include=payment_failures`` to also list the plan's newest active payment
+ * failures.
  */
 class OrganizationGetUsageParams
 private constructor(
@@ -254,12 +255,15 @@ private constructor(
 
             @JvmField val OFFERS = of("offers")
 
+            @JvmField val PAYMENT_FAILURES = of("payment_failures")
+
             @JvmStatic fun of(value: String) = Include(JsonField.of(value))
         }
 
         /** An enum containing [Include]'s known values. */
         enum class Known {
-            OFFERS
+            OFFERS,
+            PAYMENT_FAILURES,
         }
 
         /**
@@ -273,6 +277,7 @@ private constructor(
          */
         enum class Value {
             OFFERS,
+            PAYMENT_FAILURES,
             /** An enum member indicating that [Include] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -287,6 +292,7 @@ private constructor(
         fun value(): Value =
             when (this) {
                 OFFERS -> Value.OFFERS
+                PAYMENT_FAILURES -> Value.PAYMENT_FAILURES
                 else -> Value._UNKNOWN
             }
 
@@ -302,6 +308,7 @@ private constructor(
         fun known(): Known =
             when (this) {
                 OFFERS -> Known.OFFERS
+                PAYMENT_FAILURES -> Known.PAYMENT_FAILURES
                 else -> throw LlamaCloudAdminInvalidDataException("Unknown Include: $value")
             }
 
