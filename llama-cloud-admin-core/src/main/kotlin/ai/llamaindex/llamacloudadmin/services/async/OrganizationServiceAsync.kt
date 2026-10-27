@@ -159,7 +159,8 @@ interface OrganizationServiceAsync {
 
     /**
      * Get usage for a specific organization. Pass ``include=offers`` to also compute upgrade-offer
-     * eligibility.
+     * eligibility, and ``include=payment_failures`` to also list the plan's newest active payment
+     * failures.
      */
     fun getUsage(organizationId: String): CompletableFuture<UsageAndPlan> =
         getUsage(organizationId, OrganizationGetUsageParams.none())
