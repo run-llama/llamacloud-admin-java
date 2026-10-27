@@ -213,6 +213,7 @@ private constructor(
         private val endingBefore: JsonField<OffsetDateTime>,
         private val failureCount: JsonField<Long>,
         private val isPaymentFailed: JsonField<Boolean>,
+        private val paymentFailures: JsonField<List<PaymentFailure>>,
         private val recurringCredits: JsonField<List<RecurringCredit>>,
         private val startingOn: JsonField<OffsetDateTime>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -238,6 +239,9 @@ private constructor(
             @JsonProperty("is_payment_failed")
             @ExcludeMissing
             isPaymentFailed: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("payment_failures")
+            @ExcludeMissing
+            paymentFailures: JsonField<List<PaymentFailure>> = JsonMissing.of(),
             @JsonProperty("recurring_credits")
             @ExcludeMissing
             recurringCredits: JsonField<List<RecurringCredit>> = JsonMissing.of(),
@@ -253,6 +257,7 @@ private constructor(
             endingBefore,
             failureCount,
             isPaymentFailed,
+            paymentFailures,
             recurringCredits,
             startingOn,
             mutableMapOf(),
@@ -319,6 +324,16 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun isPaymentFailed(): Optional<Boolean> = isPaymentFailed.getOptional("is_payment_failed")
+
+        /**
+         * The newest active payment failures, newest first, at most 10; failure_count counts all of
+         * them. Only set when requested with include=payment_failures.
+         *
+         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun paymentFailures(): Optional<List<PaymentFailure>> =
+            paymentFailures.getOptional("payment_failures")
 
         /**
          * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
@@ -407,6 +422,16 @@ private constructor(
         fun _isPaymentFailed(): JsonField<Boolean> = isPaymentFailed
 
         /**
+         * Returns the raw JSON value of [paymentFailures].
+         *
+         * Unlike [paymentFailures], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("payment_failures")
+        @ExcludeMissing
+        fun _paymentFailures(): JsonField<List<PaymentFailure>> = paymentFailures
+
+        /**
          * Returns the raw JSON value of [recurringCredits].
          *
          * Unlike [recurringCredits], this method doesn't throw if the JSON field has an unexpected
@@ -463,6 +488,7 @@ private constructor(
             private var endingBefore: JsonField<OffsetDateTime> = JsonMissing.of()
             private var failureCount: JsonField<Long> = JsonMissing.of()
             private var isPaymentFailed: JsonField<Boolean> = JsonMissing.of()
+            private var paymentFailures: JsonField<MutableList<PaymentFailure>>? = null
             private var recurringCredits: JsonField<MutableList<RecurringCredit>>? = null
             private var startingOn: JsonField<OffsetDateTime> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -477,6 +503,7 @@ private constructor(
                 endingBefore = plan.endingBefore
                 failureCount = plan.failureCount
                 isPaymentFailed = plan.isPaymentFailed
+                paymentFailures = plan.paymentFailures.map { it.toMutableList() }
                 recurringCredits = plan.recurringCredits.map { it.toMutableList() }
                 startingOn = plan.startingOn
                 additionalProperties = plan.additionalProperties.toMutableMap()
@@ -604,6 +631,40 @@ private constructor(
                 this.isPaymentFailed = isPaymentFailed
             }
 
+            /**
+             * The newest active payment failures, newest first, at most 10; failure_count counts
+             * all of them. Only set when requested with include=payment_failures.
+             */
+            fun paymentFailures(paymentFailures: List<PaymentFailure>?) =
+                paymentFailures(JsonField.ofNullable(paymentFailures))
+
+            /** Alias for calling [Builder.paymentFailures] with `paymentFailures.orElse(null)`. */
+            fun paymentFailures(paymentFailures: Optional<List<PaymentFailure>>) =
+                paymentFailures(paymentFailures.getOrNull())
+
+            /**
+             * Sets [Builder.paymentFailures] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.paymentFailures] with a well-typed
+             * `List<PaymentFailure>` value instead. This method is primarily for setting the field
+             * to an undocumented or not yet supported value.
+             */
+            fun paymentFailures(paymentFailures: JsonField<List<PaymentFailure>>) = apply {
+                this.paymentFailures = paymentFailures.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [PaymentFailure] to [paymentFailures].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addPaymentFailure(paymentFailure: PaymentFailure) = apply {
+                paymentFailures =
+                    (paymentFailures ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("paymentFailures", it).add(paymentFailure)
+                    }
+            }
+
             fun recurringCredits(recurringCredits: List<RecurringCredit>?) =
                 recurringCredits(JsonField.ofNullable(recurringCredits))
 
@@ -698,6 +759,7 @@ private constructor(
                     endingBefore,
                     failureCount,
                     isPaymentFailed,
+                    (paymentFailures ?: JsonMissing.of()).map { it.toImmutable() },
                     (recurringCredits ?: JsonMissing.of()).map { it.toImmutable() },
                     startingOn,
                     additionalProperties.toMutableMap(),
@@ -728,6 +790,7 @@ private constructor(
             endingBefore()
             failureCount()
             isPaymentFailed()
+            paymentFailures().ifPresent { it.forEach { it.validate() } }
             recurringCredits().ifPresent { it.forEach { it.validate() } }
             startingOn()
             validated = true
@@ -757,6 +820,7 @@ private constructor(
                 (if (endingBefore.asKnown().isPresent) 1 else 0) +
                 (if (failureCount.asKnown().isPresent) 1 else 0) +
                 (if (isPaymentFailed.asKnown().isPresent) 1 else 0) +
+                (paymentFailures.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (recurringCredits.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (startingOn.asKnown().isPresent) 1 else 0)
 
@@ -3029,6 +3093,234 @@ private constructor(
                 "CurrentBillingPeriod{endDate=$endDate, startDate=$startDate, additionalProperties=$additionalProperties}"
         }
 
+        /** One active payment failure on the organization's record. */
+        class PaymentFailure
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val failedAt: JsonField<OffsetDateTime>,
+            private val invoiceId: JsonField<String>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("failed_at")
+                @ExcludeMissing
+                failedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+                @JsonProperty("invoice_id")
+                @ExcludeMissing
+                invoiceId: JsonField<String> = JsonMissing.of(),
+            ) : this(failedAt, invoiceId, mutableMapOf())
+
+            /**
+             * When the failure was recorded, in UTC
+             *
+             * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
+             *   or is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun failedAt(): OffsetDateTime = failedAt.getRequired("failed_at")
+
+            /**
+             * The Stripe invoice whose payment failed. Null when the record has none.
+             *
+             * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun invoiceId(): Optional<String> = invoiceId.getOptional("invoice_id")
+
+            /**
+             * Returns the raw JSON value of [failedAt].
+             *
+             * Unlike [failedAt], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("failed_at")
+            @ExcludeMissing
+            fun _failedAt(): JsonField<OffsetDateTime> = failedAt
+
+            /**
+             * Returns the raw JSON value of [invoiceId].
+             *
+             * Unlike [invoiceId], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("invoice_id")
+            @ExcludeMissing
+            fun _invoiceId(): JsonField<String> = invoiceId
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [PaymentFailure].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .failedAt()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [PaymentFailure]. */
+            class Builder internal constructor() {
+
+                private var failedAt: JsonField<OffsetDateTime>? = null
+                private var invoiceId: JsonField<String> = JsonMissing.of()
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(paymentFailure: PaymentFailure) = apply {
+                    failedAt = paymentFailure.failedAt
+                    invoiceId = paymentFailure.invoiceId
+                    additionalProperties = paymentFailure.additionalProperties.toMutableMap()
+                }
+
+                /** When the failure was recorded, in UTC */
+                fun failedAt(failedAt: OffsetDateTime) = failedAt(JsonField.of(failedAt))
+
+                /**
+                 * Sets [Builder.failedAt] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.failedAt] with a well-typed [OffsetDateTime]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun failedAt(failedAt: JsonField<OffsetDateTime>) = apply {
+                    this.failedAt = failedAt
+                }
+
+                /** The Stripe invoice whose payment failed. Null when the record has none. */
+                fun invoiceId(invoiceId: String?) = invoiceId(JsonField.ofNullable(invoiceId))
+
+                /** Alias for calling [Builder.invoiceId] with `invoiceId.orElse(null)`. */
+                fun invoiceId(invoiceId: Optional<String>) = invoiceId(invoiceId.getOrNull())
+
+                /**
+                 * Sets [Builder.invoiceId] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.invoiceId] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun invoiceId(invoiceId: JsonField<String>) = apply { this.invoiceId = invoiceId }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [PaymentFailure].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .failedAt()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): PaymentFailure =
+                    PaymentFailure(
+                        checkRequired("failedAt", failedAt),
+                        invoiceId,
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): PaymentFailure = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                failedAt()
+                invoiceId()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LlamaCloudAdminInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (failedAt.asKnown().isPresent) 1 else 0) +
+                    (if (invoiceId.asKnown().isPresent) 1 else 0)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is PaymentFailure &&
+                    failedAt == other.failedAt &&
+                    invoiceId == other.invoiceId &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy {
+                Objects.hash(failedAt, invoiceId, additionalProperties)
+            }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "PaymentFailure{failedAt=$failedAt, invoiceId=$invoiceId, additionalProperties=$additionalProperties}"
+        }
+
         class RecurringCredit
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
@@ -3701,6 +3993,7 @@ private constructor(
                 endingBefore == other.endingBefore &&
                 failureCount == other.failureCount &&
                 isPaymentFailed == other.isPaymentFailed &&
+                paymentFailures == other.paymentFailures &&
                 recurringCredits == other.recurringCredits &&
                 startingOn == other.startingOn &&
                 additionalProperties == other.additionalProperties
@@ -3716,6 +4009,7 @@ private constructor(
                 endingBefore,
                 failureCount,
                 isPaymentFailed,
+                paymentFailures,
                 recurringCredits,
                 startingOn,
                 additionalProperties,
@@ -3725,7 +4019,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Plan{limits=$limits, name=$name, planFrequency=$planFrequency, id=$id, currentBillingPeriod=$currentBillingPeriod, endingBefore=$endingBefore, failureCount=$failureCount, isPaymentFailed=$isPaymentFailed, recurringCredits=$recurringCredits, startingOn=$startingOn, additionalProperties=$additionalProperties}"
+            "Plan{limits=$limits, name=$name, planFrequency=$planFrequency, id=$id, currentBillingPeriod=$currentBillingPeriod, endingBefore=$endingBefore, failureCount=$failureCount, isPaymentFailed=$isPaymentFailed, paymentFailures=$paymentFailures, recurringCredits=$recurringCredits, startingOn=$startingOn, additionalProperties=$additionalProperties}"
     }
 
     /** Account usage totals shown alongside the plan. */
