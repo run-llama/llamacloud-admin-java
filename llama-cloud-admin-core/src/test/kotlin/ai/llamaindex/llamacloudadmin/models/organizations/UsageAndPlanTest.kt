@@ -59,6 +59,12 @@ internal class UsageAndPlanTest {
                         .endingBefore(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .failureCount(0L)
                         .isPaymentFailed(true)
+                        .addPaymentFailure(
+                            UsageAndPlan.Plan.PaymentFailure.builder()
+                                .failedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .invoiceId("invoice_id")
+                                .build()
+                        )
                         .addRecurringCredit(
                             UsageAndPlan.Plan.RecurringCredit.builder()
                                 .creditAmount(0L)
@@ -142,6 +148,12 @@ internal class UsageAndPlanTest {
                     .endingBefore(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .failureCount(0L)
                     .isPaymentFailed(true)
+                    .addPaymentFailure(
+                        UsageAndPlan.Plan.PaymentFailure.builder()
+                            .failedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .invoiceId("invoice_id")
+                            .build()
+                    )
                     .addRecurringCredit(
                         UsageAndPlan.Plan.RecurringCredit.builder()
                             .creditAmount(0L)
@@ -230,6 +242,12 @@ internal class UsageAndPlanTest {
                         .endingBefore(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .failureCount(0L)
                         .isPaymentFailed(true)
+                        .addPaymentFailure(
+                            UsageAndPlan.Plan.PaymentFailure.builder()
+                                .failedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .invoiceId("invoice_id")
+                                .build()
+                        )
                         .addRecurringCredit(
                             UsageAndPlan.Plan.RecurringCredit.builder()
                                 .creditAmount(0L)
