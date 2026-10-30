@@ -209,6 +209,7 @@ private constructor(
         private val name: JsonField<Name>,
         private val planFrequency: JsonField<PlanFrequency>,
         private val id: JsonField<String>,
+        private val creditPackRateUsdCentsPer1k: JsonField<Double>,
         private val currentBillingPeriod: JsonField<CurrentBillingPeriod>,
         private val endingBefore: JsonField<OffsetDateTime>,
         private val failureCount: JsonField<Long>,
@@ -227,6 +228,9 @@ private constructor(
             @ExcludeMissing
             planFrequency: JsonField<PlanFrequency> = JsonMissing.of(),
             @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("credit_pack_rate_usd_cents_per_1k")
+            @ExcludeMissing
+            creditPackRateUsdCentsPer1k: JsonField<Double> = JsonMissing.of(),
             @JsonProperty("current_billing_period")
             @ExcludeMissing
             currentBillingPeriod: JsonField<CurrentBillingPeriod> = JsonMissing.of(),
@@ -253,6 +257,7 @@ private constructor(
             name,
             planFrequency,
             id,
+            creditPackRateUsdCentsPer1k,
             currentBillingPeriod,
             endingBefore,
             failureCount,
@@ -291,6 +296,16 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun id(): Optional<String> = id.getOptional("id")
+
+        /**
+         * US cents per 1,000 credits this organization pays for credit packs and auto-reloads now.
+         * Null when the plan buys no credits (Enterprise).
+         *
+         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun creditPackRateUsdCentsPer1k(): Optional<Double> =
+            creditPackRateUsdCentsPer1k.getOptional("credit_pack_rate_usd_cents_per_1k")
 
         /**
          * The current billing period
@@ -380,6 +395,16 @@ private constructor(
          * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        /**
+         * Returns the raw JSON value of [creditPackRateUsdCentsPer1k].
+         *
+         * Unlike [creditPackRateUsdCentsPer1k], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("credit_pack_rate_usd_cents_per_1k")
+        @ExcludeMissing
+        fun _creditPackRateUsdCentsPer1k(): JsonField<Double> = creditPackRateUsdCentsPer1k
 
         /**
          * Returns the raw JSON value of [currentBillingPeriod].
@@ -484,6 +509,7 @@ private constructor(
             private var name: JsonField<Name>? = null
             private var planFrequency: JsonField<PlanFrequency>? = null
             private var id: JsonField<String> = JsonMissing.of()
+            private var creditPackRateUsdCentsPer1k: JsonField<Double> = JsonMissing.of()
             private var currentBillingPeriod: JsonField<CurrentBillingPeriod> = JsonMissing.of()
             private var endingBefore: JsonField<OffsetDateTime> = JsonMissing.of()
             private var failureCount: JsonField<Long> = JsonMissing.of()
@@ -499,6 +525,7 @@ private constructor(
                 name = plan.name
                 planFrequency = plan.planFrequency
                 id = plan.id
+                creditPackRateUsdCentsPer1k = plan.creditPackRateUsdCentsPer1k
                 currentBillingPeriod = plan.currentBillingPeriod
                 endingBefore = plan.endingBefore
                 failureCount = plan.failureCount
@@ -559,6 +586,40 @@ private constructor(
              * value.
              */
             fun id(id: JsonField<String>) = apply { this.id = id }
+
+            /**
+             * US cents per 1,000 credits this organization pays for credit packs and auto-reloads
+             * now. Null when the plan buys no credits (Enterprise).
+             */
+            fun creditPackRateUsdCentsPer1k(creditPackRateUsdCentsPer1k: Double?) =
+                creditPackRateUsdCentsPer1k(JsonField.ofNullable(creditPackRateUsdCentsPer1k))
+
+            /**
+             * Alias for [Builder.creditPackRateUsdCentsPer1k].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun creditPackRateUsdCentsPer1k(creditPackRateUsdCentsPer1k: Double) =
+                creditPackRateUsdCentsPer1k(creditPackRateUsdCentsPer1k as Double?)
+
+            /**
+             * Alias for calling [Builder.creditPackRateUsdCentsPer1k] with
+             * `creditPackRateUsdCentsPer1k.orElse(null)`.
+             */
+            fun creditPackRateUsdCentsPer1k(creditPackRateUsdCentsPer1k: Optional<Double>) =
+                creditPackRateUsdCentsPer1k(creditPackRateUsdCentsPer1k.getOrNull())
+
+            /**
+             * Sets [Builder.creditPackRateUsdCentsPer1k] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.creditPackRateUsdCentsPer1k] with a well-typed
+             * [Double] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            fun creditPackRateUsdCentsPer1k(creditPackRateUsdCentsPer1k: JsonField<Double>) =
+                apply {
+                    this.creditPackRateUsdCentsPer1k = creditPackRateUsdCentsPer1k
+                }
 
             /** The current billing period */
             fun currentBillingPeriod(currentBillingPeriod: CurrentBillingPeriod?) =
@@ -755,6 +816,7 @@ private constructor(
                     checkRequired("name", name),
                     checkRequired("planFrequency", planFrequency),
                     id,
+                    creditPackRateUsdCentsPer1k,
                     currentBillingPeriod,
                     endingBefore,
                     failureCount,
@@ -786,6 +848,7 @@ private constructor(
             name().validate()
             planFrequency().validate()
             id()
+            creditPackRateUsdCentsPer1k()
             currentBillingPeriod().ifPresent { it.validate() }
             endingBefore()
             failureCount()
@@ -816,6 +879,7 @@ private constructor(
                 (name.asKnown().getOrNull()?.validity() ?: 0) +
                 (planFrequency.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (id.asKnown().isPresent) 1 else 0) +
+                (if (creditPackRateUsdCentsPer1k.asKnown().isPresent) 1 else 0) +
                 (currentBillingPeriod.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (endingBefore.asKnown().isPresent) 1 else 0) +
                 (if (failureCount.asKnown().isPresent) 1 else 0) +
@@ -3989,6 +4053,7 @@ private constructor(
                 name == other.name &&
                 planFrequency == other.planFrequency &&
                 id == other.id &&
+                creditPackRateUsdCentsPer1k == other.creditPackRateUsdCentsPer1k &&
                 currentBillingPeriod == other.currentBillingPeriod &&
                 endingBefore == other.endingBefore &&
                 failureCount == other.failureCount &&
@@ -4005,6 +4070,7 @@ private constructor(
                 name,
                 planFrequency,
                 id,
+                creditPackRateUsdCentsPer1k,
                 currentBillingPeriod,
                 endingBefore,
                 failureCount,
@@ -4019,7 +4085,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Plan{limits=$limits, name=$name, planFrequency=$planFrequency, id=$id, currentBillingPeriod=$currentBillingPeriod, endingBefore=$endingBefore, failureCount=$failureCount, isPaymentFailed=$isPaymentFailed, paymentFailures=$paymentFailures, recurringCredits=$recurringCredits, startingOn=$startingOn, additionalProperties=$additionalProperties}"
+            "Plan{limits=$limits, name=$name, planFrequency=$planFrequency, id=$id, creditPackRateUsdCentsPer1k=$creditPackRateUsdCentsPer1k, currentBillingPeriod=$currentBillingPeriod, endingBefore=$endingBefore, failureCount=$failureCount, isPaymentFailed=$isPaymentFailed, paymentFailures=$paymentFailures, recurringCredits=$recurringCredits, startingOn=$startingOn, additionalProperties=$additionalProperties}"
     }
 
     /** Account usage totals shown alongside the plan. */

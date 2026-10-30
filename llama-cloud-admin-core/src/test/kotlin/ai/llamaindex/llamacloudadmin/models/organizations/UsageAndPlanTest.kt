@@ -50,6 +50,7 @@ internal class UsageAndPlanTest {
                         .name(UsageAndPlan.Plan.Name.ENTERPRISE)
                         .planFrequency(UsageAndPlan.Plan.PlanFrequency.ANNUAL)
                         .id("id")
+                        .creditPackRateUsdCentsPer1k(0.0)
                         .currentBillingPeriod(
                             UsageAndPlan.Plan.CurrentBillingPeriod.builder()
                                 .endDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -139,6 +140,7 @@ internal class UsageAndPlanTest {
                     .name(UsageAndPlan.Plan.Name.ENTERPRISE)
                     .planFrequency(UsageAndPlan.Plan.PlanFrequency.ANNUAL)
                     .id("id")
+                    .creditPackRateUsdCentsPer1k(0.0)
                     .currentBillingPeriod(
                         UsageAndPlan.Plan.CurrentBillingPeriod.builder()
                             .endDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -233,6 +235,7 @@ internal class UsageAndPlanTest {
                         .name(UsageAndPlan.Plan.Name.ENTERPRISE)
                         .planFrequency(UsageAndPlan.Plan.PlanFrequency.ANNUAL)
                         .id("id")
+                        .creditPackRateUsdCentsPer1k(0.0)
                         .currentBillingPeriod(
                             UsageAndPlan.Plan.CurrentBillingPeriod.builder()
                                 .endDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
