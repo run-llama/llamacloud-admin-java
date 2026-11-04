@@ -561,6 +561,8 @@ private constructor(
             @JvmField
             val RATE_LIMIT_EXTRACT_CONCURRENT_DEFAULT = of("rate_limit_extract_concurrent_default")
 
+            @JvmField val RATE_LIMIT_EXTRACT_REVIEW_API = of("rate_limit_extract_review_api")
+
             @JvmField val RATE_LIMIT_FILE_API_READ = of("rate_limit_file_api_read")
 
             @JvmField val RATE_LIMIT_FILE_API_WRITE = of("rate_limit_file_api_write")
@@ -676,6 +678,7 @@ private constructor(
             RATE_LIMIT_EXTRACT_API_LIST,
             RATE_LIMIT_EXTRACT_API_QUERY,
             RATE_LIMIT_EXTRACT_CONCURRENT_DEFAULT,
+            RATE_LIMIT_EXTRACT_REVIEW_API,
             RATE_LIMIT_FILE_API_READ,
             RATE_LIMIT_FILE_API_WRITE,
             RATE_LIMIT_INDEX_V1_PIPELINE_CONCURRENT_JOBS,
@@ -752,6 +755,7 @@ private constructor(
             RATE_LIMIT_EXTRACT_API_LIST,
             RATE_LIMIT_EXTRACT_API_QUERY,
             RATE_LIMIT_EXTRACT_CONCURRENT_DEFAULT,
+            RATE_LIMIT_EXTRACT_REVIEW_API,
             RATE_LIMIT_FILE_API_READ,
             RATE_LIMIT_FILE_API_WRITE,
             RATE_LIMIT_INDEX_V1_PIPELINE_CONCURRENT_JOBS,
@@ -838,6 +842,7 @@ private constructor(
                 RATE_LIMIT_EXTRACT_API_LIST -> Value.RATE_LIMIT_EXTRACT_API_LIST
                 RATE_LIMIT_EXTRACT_API_QUERY -> Value.RATE_LIMIT_EXTRACT_API_QUERY
                 RATE_LIMIT_EXTRACT_CONCURRENT_DEFAULT -> Value.RATE_LIMIT_EXTRACT_CONCURRENT_DEFAULT
+                RATE_LIMIT_EXTRACT_REVIEW_API -> Value.RATE_LIMIT_EXTRACT_REVIEW_API
                 RATE_LIMIT_FILE_API_READ -> Value.RATE_LIMIT_FILE_API_READ
                 RATE_LIMIT_FILE_API_WRITE -> Value.RATE_LIMIT_FILE_API_WRITE
                 RATE_LIMIT_INDEX_V1_PIPELINE_CONCURRENT_JOBS ->
@@ -930,6 +935,7 @@ private constructor(
                 RATE_LIMIT_EXTRACT_API_LIST -> Known.RATE_LIMIT_EXTRACT_API_LIST
                 RATE_LIMIT_EXTRACT_API_QUERY -> Known.RATE_LIMIT_EXTRACT_API_QUERY
                 RATE_LIMIT_EXTRACT_CONCURRENT_DEFAULT -> Known.RATE_LIMIT_EXTRACT_CONCURRENT_DEFAULT
+                RATE_LIMIT_EXTRACT_REVIEW_API -> Known.RATE_LIMIT_EXTRACT_REVIEW_API
                 RATE_LIMIT_FILE_API_READ -> Known.RATE_LIMIT_FILE_API_READ
                 RATE_LIMIT_FILE_API_WRITE -> Known.RATE_LIMIT_FILE_API_WRITE
                 RATE_LIMIT_INDEX_V1_PIPELINE_CONCURRENT_JOBS ->
