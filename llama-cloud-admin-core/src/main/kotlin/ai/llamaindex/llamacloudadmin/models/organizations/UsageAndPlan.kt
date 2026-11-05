@@ -2605,6 +2605,8 @@ private constructor(
 
                 @JvmField val PRO_V2 = of("pro_v2")
 
+                @JvmField val SALES_LED_V1 = of("sales_led_v1")
+
                 @JvmField val STARTER_V1 = of("starter_v1")
 
                 @JvmField val STARTER_V2 = of("starter_v2")
@@ -2630,6 +2632,7 @@ private constructor(
                 PRO,
                 PRO_V1,
                 PRO_V2,
+                SALES_LED_V1,
                 STARTER_V1,
                 STARTER_V2,
                 UNKNOWN,
@@ -2658,6 +2661,7 @@ private constructor(
                 PRO,
                 PRO_V1,
                 PRO_V2,
+                SALES_LED_V1,
                 STARTER_V1,
                 STARTER_V2,
                 UNKNOWN,
@@ -2687,6 +2691,7 @@ private constructor(
                     PRO -> Value.PRO
                     PRO_V1 -> Value.PRO_V1
                     PRO_V2 -> Value.PRO_V2
+                    SALES_LED_V1 -> Value.SALES_LED_V1
                     STARTER_V1 -> Value.STARTER_V1
                     STARTER_V2 -> Value.STARTER_V2
                     UNKNOWN -> Value.UNKNOWN
@@ -2717,6 +2722,7 @@ private constructor(
                     PRO -> Known.PRO
                     PRO_V1 -> Known.PRO_V1
                     PRO_V2 -> Known.PRO_V2
+                    SALES_LED_V1 -> Known.SALES_LED_V1
                     STARTER_V1 -> Known.STARTER_V1
                     STARTER_V2 -> Known.STARTER_V2
                     UNKNOWN -> Known.UNKNOWN
