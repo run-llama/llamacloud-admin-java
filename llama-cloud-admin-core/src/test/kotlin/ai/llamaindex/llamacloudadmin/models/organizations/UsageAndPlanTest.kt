@@ -59,6 +59,7 @@ internal class UsageAndPlanTest {
                         )
                         .endingBefore(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .failureCount(0L)
+                        .isFallback(true)
                         .isPaymentFailed(true)
                         .addPaymentFailure(
                             UsageAndPlan.Plan.PaymentFailure.builder()
@@ -149,6 +150,7 @@ internal class UsageAndPlanTest {
                     )
                     .endingBefore(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .failureCount(0L)
+                    .isFallback(true)
                     .isPaymentFailed(true)
                     .addPaymentFailure(
                         UsageAndPlan.Plan.PaymentFailure.builder()
@@ -244,6 +246,7 @@ internal class UsageAndPlanTest {
                         )
                         .endingBefore(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .failureCount(0L)
+                        .isFallback(true)
                         .isPaymentFailed(true)
                         .addPaymentFailure(
                             UsageAndPlan.Plan.PaymentFailure.builder()
