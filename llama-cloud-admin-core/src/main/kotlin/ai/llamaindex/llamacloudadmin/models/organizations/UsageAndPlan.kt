@@ -213,6 +213,7 @@ private constructor(
         private val currentBillingPeriod: JsonField<CurrentBillingPeriod>,
         private val endingBefore: JsonField<OffsetDateTime>,
         private val failureCount: JsonField<Long>,
+        private val isFallback: JsonField<Boolean>,
         private val isPaymentFailed: JsonField<Boolean>,
         private val paymentFailures: JsonField<List<PaymentFailure>>,
         private val recurringCredits: JsonField<List<RecurringCredit>>,
@@ -240,6 +241,9 @@ private constructor(
             @JsonProperty("failure_count")
             @ExcludeMissing
             failureCount: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("is_fallback")
+            @ExcludeMissing
+            isFallback: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("is_payment_failed")
             @ExcludeMissing
             isPaymentFailed: JsonField<Boolean> = JsonMissing.of(),
@@ -261,6 +265,7 @@ private constructor(
             currentBillingPeriod,
             endingBefore,
             failureCount,
+            isFallback,
             isPaymentFailed,
             paymentFailures,
             recurringCredits,
@@ -331,6 +336,15 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun failureCount(): Optional<Long> = failureCount.getOptional("failure_count")
+
+        /**
+         * Whether the organization's plan failed to load; if so, the other fields hold the default
+         * plan.
+         *
+         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun isFallback(): Optional<Boolean> = isFallback.getOptional("is_fallback")
 
         /**
          * Whether the organization has a failed payment that requires support contact
@@ -437,6 +451,15 @@ private constructor(
         fun _failureCount(): JsonField<Long> = failureCount
 
         /**
+         * Returns the raw JSON value of [isFallback].
+         *
+         * Unlike [isFallback], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("is_fallback")
+        @ExcludeMissing
+        fun _isFallback(): JsonField<Boolean> = isFallback
+
+        /**
          * Returns the raw JSON value of [isPaymentFailed].
          *
          * Unlike [isPaymentFailed], this method doesn't throw if the JSON field has an unexpected
@@ -513,6 +536,7 @@ private constructor(
             private var currentBillingPeriod: JsonField<CurrentBillingPeriod> = JsonMissing.of()
             private var endingBefore: JsonField<OffsetDateTime> = JsonMissing.of()
             private var failureCount: JsonField<Long> = JsonMissing.of()
+            private var isFallback: JsonField<Boolean> = JsonMissing.of()
             private var isPaymentFailed: JsonField<Boolean> = JsonMissing.of()
             private var paymentFailures: JsonField<MutableList<PaymentFailure>>? = null
             private var recurringCredits: JsonField<MutableList<RecurringCredit>>? = null
@@ -529,6 +553,7 @@ private constructor(
                 currentBillingPeriod = plan.currentBillingPeriod
                 endingBefore = plan.endingBefore
                 failureCount = plan.failureCount
+                isFallback = plan.isFallback
                 isPaymentFailed = plan.isPaymentFailed
                 paymentFailures = plan.paymentFailures.map { it.toMutableList() }
                 recurringCredits = plan.recurringCredits.map { it.toMutableList() }
@@ -677,6 +702,21 @@ private constructor(
                 this.failureCount = failureCount
             }
 
+            /**
+             * Whether the organization's plan failed to load; if so, the other fields hold the
+             * default plan.
+             */
+            fun isFallback(isFallback: Boolean) = isFallback(JsonField.of(isFallback))
+
+            /**
+             * Sets [Builder.isFallback] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.isFallback] with a well-typed [Boolean] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun isFallback(isFallback: JsonField<Boolean>) = apply { this.isFallback = isFallback }
+
             /** Whether the organization has a failed payment that requires support contact */
             fun isPaymentFailed(isPaymentFailed: Boolean) =
                 isPaymentFailed(JsonField.of(isPaymentFailed))
@@ -820,6 +860,7 @@ private constructor(
                     currentBillingPeriod,
                     endingBefore,
                     failureCount,
+                    isFallback,
                     isPaymentFailed,
                     (paymentFailures ?: JsonMissing.of()).map { it.toImmutable() },
                     (recurringCredits ?: JsonMissing.of()).map { it.toImmutable() },
@@ -852,6 +893,7 @@ private constructor(
             currentBillingPeriod().ifPresent { it.validate() }
             endingBefore()
             failureCount()
+            isFallback()
             isPaymentFailed()
             paymentFailures().ifPresent { it.forEach { it.validate() } }
             recurringCredits().ifPresent { it.forEach { it.validate() } }
@@ -883,6 +925,7 @@ private constructor(
                 (currentBillingPeriod.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (endingBefore.asKnown().isPresent) 1 else 0) +
                 (if (failureCount.asKnown().isPresent) 1 else 0) +
+                (if (isFallback.asKnown().isPresent) 1 else 0) +
                 (if (isPaymentFailed.asKnown().isPresent) 1 else 0) +
                 (paymentFailures.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (recurringCredits.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
@@ -4063,6 +4106,7 @@ private constructor(
                 currentBillingPeriod == other.currentBillingPeriod &&
                 endingBefore == other.endingBefore &&
                 failureCount == other.failureCount &&
+                isFallback == other.isFallback &&
                 isPaymentFailed == other.isPaymentFailed &&
                 paymentFailures == other.paymentFailures &&
                 recurringCredits == other.recurringCredits &&
@@ -4080,6 +4124,7 @@ private constructor(
                 currentBillingPeriod,
                 endingBefore,
                 failureCount,
+                isFallback,
                 isPaymentFailed,
                 paymentFailures,
                 recurringCredits,
@@ -4091,7 +4136,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Plan{limits=$limits, name=$name, planFrequency=$planFrequency, id=$id, creditPackRateUsdCentsPer1k=$creditPackRateUsdCentsPer1k, currentBillingPeriod=$currentBillingPeriod, endingBefore=$endingBefore, failureCount=$failureCount, isPaymentFailed=$isPaymentFailed, paymentFailures=$paymentFailures, recurringCredits=$recurringCredits, startingOn=$startingOn, additionalProperties=$additionalProperties}"
+            "Plan{limits=$limits, name=$name, planFrequency=$planFrequency, id=$id, creditPackRateUsdCentsPer1k=$creditPackRateUsdCentsPer1k, currentBillingPeriod=$currentBillingPeriod, endingBefore=$endingBefore, failureCount=$failureCount, isFallback=$isFallback, isPaymentFailed=$isPaymentFailed, paymentFailures=$paymentFailures, recurringCredits=$recurringCredits, startingOn=$startingOn, additionalProperties=$additionalProperties}"
     }
 
     /** Account usage totals shown alongside the plan. */
