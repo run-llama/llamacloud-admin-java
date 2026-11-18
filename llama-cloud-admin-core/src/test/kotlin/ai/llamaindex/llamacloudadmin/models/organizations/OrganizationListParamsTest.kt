@@ -10,7 +10,7 @@ internal class OrganizationListParamsTest {
 
     @Test
     fun create() {
-        OrganizationListParams.builder().name("name").pageSize(0L).pageToken("page_token").build()
+        OrganizationListParams.builder().name("name").pageSize(1L).pageToken("page_token").build()
     }
 
     @Test
@@ -18,7 +18,7 @@ internal class OrganizationListParamsTest {
         val params =
             OrganizationListParams.builder()
                 .name("name")
-                .pageSize(0L)
+                .pageSize(1L)
                 .pageToken("page_token")
                 .build()
 
@@ -28,7 +28,7 @@ internal class OrganizationListParamsTest {
             .isEqualTo(
                 QueryParams.builder()
                     .put("name", "name")
-                    .put("page_size", "0")
+                    .put("page_size", "1")
                     .put("page_token", "page_token")
                     .build()
             )
