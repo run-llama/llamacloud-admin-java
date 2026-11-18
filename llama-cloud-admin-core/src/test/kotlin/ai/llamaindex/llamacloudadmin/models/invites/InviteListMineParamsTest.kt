@@ -10,18 +10,18 @@ internal class InviteListMineParamsTest {
 
     @Test
     fun create() {
-        InviteListMineParams.builder().pageSize(0L).pageToken("page_token").build()
+        InviteListMineParams.builder().pageSize(1L).pageToken("page_token").build()
     }
 
     @Test
     fun queryParams() {
-        val params = InviteListMineParams.builder().pageSize(0L).pageToken("page_token").build()
+        val params = InviteListMineParams.builder().pageSize(1L).pageToken("page_token").build()
 
         val queryParams = params._queryParams()
 
         assertThat(queryParams)
             .isEqualTo(
-                QueryParams.builder().put("page_size", "0").put("page_token", "page_token").build()
+                QueryParams.builder().put("page_size", "1").put("page_token", "page_token").build()
             )
     }
 
