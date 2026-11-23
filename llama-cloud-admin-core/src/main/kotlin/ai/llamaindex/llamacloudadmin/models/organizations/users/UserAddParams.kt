@@ -2,6 +2,7 @@
 
 package ai.llamaindex.llamacloudadmin.models.organizations.users
 
+import ai.llamaindex.llamacloudadmin.core.Enum
 import ai.llamaindex.llamacloudadmin.core.ExcludeMissing
 import ai.llamaindex.llamacloudadmin.core.JsonField
 import ai.llamaindex.llamacloudadmin.core.JsonMissing
@@ -226,6 +227,7 @@ private constructor(
     private constructor(
         private val projectIds: JsonField<List<String>>,
         private val email: JsonField<String>,
+        private val role: JsonField<Role>,
         private val roleId: JsonField<String>,
         private val userId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -237,9 +239,10 @@ private constructor(
             @ExcludeMissing
             projectIds: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("email") @ExcludeMissing email: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("role") @ExcludeMissing role: JsonField<Role> = JsonMissing.of(),
             @JsonProperty("role_id") @ExcludeMissing roleId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("user_id") @ExcludeMissing userId: JsonField<String> = JsonMissing.of(),
-        ) : this(projectIds, email, roleId, userId, mutableMapOf())
+        ) : this(projectIds, email, role, roleId, userId, mutableMapOf())
 
         /**
          * The project IDs to add the user to.
@@ -256,6 +259,14 @@ private constructor(
          *   (e.g. if the server responded with an unexpected value).
          */
         fun email(): Optional<String> = email.getOptional("email")
+
+        /**
+         * The role to give the user, by name. Set this or `role_id`, not both.
+         *
+         * @throws LlamaCloudAdminInvalidDataException if the JSON field has an unexpected type
+         *   (e.g. if the server responded with an unexpected value).
+         */
+        fun role(): Optional<Role> = role.getOptional("role")
 
         /**
          * The role ID to assign to the user.
@@ -288,6 +299,13 @@ private constructor(
          * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("email") @ExcludeMissing fun _email(): JsonField<String> = email
+
+        /**
+         * Returns the raw JSON value of [role].
+         *
+         * Unlike [role], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("role") @ExcludeMissing fun _role(): JsonField<Role> = role
 
         /**
          * Returns the raw JSON value of [roleId].
@@ -333,6 +351,7 @@ private constructor(
 
             private var projectIds: JsonField<MutableList<String>>? = null
             private var email: JsonField<String> = JsonMissing.of()
+            private var role: JsonField<Role> = JsonMissing.of()
             private var roleId: JsonField<String> = JsonMissing.of()
             private var userId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -341,6 +360,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 projectIds = body.projectIds.map { it.toMutableList() }
                 email = body.email
+                role = body.role
                 roleId = body.roleId
                 userId = body.userId
                 additionalProperties = body.additionalProperties.toMutableMap()
@@ -389,6 +409,21 @@ private constructor(
              * supported value.
              */
             fun email(email: JsonField<String>) = apply { this.email = email }
+
+            /** The role to give the user, by name. Set this or `role_id`, not both. */
+            fun role(role: Role?) = role(JsonField.ofNullable(role))
+
+            /** Alias for calling [Builder.role] with `role.orElse(null)`. */
+            fun role(role: Optional<Role>) = role(role.getOrNull())
+
+            /**
+             * Sets [Builder.role] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.role] with a well-typed [Role] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun role(role: JsonField<Role>) = apply { this.role = role }
 
             /** The role ID to assign to the user. */
             fun roleId(roleId: String?) = roleId(JsonField.ofNullable(roleId))
@@ -455,6 +490,7 @@ private constructor(
                 Body(
                     checkRequired("projectIds", projectIds).map { it.toImmutable() },
                     email,
+                    role,
                     roleId,
                     userId,
                     additionalProperties.toMutableMap(),
@@ -479,6 +515,7 @@ private constructor(
 
             projectIds()
             email()
+            role().ifPresent { it.validate() }
             roleId()
             userId()
             validated = true
@@ -502,8 +539,147 @@ private constructor(
         internal fun validity(): Int =
             (projectIds.asKnown().getOrNull()?.size ?: 0) +
                 (if (email.asKnown().isPresent) 1 else 0) +
+                (role.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (roleId.asKnown().isPresent) 1 else 0) +
                 (if (userId.asKnown().isPresent) 1 else 0)
+
+        /** The role to give the user, by name. Set this or `role_id`, not both. */
+        class Role @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val ADMIN = of("admin")
+
+                @JvmField val VIEWER_V2 = of("viewer_v2")
+
+                @JvmStatic fun of(value: String) = Role(JsonField.of(value))
+            }
+
+            /** An enum containing [Role]'s known values. */
+            enum class Known {
+                ADMIN,
+                VIEWER_V2,
+            }
+
+            /**
+             * An enum containing [Role]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Role] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                ADMIN,
+                VIEWER_V2,
+                /** An enum member indicating that [Role] was instantiated with an unknown value. */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    ADMIN -> Value.ADMIN
+                    VIEWER_V2 -> Value.VIEWER_V2
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws LlamaCloudAdminInvalidDataException if this class instance's value is a not a
+             *   known member.
+             */
+            fun known(): Known =
+                when (this) {
+                    ADMIN -> Known.ADMIN
+                    VIEWER_V2 -> Known.VIEWER_V2
+                    else -> throw LlamaCloudAdminInvalidDataException("Unknown Role: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws LlamaCloudAdminInvalidDataException if this class instance's value does not
+             *   have the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    LlamaCloudAdminInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LlamaCloudAdminInvalidDataException if any value type in this object doesn't
+             *   match its expected type.
+             */
+            fun validate(): Role = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LlamaCloudAdminInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Role && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -513,19 +689,20 @@ private constructor(
             return other is Body &&
                 projectIds == other.projectIds &&
                 email == other.email &&
+                role == other.role &&
                 roleId == other.roleId &&
                 userId == other.userId &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(projectIds, email, roleId, userId, additionalProperties)
+            Objects.hash(projectIds, email, role, roleId, userId, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{projectIds=$projectIds, email=$email, roleId=$roleId, userId=$userId, additionalProperties=$additionalProperties}"
+            "Body{projectIds=$projectIds, email=$email, role=$role, roleId=$roleId, userId=$userId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
