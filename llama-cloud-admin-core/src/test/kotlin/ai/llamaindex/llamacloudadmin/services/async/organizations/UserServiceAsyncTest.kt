@@ -46,6 +46,7 @@ internal class UserServiceAsyncTest {
                         UserAddParams.Body.builder()
                             .addProjectId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                             .email("dev@stainless.com")
+                            .role(UserAddParams.Body.Role.VIEWER_V2)
                             .roleId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                             .userId("user_id")
                             .build()
