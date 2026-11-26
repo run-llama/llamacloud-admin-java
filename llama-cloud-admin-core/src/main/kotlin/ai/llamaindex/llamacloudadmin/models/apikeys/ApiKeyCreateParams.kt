@@ -26,7 +26,8 @@ import kotlin.jvm.optionals.getOrNull
  *
  * Scope it to a project with `project_id`, which requires read access to that project; omit it for
  * a key that reaches every project you can read. A project-scoped or agent key cannot create an API
- * key. The response carries the secret in `redacted_api_key`, and only this once.
+ * key. An unscoped key can create only project keys, with its own role and expiring no later than
+ * it does. The response carries the secret in `redacted_api_key`, and only this once.
  */
 class ApiKeyCreateParams
 private constructor(
